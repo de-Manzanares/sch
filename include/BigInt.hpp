@@ -1,5 +1,5 @@
-#ifndef SCH_SRC_BIGUINT_HPP_
-#define SCH_SRC_BIGUINT_HPP_
+#ifndef SCH_INCLUDE_BIGINT_HPP_
+#define SCH_INCLUDE_BIGINT_HPP_
 
 #include <algorithm>
 #include <cstdint>
@@ -52,12 +52,13 @@ class BigInt {
 
  private:
   sign _sign = sign::positive;
-  std::vector<uint8_t> _data; // little-endian order
+  std::vector<uint8_t> _data{}; // little-endian order
 };
 
 //------------------------------------------------------------------------------
-// Constructor
+// Constructors
 
+// String constructor
 inline BigInt::BigInt(const std::string &str) {
   int offset = 0;           // to ignore negative sign, if it exists
   if (str.front() == '-') { // check for sign
@@ -73,6 +74,10 @@ inline BigInt::BigInt(const std::string &str) {
   for (auto &digit : _data) {
     digit -= '0';
   }
+  // the BigInt objects can sometimes be initialized with leading zeros
+  // having leading zeros will cause incorrect comparisons between BigInts
+  // best to get rid of them now
+  this->normalize();
 }
 
 //------------------------------------------------------------------------------
@@ -162,7 +167,8 @@ inline BigInt BigInt::operator-(const BigInt &rhs) const {
   BigInt _rhs{rhs};
   size_t tmp_lhs{0};
   size_t tmp_rhs{0};
-  if (_rhs > *this) {
+
+  if (_rhs > _lhs) {
     difference._sign = sign::negative;
   }
   if (difference._sign == sign::positive) { // subtract rhs from lhs
@@ -173,7 +179,8 @@ inline BigInt BigInt::operator-(const BigInt &rhs) const {
           _lhs._data[tmp_lhs + 1] -= 1;
         } else {
           size_t tmp_it{1};
-          while (_lhs._data[tmp_lhs + tmp_it] == 0) {
+          while ((tmp_lhs + tmp_it) < _lhs._data.size() - 1 &&
+                 _lhs._data[tmp_lhs + tmp_it] == 0) {
             _lhs._data[tmp_lhs + tmp_it] = 9;
             ++tmp_it;
           }
@@ -192,7 +199,8 @@ inline BigInt BigInt::operator-(const BigInt &rhs) const {
           _rhs._data[tmp_rhs + 1] -= 1;
         } else {
           size_t tmp_it{1};
-          while (_rhs._data[tmp_rhs + tmp_it] == 0) {
+          while ((tmp_rhs + tmp_it) < _rhs._data.size() - 1 &&
+                 _rhs._data[tmp_rhs + tmp_it] == 0) {
             _rhs._data[tmp_rhs + tmp_it] = 9;
             ++tmp_it;
           }
@@ -283,6 +291,10 @@ inline BigInt &BigInt::operator++() {
 // Stream operators
 
 inline std::ostream &operator<<(std::ostream &os, const BigInt &b) {
+  if (b._data.empty()) {
+    os << "0";
+    return os;
+  }
   if (b._sign == sign::negative) {
     os << '-';
   }
@@ -326,4 +338,4 @@ inline BigInt pow(const BigInt &base, const uint exp) {
 
 } // namespace sch
 
-#endif // SCH_SRC_BIGUINT_HPP_
+#endif // SCH_INCLUDE_BIGINT_HPP_

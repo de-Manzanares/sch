@@ -39,13 +39,21 @@ TEST_CASE("operator << : stream extraction") {
     for (int j = 0; j < dist_length(rand_engine); ++j) {
       str += static_cast<char>(dist_digit(rand_engine) + '0');
     }
+    size_t str_index{}; // to ignore leading zero's in string
+    while (str[str_index] == '0') {
+      ++str_index;
+    }
     if (dist_digit(rand_engine) % 2 == 0) {
       str.insert(0, 1, '-');
+      ++str_index;
     }
     std::ostringstream os;
-    sch::BigInt b_uint(str);
+    sch::BigInt b_uint{str};
     os << b_uint;
-    CHECK(os.str() == str);
+    // ternary is to maintain the '-' while dodging leading zeros, should
+    // the character be present
+    CHECK(os.str() == (str[0] == '-' ? '-' + str.substr(str_index)
+                                     : str.substr(str_index)));
   }
 }
 
@@ -81,14 +89,10 @@ TEST_CASE("operator + : addition") {
   }
 }
 
-TEST_CASE("simple subtraction") {
-  // 83765 - 17603
-  std::cout << sch::BigInt{"83765"} - sch::BigInt{"17603"};
-}
 TEST_CASE("operator - : subtraction") {
   CHECK(sch::BigInt(std::string{'0'}) - sch::BigInt(std::string{'0'}) ==
         sch::BigInt(std::string{'0'}));
-  for (int i = 0; i < 500; ++i) {
+  for (int i = 0; i < 10000; ++i) {
     std::string str;
     long long n1;
     long long n2;
@@ -140,7 +144,7 @@ TEST_CASE("simple multiplication") {
 }
 
 TEST_CASE("operator: * multiplication") {
-  for (int i = 0; i < 500; ++i) {
+  for (int i = 0; i < 1000; ++i) {
     std::string str;
     unsigned long long n1;
     unsigned long long n2;
