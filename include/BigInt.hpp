@@ -44,6 +44,7 @@ class BigInt {
   BigInt &operator>>=(const BigInt &rhs);
 
   BigInt &operator-();
+  BigInt operator-() const;
   BigInt &operator++();
   BigInt &operator--();
 
@@ -134,10 +135,24 @@ inline bool BigInt::operator>=(const BigInt &rhs) const {
 // Binary arithmetic operators
 
 inline BigInt BigInt::operator+(const BigInt &rhs) const {
+
+  if (_sign != rhs._sign) {
+    if (_sign == sign::negative) {
+      return rhs - (-BigInt{*this});
+    }
+    if (rhs._sign == sign::negative) {
+      return *this - (-BigInt{rhs});
+    }
+  }
+  if (_sign == sign::negative && rhs._sign == sign::negative) {
+    return -(-BigInt{*this} + -BigInt{rhs});
+  }
+
   BigInt sum;
   bool carry = false;
   size_t tmp_lhs{0};
   size_t tmp_rhs{0};
+
   while (tmp_lhs < _data.size() && tmp_rhs < rhs._data.size()) {
     sum._data.push_back(_data[tmp_lhs] + rhs._data[tmp_rhs] + (carry ? 1 : 0));
     if (sum._data.back() > 9) {
@@ -307,6 +322,8 @@ inline BigInt &BigInt::operator-() {
   _sign = (_sign == sign::positive ? sign::negative : sign::positive);
   return *this;
 }
+
+inline BigInt BigInt::operator-() const { return -BigInt{*this}; }
 
 //------------------------------------------------------------------------------
 // Increment decrement operators
