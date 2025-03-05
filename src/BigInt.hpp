@@ -1,5 +1,5 @@
-#ifndef PROJECT_EULER_CPP17_BIGUINT_HPP_
-#define PROJECT_EULER_CPP17_BIGUINT_HPP_
+#ifndef SCH_SRC_BIGUINT_HPP_
+#define SCH_SRC_BIGUINT_HPP_
 
 #include <algorithm>
 #include <cstdint>
@@ -8,41 +8,43 @@
 #include <string>
 #include <vector>
 
-class BigUInt {
+namespace sch {
+
+class BigInt {
  public:
-  BigUInt() = default;
-  explicit BigUInt(const std::string &str);
-  ~BigUInt() = default;
+  BigInt() = default;
+  explicit BigInt(const std::string &str);
+  ~BigInt() = default;
 
-  BigUInt(const BigUInt &) = default;
-  BigUInt(BigUInt &&) = default;
-  BigUInt &operator=(const BigUInt &) = default;
-  BigUInt &operator=(BigUInt &&) = default;
+  BigInt(const BigInt &) = default;
+  BigInt(BigInt &&) = default;
+  BigInt &operator=(const BigInt &) = default;
+  BigInt &operator=(BigInt &&) = default;
 
-  bool operator==(const BigUInt &rhs) const;
-  bool operator!=(const BigUInt &rhs) const;
-  bool operator<(const BigUInt &rhs) const;
-  bool operator>(const BigUInt &rhs) const;
-  bool operator<=(const BigUInt &rhs) const;
-  bool operator>=(const BigUInt &rhs) const;
+  bool operator==(const BigInt &rhs) const;
+  bool operator!=(const BigInt &rhs) const;
+  bool operator<(const BigInt &rhs) const;
+  bool operator>(const BigInt &rhs) const;
+  bool operator<=(const BigInt &rhs) const;
+  bool operator>=(const BigInt &rhs) const;
 
-  BigUInt operator+(const BigUInt &rhs) const;
-  BigUInt operator-(const BigUInt &rhs) const;
-  BigUInt operator*(const BigUInt &rhs) const;
-  BigUInt operator/(const BigUInt &rhs) const;
-  BigUInt operator%(const BigUInt &rhs) const;
-  BigUInt &operator+=(const BigUInt &rhs);
-  BigUInt &operator-=(const BigUInt &rhs);
-  BigUInt &operator*=(const BigUInt &rhs);
-  BigUInt &operator/=(const BigUInt &rhs);
-  BigUInt &operator%=(const BigUInt &rhs);
-  BigUInt &operator<<=(const BigUInt &rhs);
-  BigUInt &operator>>=(const BigUInt &rhs);
+  BigInt operator+(const BigInt &rhs) const;
+  BigInt operator-(const BigInt &rhs) const;
+  BigInt operator*(const BigInt &rhs) const;
+  BigInt operator/(const BigInt &rhs) const;
+  BigInt operator%(const BigInt &rhs) const;
+  BigInt &operator+=(const BigInt &rhs);
+  BigInt &operator-=(const BigInt &rhs);
+  BigInt &operator*=(const BigInt &rhs);
+  BigInt &operator/=(const BigInt &rhs);
+  BigInt &operator%=(const BigInt &rhs);
+  BigInt &operator<<=(const BigInt &rhs);
+  BigInt &operator>>=(const BigInt &rhs);
 
-  BigUInt &operator++();
-  BigUInt &operator--();
+  BigInt &operator++();
+  BigInt &operator--();
 
-  friend std::ostream &operator<<(std::ostream &os, const BigUInt &b);
+  friend std::ostream &operator<<(std::ostream &os, const BigInt &b);
 
   void normalize();
 
@@ -50,7 +52,10 @@ class BigUInt {
   std::vector<uint8_t> _data; // little-endian order
 };
 
-inline BigUInt::BigUInt(const std::string &str) {
+//------------------------------------------------------------------------------
+// Constructor
+
+inline BigInt::BigInt(const std::string &str) {
   if (!std::all_of(str.begin(), str.end(), isdigit)) {
     throw std::invalid_argument(
         "BigUInt::BigUInt(): string contains non-numeric characters");
@@ -61,15 +66,18 @@ inline BigUInt::BigUInt(const std::string &str) {
   }
 }
 
-inline bool BigUInt::operator==(const BigUInt &rhs) const {
+//------------------------------------------------------------------------------
+// Binary comparison operators
+
+inline bool BigInt::operator==(const BigInt &rhs) const {
   return _data == rhs._data;
 }
 
-inline bool BigUInt::operator!=(const BigUInt &rhs) const {
+inline bool BigInt::operator!=(const BigInt &rhs) const {
   return _data != rhs._data;
 }
 
-inline bool BigUInt::operator<(const BigUInt &rhs) const {
+inline bool BigInt::operator<(const BigInt &rhs) const {
   // little endian order means we cannot reuse the std::vector operator
   if (_data.size() != rhs._data.size()) {
     return _data.size() < rhs._data.size(); // shorter number is smaller
@@ -78,18 +86,21 @@ inline bool BigUInt::operator<(const BigUInt &rhs) const {
                                       rhs._data.rbegin(), rhs._data.rend());
 }
 
-inline bool BigUInt::operator>(const BigUInt &rhs) const { return rhs < *this; }
+inline bool BigInt::operator>(const BigInt &rhs) const { return rhs < *this; }
 
-inline bool BigUInt::operator<=(const BigUInt &rhs) const {
+inline bool BigInt::operator<=(const BigInt &rhs) const {
   return !(*this > rhs);
 }
 
-inline bool BigUInt::operator>=(const BigUInt &rhs) const {
+inline bool BigInt::operator>=(const BigInt &rhs) const {
   return !(*this < rhs);
 }
 
-inline BigUInt BigUInt::operator+(const BigUInt &rhs) const {
-  BigUInt sum;
+//------------------------------------------------------------------------------
+// Binary arithmetic operators
+
+inline BigInt BigInt::operator+(const BigInt &rhs) const {
+  BigInt sum;
   bool carry = false;
   size_t tmp_lhs{0};
   size_t tmp_rhs{0};
@@ -131,23 +142,18 @@ inline BigUInt BigUInt::operator+(const BigUInt &rhs) const {
   return sum;
 }
 
-inline BigUInt &BigUInt::operator+=(const BigUInt &rhs) {
+inline BigInt &BigInt::operator+=(const BigInt &rhs) {
   *this = *this + rhs;
   return *this;
 }
 
-inline BigUInt &BigUInt::operator++() {
-  *this += BigUInt("1");
-  return *this;
-}
-
-inline BigUInt BigUInt::operator*(const BigUInt &rhs) const {
+inline BigInt BigInt::operator*(const BigInt &rhs) const {
   // naive implementation
   // schoolbook algorithm -- should be faster than repeated addition
-  std::vector<BigUInt> sums;
+  std::vector<BigInt> sums;
   sums.reserve(_data.size() + rhs._data.size());
 
-  BigUInt product{};
+  BigInt product{};
   bool carry_bool = false;
   uint8_t carry_val{};
   size_t sum_index{0};
@@ -186,35 +192,51 @@ inline BigUInt BigUInt::operator*(const BigUInt &rhs) const {
   return product;
 }
 
-inline BigUInt &BigUInt::operator*=(const BigUInt &rhs) {
+inline BigInt &BigInt::operator*=(const BigInt &rhs) {
   *this = *this * rhs;
   return *this;
 }
 
-inline std::ostream &operator<<(std::ostream &os, const BigUInt &b) {
+//------------------------------------------------------------------------------
+// Increment decrement operators
+
+inline BigInt &BigInt::operator++() {
+  *this += BigInt("1");
+  return *this;
+}
+
+//------------------------------------------------------------------------------
+// Stream operators
+
+inline std::ostream &operator<<(std::ostream &os, const BigInt &b) {
   for (auto it = b._data.rbegin(); it != b._data.rend(); ++it) {
     os << static_cast<char>(*it + '0');
   }
   return os;
 }
 
-inline void BigUInt::normalize() {
+//------------------------------------------------------------------------------
+// Member functions
+
+inline void BigInt::normalize() {
   while (_data.size() > 1 && _data.back() == 0) {
     _data.pop_back();
   }
 }
 
-namespace sch {
-inline BigUInt pow(const BigUInt &base, const uint exp) {
-  BigUInt _base = base;
+//------------------------------------------------------------------------------
+// Non-member functions
+
+inline BigInt pow(const BigInt &base, const uint exp) {
+  BigInt _base = base;
   uint _exp = exp;
-  if (BigUInt(std::to_string(_exp)) == BigUInt(std::string{'0'})) {
-    return BigUInt(std::string{'1'});
+  if (BigInt(std::to_string(_exp)) == BigInt(std::string{'0'})) {
+    return BigInt(std::string{'1'});
   }
-  if (base == BigUInt(std::string{'0'})) {
-    return BigUInt(std::string{'0'});
+  if (base == BigInt(std::string{'0'})) {
+    return BigInt(std::string{'0'});
   }
-  BigUInt res{std::string{'1'}};
+  BigInt res{std::string{'1'}};
   while (_exp > 0) {
     if (_exp % 2 == 1) {
       res *= _base;
@@ -224,6 +246,7 @@ inline BigUInt pow(const BigUInt &base, const uint exp) {
   }
   return res;
 }
+
 } // namespace sch
 
-#endif // PROJECT_EULER_CPP17_BIGUINT_HPP_
+#endif // SCH_SRC_BIGUINT_HPP_
