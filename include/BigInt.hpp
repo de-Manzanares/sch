@@ -290,7 +290,8 @@ inline BigInt BigInt::operator*(const BigInt &rhs) const {
   for (const auto &sum : sums) {
     product += sum;
   }
-  product.normalize(); // idk if this is necessary in this function
+  product._sign = (_sign == rhs._sign) ? sign::positive : sign::negative;
+  product.normalize();
   return product;
 }
 
@@ -338,6 +339,9 @@ inline std::ostream &operator<<(std::ostream &os, const BigInt &b) {
 inline void BigInt::normalize() {
   while (_data.size() > 1 && _data.back() == 0) {
     _data.pop_back();
+  }
+  if (_data.empty() || _data == std::vector{uint8_t{0}}) {
+    _sign = sign::positive;
   }
 }
 

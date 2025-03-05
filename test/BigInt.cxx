@@ -179,8 +179,8 @@ TEST_CASE("simple multiplication") {
 TEST_CASE("operator: * multiplication") {
   for (int i = 0; i < 1000; ++i) {
     std::string str;
-    unsigned long long n1;
-    unsigned long long n2;
+    long long n1;
+    long long n2;
     sch::BigInt b_uint1;
     sch::BigInt b_uint2;
     for (int k = 0; k < 2; ++k) {
@@ -188,13 +188,16 @@ TEST_CASE("operator: * multiplication") {
       for (int j = 0; j < dist_length_product_check(rand_engine); ++j) {
         str += static_cast<char>(dist_digit(rand_engine) + '0');
       }
+      if (dist_digit(rand_engine) % 2 == 0) {
+        str.insert(0, 1, '-');
+      }
       if (k == 0) {
         b_uint1 = sch::BigInt{str};
-        n1 = std::stoull(str);
+        n1 = std::stoll(str);
       }
       if (k == 1) {
         b_uint2 = sch::BigInt{str};
-        n2 = std::stoull(str);
+        n2 = std::stoll(str);
       }
     }
     std::ostringstream os1;
