@@ -43,6 +43,7 @@ class BigInt {
   BigInt &operator<<=(const BigInt &rhs);
   BigInt &operator>>=(const BigInt &rhs);
 
+  BigInt &operator-();
   BigInt &operator++();
   BigInt &operator--();
 
@@ -84,20 +85,39 @@ inline BigInt::BigInt(const std::string &str) {
 // Binary comparison operators
 
 inline bool BigInt::operator==(const BigInt &rhs) const {
-  return _data == rhs._data;
+  return (_data == rhs._data && _sign == rhs._sign);
 }
 
 inline bool BigInt::operator!=(const BigInt &rhs) const {
-  return _data != rhs._data;
+  return !(*this == rhs);
 }
 
 inline bool BigInt::operator<(const BigInt &rhs) const {
-  // little endian order means we cannot reuse the std::vector operator
-  if (_data.size() != rhs._data.size()) {
-    return _data.size() < rhs._data.size(); // shorter number is smaller
+  // opposite sign considerations ---------------------
+  if (_sign == sign::negative && rhs._sign == sign::positive) {
+    return true;
   }
-  return std::lexicographical_compare(_data.rbegin(), _data.rend(),
-                                      rhs._data.rbegin(), rhs._data.rend());
+  if (_sign == sign::positive && rhs._sign == sign::negative) {
+    return false;
+  }
+  // same sign considerations -------------------------
+  // different lengths ------------------
+  // if positive, shorter is smaller
+  // if negative, longer is smaller
+  if (_data.size() != rhs._data.size()) {
+    return (_sign == sign::positive ? _data.size() < rhs._data.size()
+                                    : rhs._data.size() < _data.size());
+  }
+  // same length ------------------------
+  // if positive, lexicographically "smaller" is smaller
+  // if negative, lexicographically "larger" is smaller
+  return (
+      _sign == sign::positive
+          ? std::lexicographical_compare(_data.rbegin(), _data.rend(),
+                                         rhs._data.rbegin(), rhs._data.rend())
+          : std::lexicographical_compare(rhs._data.rbegin(), rhs._data.rend(),
+                                         _data.rbegin(), _data.rend()));
+  // --------------------------------------------------
 }
 
 inline bool BigInt::operator>(const BigInt &rhs) const { return rhs < *this; }
@@ -276,6 +296,14 @@ inline BigInt BigInt::operator*(const BigInt &rhs) const {
 
 inline BigInt &BigInt::operator*=(const BigInt &rhs) {
   *this = *this * rhs;
+  return *this;
+}
+
+// ------------------------------------------------------------------------------
+// Unary operators
+
+inline BigInt &BigInt::operator-() {
+  _sign = (_sign == sign::positive ? sign::negative : sign::positive);
   return *this;
 }
 

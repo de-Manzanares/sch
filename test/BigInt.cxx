@@ -33,6 +33,39 @@ TEST_CASE("constructor") {
   }
 }
 
+TEST_CASE("comparison operators") {
+  for (int i = 0; i < 1000; ++i) {
+    std::string str;
+    long long n1;
+    long long n2;
+    sch::BigInt b_uint1;
+    sch::BigInt b_uint2;
+    for (int k = 0; k < 2; ++k) {
+      str.clear();
+      for (int j = 0; j < dist_length_sum_check(rand_engine); ++j) {
+        str += static_cast<char>(dist_digit(rand_engine) + '0');
+      }
+      if (dist_digit(rand_engine) % 2 == 0) {
+        str.insert(0, 1, '-');
+      }
+      if (k == 0) {
+        b_uint1 = sch::BigInt{str};
+        n1 = std::stoll(str);
+      }
+      if (k == 1) {
+        b_uint2 = sch::BigInt{str};
+        n2 = std::stoll(str);
+      }
+    }
+    CHECK((n1 == n2) == (b_uint1 == b_uint2));
+    CHECK((n1 != n2) == (b_uint1 != b_uint2));
+    CHECK((n1 < n2) == (b_uint1 < b_uint2));
+    CHECK((n1 > n2) == (b_uint1 > b_uint2));
+    CHECK((n1 <= n2) == (b_uint1 <= b_uint2));
+    CHECK((n1 >= n2) == (b_uint1 >= b_uint2));
+  }
+}
+
 TEST_CASE("operator << : stream extraction") {
   for (int i = 0; i < 200; ++i) {
     std::string str;
