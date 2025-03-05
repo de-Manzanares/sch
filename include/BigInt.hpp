@@ -151,11 +151,69 @@ inline BigInt BigInt::operator+(const BigInt &rhs) const {
   return sum;
 }
 
+// is there a way to work around using copies to maintain constness?
 inline BigInt BigInt::operator-(const BigInt &rhs) const {
   if (*this == rhs) {
-    return BigInt(0);
+    return BigInt{"0"};
   }
-  return BigInt{0};
+  // working draft
+  BigInt difference{};
+  BigInt _lhs{*this};
+  BigInt _rhs{rhs};
+  size_t tmp_lhs{0};
+  size_t tmp_rhs{0};
+  if (_rhs > *this) {
+    difference._sign = sign::negative;
+  }
+  if (difference._sign == sign::positive) { // subtract rhs from lhs
+    while (tmp_lhs < _lhs._data.size() && tmp_rhs < _rhs._data.size()) {
+      if (_lhs._data[tmp_lhs] < _rhs._data[tmp_rhs]) {
+        _lhs._data[tmp_lhs] += 10;
+        if (_lhs._data[tmp_lhs + 1] != 0) {
+          _lhs._data[tmp_lhs + 1] -= 1;
+        } else {
+          size_t tmp_it{1};
+          while (_lhs._data[tmp_lhs + tmp_it] == 0) {
+            _lhs._data[tmp_lhs + tmp_it] = 9;
+            ++tmp_it;
+          }
+          _lhs._data[tmp_lhs + tmp_it] -= 1;
+        }
+      }
+      difference._data.push_back(_lhs._data[tmp_lhs] - _rhs._data[tmp_rhs]);
+      ++tmp_lhs;
+      ++tmp_rhs;
+    }
+  } else { // subtract lhs from rhs
+    while (tmp_lhs < _lhs._data.size() && tmp_rhs < _rhs._data.size()) {
+      if (_rhs._data[tmp_rhs] < _lhs._data[tmp_lhs]) {
+        _rhs._data[tmp_rhs] += 10;
+        if (_rhs._data[tmp_rhs + 1] != 0) {
+          _rhs._data[tmp_rhs + 1] -= 1;
+        } else {
+          size_t tmp_it{1};
+          while (_rhs._data[tmp_rhs + tmp_it] == 0) {
+            _rhs._data[tmp_rhs + tmp_it] = 9;
+            ++tmp_it;
+          }
+          _rhs._data[tmp_rhs + tmp_it] -= 1;
+        }
+      }
+      difference._data.push_back(_rhs._data[tmp_rhs] - _data[tmp_lhs]);
+      ++tmp_lhs;
+      ++tmp_rhs;
+    }
+  }
+  while (tmp_lhs < _lhs._data.size()) {
+    difference._data.push_back(_lhs._data[tmp_lhs]);
+    ++tmp_lhs;
+  }
+  while (tmp_rhs < _rhs._data.size()) {
+    difference._data.push_back(_rhs._data[tmp_rhs]);
+    ++tmp_rhs;
+  }
+  difference.normalize();
+  return difference;
 }
 
 inline BigInt &BigInt::operator+=(const BigInt &rhs) {

@@ -81,7 +81,43 @@ TEST_CASE("operator + : addition") {
   }
 }
 
-TEST_CASE("operator: ++x pre-increment") {
+TEST_CASE("simple subtraction") {
+  // 83765 - 17603
+  std::cout << sch::BigInt{"83765"} - sch::BigInt{"17603"};
+}
+TEST_CASE("operator - : subtraction") {
+  CHECK(sch::BigInt(std::string{'0'}) - sch::BigInt(std::string{'0'}) ==
+        sch::BigInt(std::string{'0'}));
+  for (int i = 0; i < 500; ++i) {
+    std::string str;
+    long long n1;
+    long long n2;
+    sch::BigInt b_uint1;
+    sch::BigInt b_uint2;
+    for (int k = 0; k < 2; ++k) {
+      str.clear();
+      for (int j = 0; j < dist_length_sum_check(rand_engine); ++j) {
+        str += static_cast<char>(dist_digit(rand_engine) + '0');
+      }
+      if (k == 0) {
+        b_uint1 = sch::BigInt{str};
+        n1 = std::stoll(str);
+      }
+      if (k == 1) {
+        b_uint2 = sch::BigInt{str};
+        n2 = std::stoll(str);
+      }
+    }
+    std::ostringstream os1;
+    std::ostringstream os2;
+    os1 << n1 - n2;
+    os2 << b_uint1 - b_uint2;
+    std::cout << n1 << " - " << n2 << " = " << b_uint1 - b_uint2 << '\n';
+    CHECK(os1.str() == os2.str());
+  }
+}
+
+TEST_CASE("operator ++ : pre-increment") {
   sch::BigInt b_uint("1");
   CHECK(++b_uint == sch::BigInt("2"));
   b_uint = sch::BigInt("999999999");
