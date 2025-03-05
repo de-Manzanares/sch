@@ -11,20 +11,36 @@ std::uniform_int_distribution dist_length_sum_check{1, 20};
 std::uniform_int_distribution dist_length_product_check{1, 8};
 
 TEST_CASE("constructor") {
-  for (int i = 0; i < 100; ++i) {
+  SECTION("positive") {
+    for (int i = 0; i < 100; ++i) {
+      std::string str;
+      for (int j = 0; j < dist_length(rand_engine); ++j) {
+        str += static_cast<char>(dist_digit(rand_engine) + '0');
+      }
+      sch::BigInt b_uint(str);
+    }
+  }
+  SECTION("negative") {
+    sch::BigInt bing{"-123456789"};
+    for (int i = 0; i < 100; ++i) {
+      std::string str;
+      for (int j = 0; j < dist_length(rand_engine); ++j) {
+        str += static_cast<char>(dist_digit(rand_engine) + '0');
+      }
+      str.insert(0, 1, '-');
+      sch::BigInt b_uint(str);
+    }
+  }
+}
+
+TEST_CASE("operator << : stream extraction") {
+  for (int i = 0; i < 200; ++i) {
     std::string str;
     for (int j = 0; j < dist_length(rand_engine); ++j) {
       str += static_cast<char>(dist_digit(rand_engine) + '0');
     }
-    sch::BigInt b_uint(str);
-  }
-}
-
-TEST_CASE("operator: stream extraction") {
-  for (int i = 0; i < 100; ++i) {
-    std::string str;
-    for (int j = 0; j < dist_length(rand_engine); ++j) {
-      str += static_cast<char>(dist_digit(rand_engine) + '0');
+    if (dist_digit(rand_engine) % 2 == 0) {
+      str.insert(0, 1, '-');
     }
     std::ostringstream os;
     sch::BigInt b_uint(str);
@@ -33,7 +49,7 @@ TEST_CASE("operator: stream extraction") {
   }
 }
 
-TEST_CASE("operator: + addition") {
+TEST_CASE("operator + : addition") {
   CHECK(sch::BigInt(std::string{'0'}) + sch::BigInt(std::string{'0'}) ==
         sch::BigInt(std::string{'0'}));
   for (int i = 0; i < 500; ++i) {

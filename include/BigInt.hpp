@@ -10,6 +10,8 @@
 
 namespace sch {
 
+enum class sign : bool { negative, positive };
+
 class BigInt {
  public:
   BigInt() = default;
@@ -49,6 +51,7 @@ class BigInt {
   void normalize();
 
  private:
+  sign _sign = sign::positive;
   std::vector<uint8_t> _data; // little-endian order
 };
 
@@ -56,11 +59,17 @@ class BigInt {
 // Constructor
 
 inline BigInt::BigInt(const std::string &str) {
-  if (!std::all_of(str.begin(), str.end(), isdigit)) {
+  int offset = 0;           // to ignore negative sign, if it exists
+  if (str.front() == '-') { // check for sign
+    offset = 1;
+    _sign = sign::negative;
+  }
+  // ensure there are no other non-numeric characters
+  if (!std::all_of(str.begin() + offset, str.end(), isdigit)) {
     throw std::invalid_argument(
         "BigUInt::BigUInt(): string contains non-numeric characters");
   }
-  _data = std::vector<uint8_t>(str.rbegin(), str.rend());
+  _data = std::vector<uint8_t>(str.rbegin(), str.rend() - offset);
   for (auto &digit : _data) {
     digit -= '0';
   }
@@ -142,6 +151,13 @@ inline BigInt BigInt::operator+(const BigInt &rhs) const {
   return sum;
 }
 
+inline BigInt BigInt::operator-(const BigInt &rhs) const {
+  if (*this == rhs) {
+    return BigInt(0);
+  }
+  return BigInt{0};
+}
+
 inline BigInt &BigInt::operator+=(const BigInt &rhs) {
   *this = *this + rhs;
   return *this;
@@ -209,6 +225,9 @@ inline BigInt &BigInt::operator++() {
 // Stream operators
 
 inline std::ostream &operator<<(std::ostream &os, const BigInt &b) {
+  if (b._sign == sign::negative) {
+    os << '-';
+  }
   for (auto it = b._data.rbegin(); it != b._data.rend(); ++it) {
     os << static_cast<char>(*it + '0');
   }
