@@ -1,6 +1,7 @@
 #ifndef SCH_INCLUDE_BIGINT_8_HPP_
 #define SCH_INCLUDE_BIGINT_8_HPP_
 
+#include "sign.h"
 #include <algorithm>
 #include <cstdint>
 #include <ostream>
@@ -9,8 +10,6 @@
 #include <vector>
 
 namespace sch {
-
-enum class sign : bool { negative, positive };
 
 class BigInt_8 {
  public:
@@ -70,7 +69,7 @@ inline BigInt_8::BigInt_8(const std::string &str) {
   // ensure there are no other non-numeric characters
   if (!std::all_of(str.begin() + offset, str.end(), isdigit)) {
     throw std::invalid_argument(
-        "BigUInt::BigUInt(): string contains non-numeric characters");
+        "BigInt_8::BigUInt_8(): string contains non-numeric characters");
   }
   _data = std::vector<uint8_t>(str.rbegin(), str.rend() - offset);
   for (auto &digit : _data) {
