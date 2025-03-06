@@ -228,3 +228,19 @@ TEST_CASE("sch::pow()") {
     }
   }
 }
+
+TEST_CASE("counting to 100 million") {
+  sch::BigInt n{"0"};
+  for (size_t i = 0; i < 1E8; ++i) {
+    ++n;
+  }
+  std::cout << n << '\n';
+}
+
+TEST_CASE("counting from 100 million") {
+  sch::BigInt n{"100000000"};
+  for (size_t i = 0; i < 1E8; ++i) {
+    --n;
+  }
+  std::cout << n << '\n';
+}

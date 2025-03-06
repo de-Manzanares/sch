@@ -350,7 +350,36 @@ inline BigInt BigInt::operator-() const {
 // Increment decrement operators
 
 inline BigInt &BigInt::operator++() {
-  *this += BigInt("1");
+  size_t i{0};
+  // while there is carry propagation
+  while (i < _data.size() && ++_data[i] == 10) {
+    // propagate
+    _data[i++] = 0;
+  }
+  // if we reach the end, execute the final carry
+  if (i == _data.size()) {
+    _data.push_back(1);
+  }
+  return *this;
+}
+
+inline BigInt &BigInt::operator--() {
+
+  if (_sign == sign::negative) {
+    // -X - 1 = -(X + 1) → Use `operator++()` on the absolute value
+    *this = -(-*this + BigInt{"1"});
+    return *this;
+  }
+
+  // Normal case: subtract 1 from a positive BigInt
+  size_t i = 0;
+  while (i < _data.size()) {
+    if (_data[i] > 0) {
+      --_data[i];  // No borrow needed
+      break;
+    }
+    _data[i++] = 9;  // Borrow needed
+  }
   return *this;
 }
 
