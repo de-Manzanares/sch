@@ -1,9 +1,11 @@
 #ifndef SCH_INCLUDE_BIGINT_HPP_
 #define SCH_INCLUDE_BIGINT_HPP_
 
+#include "BigInt_8.hpp"
 #include "sign.h"
 
 #include <cstdint>
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -15,6 +17,9 @@ class BigInt {
  public:
   BigInt() = default;
   explicit BigInt(const std::string &str);
+  explicit BigInt(const std::vector<uint64_t> &vec);
+  void normalize();
+  friend std::ostream &operator<<(std::ostream &os, const BigInt &bint);
 
  private:
   sign _sign = sign::positive;
@@ -49,6 +54,43 @@ inline BigInt::BigInt(const std::string &str) {
     else
       _str = "0"; // Ensure loop terminates
   }
+}
+inline BigInt::BigInt(const std::vector<uint64_t> &vec) {
+  for (const auto &digit : vec) {
+    _digits.push_back(digit);
+  }
+}
+
+//------------------------------------------------------------------------------
+// Member Functions
+
+inline void BigInt::normalize() {
+  while (!_digits.empty() && _digits.back() == 0) {
+    _digits.pop_back();
+  }
+}
+
+//------------------------------------------------------------------------------
+// Friend Functions
+// Stream operators
+
+inline std::ostream &operator<<(std::ostream &os, const BigInt &bint) {
+
+  std::vector<BigInt_8> bint_8;
+
+  for (const auto &digit : bint._digits) {
+    bint_8.push_back(BigInt_8{std::to_string(digit)});
+  }
+  for (size_t i = 0; i < bint_8.size(); i++) {
+    bint_8[i] = bint_8[i] * pow(pow(BigInt_8{"2"},32), i);
+  }
+  BigInt_8 res;
+  for (const auto &num : bint_8) {
+    res += num;
+  }
+  os << res;
+
+  return os;
 }
 
 } // namespace sch
