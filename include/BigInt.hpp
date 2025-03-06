@@ -271,11 +271,6 @@ inline BigInt BigInt::operator-(const BigInt &rhs) const {
   return difference;
 }
 
-inline BigInt &BigInt::operator+=(const BigInt &rhs) {
-  *this = *this + rhs;
-  return *this;
-}
-
 inline BigInt BigInt::operator*(const BigInt &rhs) const {
   // naive implementation
   // schoolbook algorithm -- should be faster than repeated addition
@@ -320,6 +315,16 @@ inline BigInt BigInt::operator*(const BigInt &rhs) const {
   product._sign = (_sign == rhs._sign) ? sign::positive : sign::negative;
   product.normalize();
   return product;
+}
+
+inline BigInt &BigInt::operator+=(const BigInt &rhs) {
+  *this = *this + rhs;
+  return *this;
+}
+
+inline BigInt &BigInt::operator-=(const BigInt &rhs) {
+  *this = *this - rhs;
+  return *this;
 }
 
 inline BigInt &BigInt::operator*=(const BigInt &rhs) {
