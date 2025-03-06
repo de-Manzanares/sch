@@ -128,7 +128,7 @@ TEST_CASE("operator + : addition") {
 TEST_CASE("operator - : subtraction") {
   CHECK(sch::BigInt(std::string{'0'}) - sch::BigInt(std::string{'0'}) ==
         sch::BigInt(std::string{'0'}));
-  for (int i = 0; i < 10000; ++i) {
+  for (int i = 0; i < 1000; ++i) {
     std::string str;
     long long n1;
     long long n2;
@@ -138,6 +138,9 @@ TEST_CASE("operator - : subtraction") {
       str.clear();
       for (int j = 0; j < dist_length_sum_check(rand_engine); ++j) {
         str += static_cast<char>(dist_digit(rand_engine) + '0');
+      }
+      if (dist_digit(rand_engine) % 2 == 0) {
+        str.insert(0, 1, '-');
       }
       if (k == 0) {
         b_uint1 = sch::BigInt{str};

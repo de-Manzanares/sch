@@ -196,6 +196,18 @@ inline BigInt BigInt::operator-(const BigInt &rhs) const {
   if (*this == rhs) {
     return BigInt{"0"};
   }
+  if (_sign != rhs._sign) {
+    if (_sign == sign::negative) {
+      return -(-BigInt{*this} + BigInt{rhs});
+    }
+    if (rhs._sign == sign::negative) {
+      return *this + (-BigInt{rhs});
+    }
+  }
+  if (_sign == sign::negative && rhs._sign == sign::negative) {
+    return -BigInt{rhs} - (-BigInt{*this});
+  }
+
   // working draft
   BigInt difference{};
   BigInt _lhs{*this};
