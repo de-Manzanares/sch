@@ -138,14 +138,14 @@ inline BigInt BigInt::operator+(const BigInt &rhs) const {
 
   if (_sign != rhs._sign) {
     if (_sign == sign::negative) {
-      return rhs - (-BigInt{*this});
+      return rhs - (-*this);
     }
     if (rhs._sign == sign::negative) {
-      return *this - (-BigInt{rhs});
+      return *this - (-rhs);
     }
   }
   if (_sign == sign::negative && rhs._sign == sign::negative) {
-    return -(-BigInt{*this} + -BigInt{rhs});
+    return -(-*this + (-rhs));
   }
 
   BigInt sum;
@@ -198,14 +198,14 @@ inline BigInt BigInt::operator-(const BigInt &rhs) const {
   }
   if (_sign != rhs._sign) {
     if (_sign == sign::negative) {
-      return -(-BigInt{*this} + BigInt{rhs});
+      return -(-(*this) + rhs);
     }
     if (rhs._sign == sign::negative) {
-      return *this + (-BigInt{rhs});
+      return *this + (-(rhs));
     }
   }
   if (_sign == sign::negative && rhs._sign == sign::negative) {
-    return -BigInt{rhs} - (-BigInt{*this});
+    return -(rhs) - (-(*this));
   }
 
   // working draft
@@ -335,7 +335,11 @@ inline BigInt &BigInt::operator-() {
   return *this;
 }
 
-inline BigInt BigInt::operator-() const { return -BigInt{*this}; }
+inline BigInt BigInt::operator-() const {
+  BigInt tmp = *this;
+  tmp._sign = (tmp._sign == sign::positive ? sign::negative : sign::positive);
+  return tmp;
+}
 
 //------------------------------------------------------------------------------
 // Increment decrement operators
