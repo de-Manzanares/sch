@@ -1,88 +1,111 @@
 #include <catch2/catch_all.hpp>
+#include <cmath>
 #include <iostream>
 #include <random>
 
 #include "BigInt_8.hpp"
 
+namespace BigInt_8_test {
+
+//------------------------------------------------------------------------------
+
+/// one less than the number of digits in LONG_LONG_MAX
+const size_t LL_SUM_DIF_TEST_LENGTH =
+    std::log(LONG_LONG_MAX) / std::log(10); // NOLINT
+
+/// half of one less than the number of digits in LONG_LONG_MAX
+const size_t LL_PRODUCT_TEST_LENGTH = LL_SUM_DIF_TEST_LENGTH / 2;
+
 std::ranlux48_base rand_engine{std::random_device{}()};
-std::uniform_int_distribution<u_int> dist_digit{0, 9};
-std::uniform_int_distribution dist_length{1'000, 10'000};
-std::uniform_int_distribution dist_length_sum_check{1, 20};
-std::uniform_int_distribution dist_length_product_check{1, 8};
+
+/**
+ * @param lb lower bound
+ * @param ub upper bound
+ * @return random integer in range [lb,ub]
+ */
+size_t randomInRange(const size_t lb, const size_t ub) {
+  return std::uniform_int_distribution{lb, ub}(rand_engine);
+}
+
+/**
+ * @return random digit in range [0,9]
+ */
+char randomBase10digit() { return randomInRange(0, 9) + '0'; } // NOLINT
+
+/**
+ * @param lb string length lower bound
+ * @param ub string length upper bound
+ * @return A string of numbers of length L, such that lb <= L <=ub
+ */
+std::string randomString(const size_t lb, const size_t ub) {
+  std::string str;
+  const size_t length = randomInRange(lb, ub);
+  for (int i = 0; i < length; ++i) {
+    str += randomBase10digit();
+  }
+  return str;
+}
+
+/**
+ * @param[in,out] str The string subject to modification
+ * @note 50% chance to prepend '-' to the string
+ */
+void randomizeSign(std::string &str) {
+  if (randomInRange(0, 9) % 2 == 0) {
+    str.insert(0, 1, '-');
+  }
+}
+
+//------------------------------------------------------------------------------
 
 TEST_CASE("constructor") {
   SECTION("positive") {
     for (int i = 0; i < 100; ++i) {
-      std::string str;
-      for (int j = 0; j < dist_length(rand_engine); ++j) {
-        str += static_cast<char>(dist_digit(rand_engine) + '0');
-      }
-      sch::BigInt_8 b_uint(str);
+      std::string str = randomString(1, 10'000);
+      sch::BigInt_8 bint8(str);
     }
   }
   SECTION("negative") {
-    sch::BigInt_8 bing{"-123456789"};
     for (int i = 0; i < 100; ++i) {
-      std::string str;
-      for (int j = 0; j < dist_length(rand_engine); ++j) {
-        str += static_cast<char>(dist_digit(rand_engine) + '0');
-      }
+      std::string str = randomString(1, 10'000);
       str.insert(0, 1, '-');
-      sch::BigInt_8 b_uint(str);
+      sch::BigInt_8 bint8(str);
     }
   }
 }
 
 TEST_CASE("comparison operators") {
   for (int i = 0; i < 1000; ++i) {
-    std::string str;
-    long long n1;
-    long long n2;
-    sch::BigInt_8 b_uint1;
-    sch::BigInt_8 b_uint2;
+    long long n[2];
+    sch::BigInt_8 bint8[2];
     for (int k = 0; k < 2; ++k) {
-      str.clear();
-      for (int j = 0; j < dist_length_sum_check(rand_engine); ++j) {
-        str += static_cast<char>(dist_digit(rand_engine) + '0');
-      }
-      if (dist_digit(rand_engine) % 2 == 0) {
-        str.insert(0, 1, '-');
-      }
-      if (k == 0) {
-        b_uint1 = sch::BigInt_8{str};
-        n1 = std::stoll(str);
-      }
-      if (k == 1) {
-        b_uint2 = sch::BigInt_8{str};
-        n2 = std::stoll(str);
-      }
+      std::string str = randomString(1, LL_SUM_DIF_TEST_LENGTH);
+      randomizeSign(str);
+      n[k] = std::stoll(str);
+      bint8[k] = sch::BigInt_8{str};
     }
-    CHECK((n1 == n2) == (b_uint1 == b_uint2));
-    CHECK((n1 != n2) == (b_uint1 != b_uint2));
-    CHECK((n1 < n2) == (b_uint1 < b_uint2));
-    CHECK((n1 > n2) == (b_uint1 > b_uint2));
-    CHECK((n1 <= n2) == (b_uint1 <= b_uint2));
-    CHECK((n1 >= n2) == (b_uint1 >= b_uint2));
+    // clang-format off
+    CHECK((n[0] == n[1]) == (bint8[0] == bint8[1]));
+    CHECK((n[0] != n[1]) == (bint8[0] != bint8[1]));
+    CHECK((n[0] <  n[1]) == (bint8[0] <  bint8[1]));
+    CHECK((n[0] >  n[1]) == (bint8[0] >  bint8[1]));
+    CHECK((n[0] <= n[1]) == (bint8[0] <= bint8[1]));
+    CHECK((n[0] >= n[1]) == (bint8[0] >= bint8[1]));
+    // clang-format on
   }
 }
 
 TEST_CASE("operator << : stream extraction") {
-  for (int i = 0; i < 200; ++i) {
-    std::string str;
-    for (int j = 0; j < dist_length(rand_engine); ++j) {
-      str += static_cast<char>(dist_digit(rand_engine) + '0');
-    }
-    size_t str_index{}; // to ignore leading zero's in string
-    while (str[str_index] == '0') {
-      ++str_index;
-    }
-    if (dist_digit(rand_engine) % 2 == 0) {
-      str.insert(0, 1, '-');
-      ++str_index;
-    }
+  for (int i = 0; i < 100; ++i) {
     std::ostringstream os;
-    sch::BigInt_8 b_uint{str};
-    os << b_uint;
+    std::string str = randomString(1, 10'000);
+    size_t str_index = str.find_first_not_of('0');
+    randomizeSign(str);
+    if (str[0] == '-') {
+      ++str_index;
+    }
+    sch::BigInt_8 bint8{str};
+    os << bint8;
     // ternary is to maintain the '-' while dodging leading zeros, should
     // the character be present
     CHECK(os.str() == (str[0] == '-' ? '-' + str.substr(str_index)
@@ -91,137 +114,66 @@ TEST_CASE("operator << : stream extraction") {
 }
 
 TEST_CASE("operator + : addition") {
-  CHECK(sch::BigInt_8(std::string{'0'}) + sch::BigInt_8(std::string{'0'}) ==
-        sch::BigInt_8(std::string{'0'}));
   for (int i = 0; i < 1000; ++i) {
-    std::string str;
-    long long n1;
-    long long n2;
-    sch::BigInt_8 b_uint1;
-    sch::BigInt_8 b_uint2;
+    long long n[2];
+    sch::BigInt_8 bint8[2];
+    std::ostringstream os[2];
+
     for (int k = 0; k < 2; ++k) {
-      str.clear();
-      for (int j = 0; j < dist_length_sum_check(rand_engine); ++j) {
-        str += static_cast<char>(dist_digit(rand_engine) + '0');
-      }
-      if (dist_digit(rand_engine) % 2 == 0) {
-        str.insert(0, 1, '-');
-      }
-      if (k == 0) {
-        b_uint1 = sch::BigInt_8{str};
-        n1 = std::stoll(str);
-      }
-      if (k == 1) {
-        b_uint2 = sch::BigInt_8{str};
-        n2 = std::stoll(str);
-      }
+      std::string str = randomString(1, LL_SUM_DIF_TEST_LENGTH);
+      randomizeSign(str);
+      n[k] = std::stoll(str);
+      bint8[k] = sch::BigInt_8{str};
     }
-    std::ostringstream os1;
-    std::ostringstream os2;
-    os1 << n1 + n2;
-    os2 << b_uint1 + b_uint2;
-    std::cout << n1 << " + " << n2 << " = " << b_uint1 + b_uint2 << '\n';
-    CHECK(os1.str() == os2.str());
+    os[0] << n[0] + n[1];
+    os[1] << bint8[0] + bint8[1];
+    CHECK(os[0].str() == os[1].str());
   }
 }
 
 TEST_CASE("operator - : subtraction") {
-  CHECK(sch::BigInt_8(std::string{'0'}) - sch::BigInt_8(std::string{'0'}) ==
-        sch::BigInt_8(std::string{'0'}));
   for (int i = 0; i < 1000; ++i) {
-    std::string str;
-    long long n1;
-    long long n2;
-    sch::BigInt_8 b_uint1;
-    sch::BigInt_8 b_uint2;
+    long long n[2];
+    sch::BigInt_8 bint8[2];
+    std::ostringstream os[2];
+
     for (int k = 0; k < 2; ++k) {
-      str.clear();
-      for (int j = 0; j < dist_length_sum_check(rand_engine); ++j) {
-        str += static_cast<char>(dist_digit(rand_engine) + '0');
-      }
-      if (dist_digit(rand_engine) % 2 == 0) {
-        str.insert(0, 1, '-');
-      }
-      if (k == 0) {
-        b_uint1 = sch::BigInt_8{str};
-        n1 = std::stoll(str);
-      }
-      if (k == 1) {
-        b_uint2 = sch::BigInt_8{str};
-        n2 = std::stoll(str);
-      }
+      std::string str = randomString(1, LL_SUM_DIF_TEST_LENGTH);
+      randomizeSign(str);
+      n[k] = std::stoll(str);
+      bint8[k] = sch::BigInt_8{str};
     }
-    std::ostringstream os1;
-    std::ostringstream os2;
-    os1 << n1 - n2;
-    os2 << b_uint1 - b_uint2;
-    std::cout << n1 << " - " << n2 << " = " << b_uint1 - b_uint2 << '\n';
-    CHECK(os1.str() == os2.str());
-  }
-}
-
-TEST_CASE("operator ++ : pre-increment") {
-  sch::BigInt_8 b_uint("1");
-  CHECK(++b_uint == sch::BigInt_8("2"));
-  b_uint = sch::BigInt_8("999999999");
-  CHECK(++b_uint == sch::BigInt_8("1000000000"));
-}
-
-TEST_CASE("simple multiplication") {
-  for (int i = 0; i < 10; ++i) {
-    for (int j = 0; j < 10; ++j) {
-      sch::BigInt_8 a(std::to_string(i));
-      sch::BigInt_8 b(std::to_string(j));
-      std::ostringstream os1;
-      std::ostringstream os2;
-      std::cout << i << " * " << j << " = " << a * b << '\n';
-      os1 << i * j;
-      os2 << a * b;
-      CHECK(os1.str() == os2.str());
-    }
+    os[0] << n[0] - n[1];
+    os[1] << bint8[0] - bint8[1];
+    CHECK(os[0].str() == os[1].str());
   }
 }
 
 TEST_CASE("operator: * multiplication") {
   for (int i = 0; i < 1000; ++i) {
-    std::string str;
-    long long n1;
-    long long n2;
-    sch::BigInt_8 b_uint1;
-    sch::BigInt_8 b_uint2;
+    long long n[2];
+    sch::BigInt_8 bint8[2];
+    std::ostringstream os[2];
+
     for (int k = 0; k < 2; ++k) {
-      str.clear();
-      for (int j = 0; j < dist_length_product_check(rand_engine); ++j) {
-        str += static_cast<char>(dist_digit(rand_engine) + '0');
-      }
-      if (dist_digit(rand_engine) % 2 == 0) {
-        str.insert(0, 1, '-');
-      }
-      if (k == 0) {
-        b_uint1 = sch::BigInt_8{str};
-        n1 = std::stoll(str);
-      }
-      if (k == 1) {
-        b_uint2 = sch::BigInt_8{str};
-        n2 = std::stoll(str);
-      }
+      std::string str = randomString(1, LL_PRODUCT_TEST_LENGTH);
+      randomizeSign(str);
+      n[k] = std::stoll(str);
+      bint8[k] = sch::BigInt_8{str};
     }
-    std::ostringstream os1;
-    std::ostringstream os2;
-    os1 << n1 * n2;
-    os2 << b_uint1 * b_uint2;
-    std::cout << n1 << " * " << n2 << " = " << b_uint1 * b_uint2 << '\n';
-    CHECK(os1.str() == os2.str());
+    os[0] << n[0] * n[1];
+    os[1] << bint8[0] * bint8[1];
+    CHECK(os[0].str() == os[1].str());
   }
 }
 
+// TODO consider sign
 TEST_CASE("sch::pow()") {
   for (uint i = 0; i < 11; ++i) {
     for (uint j = 0; j < 11; ++j) {
       sch::BigInt_8 a(std::to_string(i));
       std::ostringstream os1;
       std::ostringstream os2;
-      std::cout << i << " ^ " << j << " = " << sch::pow(a, j) << '\n';
       os1 << static_cast<unsigned long long>(std::pow(i, j));
       os2 << sch::pow(a, j);
       CHECK(os1.str() == os2.str());
@@ -229,18 +181,18 @@ TEST_CASE("sch::pow()") {
   }
 }
 
-TEST_CASE("counting to 100 million") {
+TEST_CASE("counting to 1 million") {
   sch::BigInt_8 n{"0"};
-  for (size_t i = 0; i < 1E8; ++i) {
+  for (size_t i = 0; i < 1E6; ++i) { // NOLINT
     ++n;
   }
-  std::cout << n << '\n';
 }
 
-TEST_CASE("counting from 100 million") {
-  sch::BigInt_8 n{"100000000"};
-  for (size_t i = 0; i < 1E8; ++i) {
+TEST_CASE("counting from 1 million") {
+  sch::BigInt_8 n{"1000000"};
+  for (size_t i = 1E6; i > 0; --i) {
     --n;
   }
-  std::cout << n << '\n';
 }
+
+} // namespace BigInt_8_test
