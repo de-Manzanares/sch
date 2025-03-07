@@ -195,11 +195,4 @@ TEST_CASE("counting from 1 million") {
   }
 }
 
-TEST_CASE("impressing my brother Nolan") {
-  std::cout << std::pow(269420, 1738) << '\n';
-  const sch::BigInt_8 tmp = sch::pow(sch::BigInt_8{"269420"}, 1738);
-  std::cout << tmp.scientificNotation(6) << '\n';
-  std::cout << tmp << '\n';
-}
-
 } // namespace BigInt_8_test
