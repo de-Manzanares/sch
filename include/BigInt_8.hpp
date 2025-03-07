@@ -49,6 +49,21 @@ class BigInt_8 {
 
   friend std::ostream &operator<<(std::ostream &os, const BigInt_8 &b);
 
+  std::string scientificNotation(const size_t sigfigs) const {
+    std::string str;
+    str += std::to_string(_data.back());
+    str += ".";
+    for (int i = 1; i < sigfigs; ++i) {
+      str += std::to_string(_data.at(_data.size() - (i + 1)));
+    }
+    if (_data.at(_data.size() - (sigfigs + 2)) >= '5') {
+      str.back() += 1;
+    }
+    str += " x 10^";
+    str += std::to_string(_data.size() - 1);
+    return str;
+  }
+
   void normalize();
 
  private:
