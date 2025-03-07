@@ -52,8 +52,19 @@ class BigInt_8 {
   void normalize();
 
  private:
-  sign _sign = sign::positive;
-  std::vector<uint8_t> _data{}; // little-endian order
+  // constants
+  static constexpr uint64_t BASE = 10; ///< data is stored in base 10
+
+  // private variables
+  sign _sign = sign::positive;  ///< sign of the number
+  std::vector<uint8_t> _data{}; ///< @note little endian order
+
+  //------------------------------------------------------------
+  // Addition operator helpers
+  static void add(size_t &it_lhs, const BigInt_8 &lhs, size_t &it_rhs,
+                  const BigInt_8 &rhs, bool &carry, BigInt_8 &sum);
+  static void carryDown(size_t &it, const BigInt_8 &bint_8, bool &carry,
+                        BigInt_8 &sum);
 };
 
 //------------------------------------------------------------------------------
@@ -133,63 +144,86 @@ inline bool BigInt_8::operator>=(const BigInt_8 &rhs) const {
 }
 
 //------------------------------------------------------------------------------
-// Binary arithmetic operators
+// Addition operator
 
 inline BigInt_8 BigInt_8::operator+(const BigInt_8 &rhs) const {
-
+  // todo optimizations for adding to 0 or 1 and so on
+  // Initially, addition and subtraction were implemented assuming two
+  // non-negative numbers. Sign handling was introduced afterward; the most
+  // straightforward approach to implementation was the conditional statements
+  // below. This allows us to reuse the subtraction (addition) logic.
   if (_sign != rhs._sign) {
     if (_sign == sign::negative) {
-      return rhs - (-*this);
+      return rhs - -*this;
     }
     if (rhs._sign == sign::negative) {
-      return *this - (-rhs);
+      return *this - -rhs;
     }
   }
   if (_sign == sign::negative && rhs._sign == sign::negative) {
-    return -(-*this + (-rhs));
+    return -(-*this + -rhs);
   }
 
   BigInt_8 sum;
   bool carry = false;
-  size_t tmp_lhs{0};
-  size_t tmp_rhs{0};
+  size_t it_lhs{0}; // iterate through the digits of the lhs
+  size_t it_rhs{0}; // iterate through the digits of the rhs
 
-  while (tmp_lhs < _data.size() && tmp_rhs < rhs._data.size()) {
-    sum._data.push_back(_data[tmp_lhs] + rhs._data[tmp_rhs] + (carry ? 1 : 0));
-    if (sum._data.back() > 9) {
-      carry = true;
-      sum._data.back() -= 10;
-    } else {
-      carry = false;
-    }
-    ++tmp_lhs;
-    ++tmp_rhs;
-  }
-  while (tmp_lhs < _data.size()) {
-    sum._data.push_back(_data[tmp_lhs] + (carry ? 1 : 0));
-    if (sum._data.back() > 9) {
-      carry = true;
-      sum._data.back() -= 10;
-    } else {
-      carry = false;
-    }
-    ++tmp_lhs;
-  }
-  while (tmp_rhs < rhs._data.size()) {
-    sum._data.push_back(rhs._data[tmp_rhs] + (carry ? 1 : 0));
-    if (sum._data.back() > 9) {
-      carry = true;
-      sum._data.back() -= 10;
-    } else {
-      carry = false;
-    }
-    ++tmp_rhs;
-  }
-  if (carry) {
+  add(it_lhs, *this, it_rhs, rhs, carry, sum);
+  carryDown(it_lhs, *this, carry, sum);
+  carryDown(it_rhs, rhs, carry, sum);
+
+  if (carry) { // final carry
     sum._data.push_back(1);
   }
   sum.normalize();
   return sum;
+}
+
+/**
+ * @brief School book addition.
+ * @param[in,out] it_lhs iterate through the lhs digits
+ * @param[in] lhs the left-hand-side addend
+ * @param[in,out] it_rhs iterate through the rhs digits
+ * @param[in] rhs the right-hand-side addend
+ * @param[in,out] carry carry 1?
+ * @param[in,out] sum the sum
+ */
+inline void BigInt_8::add(size_t &it_lhs, const BigInt_8 &lhs, size_t &it_rhs,
+                          const BigInt_8 &rhs, bool &carry, BigInt_8 &sum) {
+  while (it_lhs < lhs._data.size() && it_rhs < rhs._data.size()) {
+    sum._data.push_back(lhs._data[it_lhs] + rhs._data[it_rhs] +
+                        (carry ? 1 : 0));
+    if (sum._data.back() > BASE - 1) {
+      carry = true;
+      sum._data.back() -= BASE;
+    } else {
+      carry = false;
+    }
+    ++it_lhs;
+    ++it_rhs;
+  }
+}
+
+/**
+ * @brief School book addition -- performs all the x + 0 columns
+ * @param[in,out] it iterate through the digits
+ * @param bint_8 the number we are iterating through
+ * @param[in,out] carry carry 1?
+ * @param[in,out] sum the sum
+ */
+inline void BigInt_8::carryDown(size_t &it, const BigInt_8 &bint_8, bool &carry,
+                                BigInt_8 &sum) {
+  while (it < bint_8._data.size()) {
+    sum._data.push_back(bint_8._data[it] + (carry ? 1 : 0));
+    if (sum._data.back() > BASE - 1) {
+      carry = true;
+      sum._data.back() -= BASE;
+    } else {
+      carry = false;
+    }
+    ++it;
+  }
 }
 
 // is there a way to work around using copies to maintain constness?
