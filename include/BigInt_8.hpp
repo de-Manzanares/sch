@@ -59,15 +59,13 @@ class BigInt_8 {
   sign _sign = sign::positive;  ///< sign of the number
   std::vector<uint8_t> _data{}; ///< @note little endian order
 
-  //------------------------------------------------------------
-  // Addition operator helpers
+  // Addition operator helpers ---------------------------------
   static void add(size_t &it_lhs, const BigInt_8 &lhs, size_t &it_rhs,
                   const BigInt_8 &rhs, bool &carry, BigInt_8 &sum);
   static void a_carryDown(size_t &it, const BigInt_8 &bint_8, bool &carry,
                           BigInt_8 &sum);
 
-  //------------------------------------------------------------
-  // Subtraction operator helpers
+  // Subtraction operator helpers ------------------------------
   static void subtract(size_t &it_lhs, BigInt_8 &lhs, size_t &it_rhs,
                        const BigInt_8 &rhs, BigInt_8 &difference);
   static void s_carryDown(size_t &it, const BigInt_8 &bint_8,
@@ -150,8 +148,7 @@ inline bool BigInt_8::operator>=(const BigInt_8 &rhs) const {
   return !(*this < rhs);
 }
 
-//------------------------------------------------------------------------------
-// Addition operator
+// ADDITION OPERATOR -----------------------------------------------------------
 
 inline BigInt_8 BigInt_8::operator+(const BigInt_8 &rhs) const {
   // todo optimizations for adding to 0 or 1 and so on
@@ -176,6 +173,9 @@ inline BigInt_8 BigInt_8::operator+(const BigInt_8 &rhs) const {
   bool carry = false;
   size_t it_lhs{0}; // iterate through the digits of the lhs
   size_t it_rhs{0}; // iterate through the digits of the rhs
+
+  sum._data.reserve(_data.size() > rhs._data.size() ? _data.size()
+                                                    : rhs._data.size());
 
   add(it_lhs, *this, it_rhs, rhs, carry, sum);
   a_carryDown(it_lhs, *this, carry, sum);
@@ -234,8 +234,7 @@ inline void BigInt_8::a_carryDown(size_t &it, const BigInt_8 &bint_8,
   }
 }
 
-//------------------------------------------------------------------------------
-// Subtraction operator
+// SUBTRACTION OPERATOR --------------------------------------------------------
 
 // is there a way to work around using copies to maintain constness?
 inline BigInt_8 BigInt_8::operator-(const BigInt_8 &rhs) const {
@@ -264,6 +263,9 @@ inline BigInt_8 BigInt_8::operator-(const BigInt_8 &rhs) const {
   BigInt_8 _rhs{rhs};   // mutable copy
   size_t it_lhs{0};     // iterate through the digits of the lhs
   size_t it_rhs{0};     // iterate through the digits of the rhs
+
+  difference._data.reserve(_data.size() > rhs._data.size() ? _data.size()
+                                                           : rhs._data.size());
 
   if (_rhs > _lhs) {
     difference._sign = sign::negative; // otherwise dif sign is pos. by default
