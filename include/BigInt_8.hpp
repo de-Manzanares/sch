@@ -63,8 +63,15 @@ class BigInt_8 {
   // Addition operator helpers
   static void add(size_t &it_lhs, const BigInt_8 &lhs, size_t &it_rhs,
                   const BigInt_8 &rhs, bool &carry, BigInt_8 &sum);
-  static void carryDown(size_t &it, const BigInt_8 &bint_8, bool &carry,
-                        BigInt_8 &sum);
+  static void a_carryDown(size_t &it, const BigInt_8 &bint_8, bool &carry,
+                          BigInt_8 &sum);
+
+  //------------------------------------------------------------
+  // Subtraction operator helpers
+  static void subtract(size_t &it_lhs, BigInt_8 &lhs, size_t &it_rhs,
+                       const BigInt_8 &rhs, BigInt_8 &difference);
+  static void s_carryDown(size_t &it, const BigInt_8 &bint_8,
+                          BigInt_8 &difference);
 };
 
 //------------------------------------------------------------------------------
@@ -149,9 +156,10 @@ inline bool BigInt_8::operator>=(const BigInt_8 &rhs) const {
 inline BigInt_8 BigInt_8::operator+(const BigInt_8 &rhs) const {
   // todo optimizations for adding to 0 or 1 and so on
   // Initially, addition and subtraction were implemented assuming two
-  // non-negative numbers. Sign handling was introduced afterward; the most
-  // straightforward approach to implementation was the conditional statements
-  // below. This allows us to reuse the subtraction (addition) logic.
+  // non-negative integers. Sign handling was introduced afterward; the most
+  // straightforward approach to implementation was(is?,were?) the
+  // conditional statements below. This allows us to reuse the subtraction
+  // (addition) logic.
   if (_sign != rhs._sign) {
     if (_sign == sign::negative) {
       return rhs - -*this;
@@ -170,8 +178,8 @@ inline BigInt_8 BigInt_8::operator+(const BigInt_8 &rhs) const {
   size_t it_rhs{0}; // iterate through the digits of the rhs
 
   add(it_lhs, *this, it_rhs, rhs, carry, sum);
-  carryDown(it_lhs, *this, carry, sum);
-  carryDown(it_rhs, rhs, carry, sum);
+  a_carryDown(it_lhs, *this, carry, sum);
+  a_carryDown(it_rhs, rhs, carry, sum);
 
   if (carry) { // final carry
     sum._data.push_back(1);
@@ -181,7 +189,7 @@ inline BigInt_8 BigInt_8::operator+(const BigInt_8 &rhs) const {
 }
 
 /**
- * @brief School book addition.
+ * @brief School-book addition.
  * @param[in,out] it_lhs iterate through the lhs digits
  * @param[in] lhs the left-hand-side addend
  * @param[in,out] it_rhs iterate through the rhs digits
@@ -206,14 +214,14 @@ inline void BigInt_8::add(size_t &it_lhs, const BigInt_8 &lhs, size_t &it_rhs,
 }
 
 /**
- * @brief School book addition -- performs all the x + 0 columns
+ * @brief School-book addition -- performs all the x + 0 columns
  * @param[in,out] it iterate through the digits
  * @param bint_8 the number we are iterating through
  * @param[in,out] carry carry 1?
  * @param[in,out] sum the sum
  */
-inline void BigInt_8::carryDown(size_t &it, const BigInt_8 &bint_8, bool &carry,
-                                BigInt_8 &sum) {
+inline void BigInt_8::a_carryDown(size_t &it, const BigInt_8 &bint_8,
+                                  bool &carry, BigInt_8 &sum) {
   while (it < bint_8._data.size()) {
     sum._data.push_back(bint_8._data[it] + (carry ? 1 : 0));
     if (sum._data.back() > BASE - 1) {
@@ -226,8 +234,16 @@ inline void BigInt_8::carryDown(size_t &it, const BigInt_8 &bint_8, bool &carry,
   }
 }
 
+//------------------------------------------------------------------------------
+// Subtraction operator
+
 // is there a way to work around using copies to maintain constness?
 inline BigInt_8 BigInt_8::operator-(const BigInt_8 &rhs) const {
+  // todo optimizations for subtracting to and from 0 or 1 and so on
+  // Initially, addition and subtraction were implemented assuming two
+  // non-negative integers. Sign handling was introduced afterward; the most
+  // straightforward approach to implementation was(is?,were?) the conditional
+  // statements below. This allows us to reuse the subtraction (addition) logic.
   if (*this == rhs) {
     return BigInt_8{"0"};
   }
@@ -243,68 +259,73 @@ inline BigInt_8 BigInt_8::operator-(const BigInt_8 &rhs) const {
     return -(rhs) - (-(*this));
   }
 
-  // working draft
   BigInt_8 difference{};
-  BigInt_8 _lhs{*this};
-  BigInt_8 _rhs{rhs};
-  size_t tmp_lhs{0};
-  size_t tmp_rhs{0};
+  BigInt_8 _lhs{*this}; // mutable copy
+  BigInt_8 _rhs{rhs};   // mutable copy
+  size_t it_lhs{0};     // iterate through the digits of the lhs
+  size_t it_rhs{0};     // iterate through the digits of the rhs
 
   if (_rhs > _lhs) {
-    difference._sign = sign::negative;
+    difference._sign = sign::negative; // otherwise dif sign is pos. by default
   }
   if (difference._sign == sign::positive) { // subtract rhs from lhs
-    while (tmp_lhs < _lhs._data.size() && tmp_rhs < _rhs._data.size()) {
-      if (_lhs._data[tmp_lhs] < _rhs._data[tmp_rhs]) {
-        _lhs._data[tmp_lhs] += 10;
-        if (_lhs._data[tmp_lhs + 1] != 0) {
-          _lhs._data[tmp_lhs + 1] -= 1;
-        } else {
-          size_t tmp_it{1};
-          while ((tmp_lhs + tmp_it) < _lhs._data.size() - 1 &&
-                 _lhs._data[tmp_lhs + tmp_it] == 0) {
-            _lhs._data[tmp_lhs + tmp_it] = 9;
-            ++tmp_it;
-          }
-          _lhs._data[tmp_lhs + tmp_it] -= 1;
-        }
-      }
-      difference._data.push_back(_lhs._data[tmp_lhs] - _rhs._data[tmp_rhs]);
-      ++tmp_lhs;
-      ++tmp_rhs;
-    }
+    subtract(it_lhs, _lhs, it_rhs, _rhs, difference);
   } else { // subtract lhs from rhs
-    while (tmp_lhs < _lhs._data.size() && tmp_rhs < _rhs._data.size()) {
-      if (_rhs._data[tmp_rhs] < _lhs._data[tmp_lhs]) {
-        _rhs._data[tmp_rhs] += 10;
-        if (_rhs._data[tmp_rhs + 1] != 0) {
-          _rhs._data[tmp_rhs + 1] -= 1;
-        } else {
-          size_t tmp_it{1};
-          while ((tmp_rhs + tmp_it) < _rhs._data.size() - 1 &&
-                 _rhs._data[tmp_rhs + tmp_it] == 0) {
-            _rhs._data[tmp_rhs + tmp_it] = 9;
-            ++tmp_it;
-          }
-          _rhs._data[tmp_rhs + tmp_it] -= 1;
-        }
-      }
-      difference._data.push_back(_rhs._data[tmp_rhs] - _data[tmp_lhs]);
-      ++tmp_lhs;
-      ++tmp_rhs;
-    }
+    subtract(it_rhs, _rhs, it_lhs, _lhs, difference);
   }
-  while (tmp_lhs < _lhs._data.size()) {
-    difference._data.push_back(_lhs._data[tmp_lhs]);
-    ++tmp_lhs;
-  }
-  while (tmp_rhs < _rhs._data.size()) {
-    difference._data.push_back(_rhs._data[tmp_rhs]);
-    ++tmp_rhs;
-  }
+  s_carryDown(it_lhs, _lhs, difference);
+  s_carryDown(it_rhs, _rhs, difference);
+
   difference.normalize();
   return difference;
 }
+
+/**
+ * @brief School-book subtraction
+ * @param[in,out] it_lhs iterate through the digits of the lhs
+ * @param[in,out] lhs the minuend
+ * @param[in,out] it_rhs iterate through the digits of the rhs
+ * @param rhs the subtrahend
+ * @param[in,out] difference the difference
+ */
+inline void BigInt_8::subtract(size_t &it_lhs, BigInt_8 &lhs, size_t &it_rhs,
+                               const BigInt_8 &rhs, BigInt_8 &difference) {
+  while (it_lhs < lhs._data.size() && it_rhs < rhs._data.size()) {
+    if (lhs._data[it_lhs] < rhs._data[it_rhs]) {
+      lhs._data[it_lhs] += 10;
+      if (lhs._data[it_lhs + 1] != 0) {
+        lhs._data[it_lhs + 1] -= 1;
+      } else {
+        size_t tmp_it{1};
+        while ((it_lhs + tmp_it) < lhs._data.size() - 1 &&
+               lhs._data[it_lhs + tmp_it] == 0) {
+          lhs._data[it_lhs + tmp_it] = 9;
+          ++tmp_it;
+        }
+        lhs._data[it_lhs + tmp_it] -= 1;
+      }
+    }
+    difference._data.push_back(lhs._data[it_lhs] - rhs._data[it_rhs]);
+    ++it_lhs;
+    ++it_rhs;
+  }
+}
+
+/**
+ * School-book subtraction -- performs all the x - 0 columns
+ * @param[in,out] it iterate through the digits
+ * @param bint_8 the number we are iterating through
+ * @param[in,out] difference the difference
+ */
+inline void BigInt_8::s_carryDown(size_t &it, const BigInt_8 &bint_8,
+                                  BigInt_8 &difference) {
+  while (it < bint_8._data.size()) {
+    difference._data.push_back(bint_8._data[it]);
+    ++it;
+  }
+}
+
+//------------------------------------------------------------------------------
 
 inline BigInt_8 BigInt_8::operator*(const BigInt_8 &rhs) const {
   // naive implementation
