@@ -4,6 +4,8 @@
 #include "sign.h"
 #include <algorithm>
 #include <cstdint>
+#include <execution>
+#include <numeric>
 #include <ostream>
 #include <stdexcept>
 #include <string>
@@ -70,6 +72,10 @@ class BigInt_8 {
                        const BigInt_8 &rhs, BigInt_8 &difference);
   static void s_carryDown(size_t &it, const BigInt_8 &bint_8,
                           BigInt_8 &difference);
+
+  // Multiplication operator helpers ---------------------------
+  static BigInt_8 longMultiplication(const BigInt_8 &bottom,
+                                     const BigInt_8 &top);
 };
 
 //------------------------------------------------------------------------------
@@ -327,53 +333,62 @@ inline void BigInt_8::s_carryDown(size_t &it, const BigInt_8 &bint_8,
   }
 }
 
-//------------------------------------------------------------------------------
+// MULTIPLICATION OPERATOR -----------------------------------------------------
 
 inline BigInt_8 BigInt_8::operator*(const BigInt_8 &rhs) const {
-  // naive implementation
-  // schoolbook algorithm -- should be faster than repeated addition
-  std::vector<BigInt_8> sums;
-  sums.reserve(_data.size() + rhs._data.size());
-
-  BigInt_8 product{};
-  bool carry_bool = false;
-  uint8_t carry_val{};
-  size_t sum_index{0};
-
-  // multiply digits and carry
-  for (const auto &digit0 : _data) {
-    sums.emplace_back(); // reserve does not actually initialize any data
-    // pad with zeros
-    if (sums.size() > 1) {
-      for (size_t i = 0; i < sums.size() - 1; ++i) {
-        sums[sum_index]._data.push_back(0);
-      }
-    }
-    for (const auto &digit1 : rhs._data) {
-      sums[sum_index]._data.push_back(digit0 * digit1 +
-                                      (carry_bool ? carry_val : 0));
-      if (sums[sum_index]._data.back() > 9) {
-        carry_bool = true;
-        carry_val = sums[sum_index]._data.back() / 10;
-        sums[sum_index]._data.back() %= 10;
-      } else {
-        carry_bool = false;
-      }
-    }
-    if (carry_bool) {
-      sums[sum_index]._data.push_back(carry_val);
-    }
-    ++sum_index;
-    carry_bool = false;
-    carry_val = 0;
-  }
-  for (const auto &sum : sums) {
-    product += sum;
-  }
-  product._sign = (_sign == rhs._sign) ? sign::positive : sign::negative;
-  product.normalize();
-  return product;
+  // minimize number of operations by putting the shorter number on the "bottom"
+  return _data.size() < rhs._data.size() ? longMultiplication(*this, rhs)
+                                         : longMultiplication(rhs, *this);
 }
+
+/**
+ * @brief School-book multiplication
+ * @param bottom the number on the "bottom" of the long multiplication setup
+ * @param top the number on the "top" of the long multiplication setup
+ * @return the product of the two factors
+ */
+inline BigInt_8 BigInt_8::longMultiplication(const BigInt_8 &bottom,
+                                             const BigInt_8 &top) {
+  BigInt_8 final_product{};       // the sum of the intermediate products
+  std::vector<BigInt_8> products; // the intermediate products
+  uint8_t carry{0};               // what value is being carried?
+  size_t latest_prod{0};          // latest intermediate product
+
+  products.reserve(bottom._data.size());
+
+  for (const auto &n_b : bottom._data) {
+    // reserve does not initialize the objects
+    products.emplace_back();
+    products[latest_prod]._data.reserve(products.size() + top._data.size());
+
+    // the intermediate products must be raised to the correct power of 10
+    products[latest_prod]._data.resize(products.size() - 1, 0);
+
+    // multiply the bottom digit by each of the top digits
+    for (const auto &n_t : top._data) {
+      products[latest_prod]._data.push_back(n_b * n_t + (carry ? carry : 0));
+      if (products[latest_prod]._data.back() > BASE - 1) {
+        carry = products[latest_prod]._data.back() / BASE;
+        products[latest_prod]._data.back() %= BASE;
+      } else {
+        carry = 0;
+      }
+    }
+    if (carry) { // final carry of the iteration
+      products[latest_prod]._data.push_back(carry);
+    }
+    ++latest_prod; // moving on
+    carry = 0;     // reset for the next intermediate product
+  }
+  final_product = std::reduce(std::execution::par, products.begin(),
+                              products.end(), BigInt_8{});
+  final_product._sign =
+      bottom._sign == top._sign ? sign::positive : sign::negative;
+  final_product.normalize();
+  return final_product;
+}
+
+//------------------------------------------------------------------------------
 
 inline BigInt_8 &BigInt_8::operator+=(const BigInt_8 &rhs) {
   *this = *this + rhs;
