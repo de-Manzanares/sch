@@ -45,9 +45,25 @@ class BigInt_8 {
   BigInt_8 operator*(const BigInt_8 &rhs) const;
   BigInt_8 operator/(const BigInt_8 &rhs) const;
   BigInt_8 operator%(const BigInt_8 &rhs) const;
+
   BigInt_8 &operator+=(const BigInt_8 &rhs);
+  BigInt_8 &operator+=(const char *str);
+  BigInt_8 &operator+=(const std::string &str);
+  template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+  BigInt_8 &operator+=(const T &val);
+
   BigInt_8 &operator-=(const BigInt_8 &rhs);
+  BigInt_8 &operator-=(const char *str);
+  BigInt_8 &operator-=(const std::string &str);
+  template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+  BigInt_8 &operator-=(const T &val);
+
   BigInt_8 &operator*=(const BigInt_8 &rhs);
+  BigInt_8 &operator*=(const char *str);
+  BigInt_8 &operator*=(const std::string &str);
+  template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+  BigInt_8 &operator*=(const T &val);
+
   BigInt_8 &operator/=(const BigInt_8 &rhs);
   BigInt_8 &operator%=(const BigInt_8 &rhs);
   BigInt_8 &operator<<=(const BigInt_8 &rhs);
@@ -431,6 +447,32 @@ inline void BigInt_8::a_carryDown(size_t &it, const BigInt_8 &bint_8,
   }
 }
 
+inline BigInt_8 operator+(const BigInt_8 &lhs, const char *str) {
+  return lhs + BigInt_8{std::string{str}};
+}
+
+inline BigInt_8 operator+(const char *str, const BigInt_8 &rhs) {
+  return BigInt_8{std::string{str}} + rhs;
+}
+
+inline BigInt_8 operator+(const BigInt_8 &lhs, const std::string &str) {
+  return lhs + BigInt_8{str};
+}
+
+inline BigInt_8 operator+(const std::string &str, const BigInt_8 &rhs) {
+  return BigInt_8{str} + rhs;
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+BigInt_8 operator+(const BigInt_8 &lhs, const T &val) {
+  return lhs + BigInt_8{val};
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+BigInt_8 operator+(const T &val, const BigInt_8 &rhs) {
+  return BigInt_8{val} + rhs;
+}
+
 // SUBTRACTION OPERATOR --------------------------------------------------------
 
 // is there a way to work around using copies to maintain constness?
@@ -524,6 +566,32 @@ inline void BigInt_8::s_carryDown(size_t &it, const BigInt_8 &bint_8,
   }
 }
 
+inline BigInt_8 operator-(const BigInt_8 &lhs, const char *str) {
+  return lhs - BigInt_8{std::string{str}};
+}
+
+inline BigInt_8 operator-(const char *str, const BigInt_8 &rhs) {
+  return BigInt_8{std::string{str}} - rhs;
+}
+
+inline BigInt_8 operator-(const BigInt_8 &lhs, const std::string &str) {
+  return lhs - BigInt_8{str};
+}
+
+inline BigInt_8 operator-(const std::string &str, const BigInt_8 &rhs) {
+  return BigInt_8{str} - rhs;
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+BigInt_8 operator-(const BigInt_8 &lhs, const T &val) {
+  return lhs - BigInt_8{val};
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+BigInt_8 operator-(const T &val, const BigInt_8 &rhs) {
+  return BigInt_8{val} - rhs;
+}
+
 // MULTIPLICATION OPERATOR -----------------------------------------------------
 
 inline BigInt_8 BigInt_8::operator*(const BigInt_8 &rhs) const {
@@ -579,10 +647,80 @@ inline BigInt_8 BigInt_8::longMultiplication(const BigInt_8 &bottom,
   return final_product;
 }
 
-//------------------------------------------------------------------------------
+inline BigInt_8 operator*(const BigInt_8 &lhs, const char *str) {
+  return lhs * BigInt_8{std::string{str}};
+}
+
+inline BigInt_8 operator*(const char *str, const BigInt_8 &rhs) {
+  return BigInt_8{std::string{str}} * rhs;
+}
+
+inline BigInt_8 operator*(const BigInt_8 &lhs, const std::string &str) {
+  return lhs * BigInt_8{str};
+}
+
+inline BigInt_8 operator*(const std::string &str, const BigInt_8 &rhs) {
+  return BigInt_8{str} * rhs;
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+BigInt_8 operator*(const BigInt_8 &lhs, const T &val) {
+  return lhs * BigInt_8{val};
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+BigInt_8 operator*(const T &val, const BigInt_8 &rhs) {
+  return BigInt_8{val} * rhs;
+}
+
+// DIVISION OPERATOR -----------------------------------------------------------
+
+inline BigInt_8 BigInt_8::operator/(const BigInt_8 &rhs) const {
+  BigInt_8 dividend{*this};
+  BigInt_8 divisor{rhs};
+  BigInt_8 quotient{"0"};
+  BigInt_8 remainder{"0"};
+
+  dividend._sign = sign::positive;
+  divisor._sign = sign::positive;
+
+  if (divisor == dividend) {
+    quotient = BigInt_8{"1"};
+    quotient._sign = this->_sign == rhs._sign ? sign::positive : sign::negative;
+    return quotient;
+  }
+  if (divisor > dividend) {
+    return BigInt_8{"0"};
+  }
+
+  // std::map<uint8_t, BigInt_8> products = {{1,divisor},{2,divisor*2},};
+
+  for (auto digit = dividend._data.rbegin(); digit != divisor._data.rend();
+       ++digit) {
+  }
+
+  return quotient;
+}
+
+// SELF ASSIGNMENT OPERATORS ---------------------------------------------------
 
 inline BigInt_8 &BigInt_8::operator+=(const BigInt_8 &rhs) {
   *this = *this + rhs;
+  return *this;
+}
+
+inline BigInt_8 &BigInt_8::operator+=(const char *str) {
+  *this = *this + BigInt_8{std::string{str}};
+  return *this;
+}
+
+inline BigInt_8 &BigInt_8::operator+=(const std::string &str) {
+  *this = *this + BigInt_8{str};
+  return *this;
+}
+
+template <typename T, typename> BigInt_8 &BigInt_8::operator+=(const T &val) {
+  *this = *this + BigInt_8{val};
   return *this;
 }
 
@@ -591,8 +729,40 @@ inline BigInt_8 &BigInt_8::operator-=(const BigInt_8 &rhs) {
   return *this;
 }
 
+inline BigInt_8 &BigInt_8::operator-=(const char *str) {
+  *this = *this - BigInt_8{std::string{str}};
+  return *this;
+}
+
+inline BigInt_8 &BigInt_8::operator-=(const std::string &str) {
+  *this = *this - BigInt_8{str};
+  return *this;
+}
+
+template <typename T, typename>
+BigInt_8 &BigInt_8::operator-=(const T &val) {
+  *this = *this - BigInt_8{val};
+  return *this;
+}
+
 inline BigInt_8 &BigInt_8::operator*=(const BigInt_8 &rhs) {
   *this = *this * rhs;
+  return *this;
+}
+
+inline BigInt_8 &BigInt_8::operator*=(const char *str) {
+  *this = *this * BigInt_8{std::string{str}};
+  return *this;
+}
+
+inline BigInt_8 &BigInt_8::operator*=(const std::string &str) {
+  *this = *this * BigInt_8{str};
+  return *this;
+}
+
+template <typename T, typename >
+BigInt_8 &BigInt_8::operator*=(const T &val) {
+  *this = *this * BigInt_8{val};
   return *this;
 }
 
