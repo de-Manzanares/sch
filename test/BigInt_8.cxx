@@ -167,6 +167,12 @@ TEST_CASE("operator: * multiplication") {
   }
 }
 
+TEST_CASE("operator: / division") {
+  sch::BigInt_8 dividend{123};
+  sch::BigInt_8 divisor{-200};
+  std::cout << dividend / divisor << std::endl;
+}
+
 // TODO consider sign
 TEST_CASE("sch::pow()") {
   for (uint i = 0; i < 11; ++i) {

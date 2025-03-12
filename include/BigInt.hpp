@@ -30,7 +30,6 @@ class BigInt {
 // Constructor
 
 inline BigInt::BigInt(const std::string &str) {
-
   std::string _str = str;
 
   while (!_str.empty() && _str != "0") {
@@ -76,7 +75,6 @@ inline void BigInt::normalize() {
 // Stream operators
 
 inline std::ostream &operator<<(std::ostream &os, const BigInt &bint) {
-
   std::vector<BigInt_8> bint_8;
   bint_8.reserve(bint._digits.size());
 

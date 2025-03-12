@@ -797,7 +797,6 @@ inline BigInt_8 &BigInt_8::operator++() {
 }
 
 inline BigInt_8 &BigInt_8::operator--() {
-
   if (_sign == sign::negative) {
     // -X - 1 = -(X + 1) → Use `operator++()` on the absolute value
     *this = -(-*this + BigInt_8{"1"});
