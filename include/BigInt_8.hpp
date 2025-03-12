@@ -9,6 +9,7 @@
 #include <ostream>
 #include <stdexcept>
 #include <string>
+#include <type_traits>
 #include <vector>
 
 namespace sch {
@@ -17,12 +18,20 @@ class BigInt_8 {
  public:
   BigInt_8() = default;
   explicit BigInt_8(const std::string &str);
+  template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+  explicit BigInt_8(T val) : BigInt_8(std::to_string(val)) {}
   ~BigInt_8() = default;
 
-  BigInt_8(const BigInt_8 &) = default;
-  BigInt_8(BigInt_8 &&) = default;
+  BigInt_8(const BigInt_8 &) = default;       // copy constructor
+  BigInt_8(BigInt_8 &&) = default;            // move constructor
+  BigInt_8 &operator=(BigInt_8 &&) = default; // move assignment
+
+  // Copy assignment
   BigInt_8 &operator=(const BigInt_8 &) = default;
-  BigInt_8 &operator=(BigInt_8 &&) = default;
+  BigInt_8 &operator=(const char *str);
+  BigInt_8 &operator=(const std::string &str);
+  template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+  BigInt_8 &operator=(T val);
 
   bool operator==(const BigInt_8 &rhs) const;
   bool operator!=(const BigInt_8 &rhs) const;
@@ -101,6 +110,23 @@ inline BigInt_8::BigInt_8(const std::string &str) {
   // having leading zeros will cause incorrect comparisons between BigInts
   // best to get rid of them now
   this->normalize();
+}
+
+// COPY ASSIGNMENT -------------------------------------------------------------
+
+inline BigInt_8 &BigInt_8::operator=(const char *str) {
+  *this = BigInt_8{std::string(str)};
+  return *this;
+}
+
+inline BigInt_8 &BigInt_8::operator=(const std::string &str) {
+  *this = BigInt_8{str};
+  return *this;
+}
+
+template <typename T, typename> BigInt_8 &BigInt_8::operator=(T val) {
+  *this = BigInt_8{val};
+  return *this;
 }
 
 //------------------------------------------------------------------------------

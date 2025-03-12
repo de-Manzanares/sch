@@ -62,14 +62,14 @@ TEST_CASE("constructor") {
   SECTION("positive") {
     for (int i = 0; i < 100; ++i) {
       std::string str = randomString(1, 10'000);
-      sch::BigInt_8 bint8(str);
+      sch::BigInt_8 bint8{str};
     }
   }
   SECTION("negative") {
     for (int i = 0; i < 100; ++i) {
       std::string str = randomString(1, 10'000);
       str.insert(0, 1, '-');
-      sch::BigInt_8 bint8(str);
+      sch::BigInt_8 bint8{str};
     }
   }
 }
@@ -82,7 +82,7 @@ TEST_CASE("comparison operators") {
       std::string str = randomString(1, LL_SUM_DIF_TEST_LENGTH);
       randomizeSign(str);
       n[k] = std::stoll(str);
-      bint8[k] = sch::BigInt_8{str};
+      bint8[k] = n[k];
     }
     // clang-format off
     CHECK((n[0] == n[1]) == (bint8[0] == bint8[1]));
@@ -123,7 +123,7 @@ TEST_CASE("operator + : addition") {
       std::string str = randomString(1, LL_SUM_DIF_TEST_LENGTH);
       randomizeSign(str);
       n[k] = std::stoll(str);
-      bint8[k] = sch::BigInt_8{str};
+      bint8[k] = n[k];
     }
     os[0] << n[0] + n[1];
     os[1] << bint8[0] + bint8[1];
@@ -141,7 +141,7 @@ TEST_CASE("operator - : subtraction") {
       std::string str = randomString(1, LL_SUM_DIF_TEST_LENGTH);
       randomizeSign(str);
       n[k] = std::stoll(str);
-      bint8[k] = sch::BigInt_8{str};
+      bint8[k] = n[k];
     }
     os[0] << n[0] - n[1];
     os[1] << bint8[0] - bint8[1];
@@ -159,7 +159,7 @@ TEST_CASE("operator: * multiplication") {
       std::string str = randomString(1, LL_PRODUCT_TEST_LENGTH);
       randomizeSign(str);
       n[k] = std::stoll(str);
-      bint8[k] = sch::BigInt_8{str};
+      bint8[k] = n[k];
     }
     os[0] << n[0] * n[1];
     os[1] << bint8[0] * bint8[1];
@@ -171,7 +171,7 @@ TEST_CASE("operator: * multiplication") {
 TEST_CASE("sch::pow()") {
   for (uint i = 0; i < 11; ++i) {
     for (uint j = 0; j < 11; ++j) {
-      sch::BigInt_8 a(std::to_string(i));
+      sch::BigInt_8 a{i};
       std::ostringstream os1;
       std::ostringstream os2;
       os1 << static_cast<unsigned long long>(std::pow(i, j));
@@ -182,14 +182,14 @@ TEST_CASE("sch::pow()") {
 }
 
 TEST_CASE("counting to 1 million") {
-  sch::BigInt_8 n{"0"};
+  sch::BigInt_8 n{0};
   for (size_t i = 0; i < 1E6; ++i) { // NOLINT
     ++n;
   }
 }
 
 TEST_CASE("counting from 1 million") {
-  sch::BigInt_8 n{"1000000"};
+  sch::BigInt_8 n{100000};
   for (size_t i = 1E6; i > 0; --i) {
     --n;
   }
