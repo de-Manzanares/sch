@@ -19,7 +19,7 @@ class BigInt_8 {
   BigInt_8() = default;
   explicit BigInt_8(const std::string &str);
   template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-  explicit BigInt_8(T val) : BigInt_8(std::to_string(val)) {}
+  explicit BigInt_8(const T &val) : BigInt_8(std::to_string(val)) {}
   ~BigInt_8() = default;
 
   BigInt_8(const BigInt_8 &) = default;       // copy constructor
@@ -31,7 +31,7 @@ class BigInt_8 {
   BigInt_8 &operator=(const char *str);
   BigInt_8 &operator=(const std::string &str);
   template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-  BigInt_8 &operator=(T val);
+  BigInt_8 &operator=(const T &val);
 
   bool operator==(const BigInt_8 &rhs) const;
   bool operator!=(const BigInt_8 &rhs) const;
@@ -124,21 +124,76 @@ inline BigInt_8 &BigInt_8::operator=(const std::string &str) {
   return *this;
 }
 
-template <typename T, typename> BigInt_8 &BigInt_8::operator=(T val) {
+template <typename T, typename> BigInt_8 &BigInt_8::operator=(const T &val) {
   *this = BigInt_8{val};
   return *this;
 }
 
-//------------------------------------------------------------------------------
-// Binary comparison operators
+// EQUALITY OPERATORS-----------------------------------------------------------
 
 inline bool BigInt_8::operator==(const BigInt_8 &rhs) const {
   return (_data == rhs._data && _sign == rhs._sign);
 }
 
+inline bool operator==(const BigInt_8 &lhs, const char *str) {
+  return lhs == BigInt_8{std::string{str}};
+}
+
+inline bool operator==(const char *str, const BigInt_8 &rhs) {
+  return rhs == BigInt_8{std::string{str}};
+}
+
+inline bool operator==(const BigInt_8 &lhs, const std::string &str) {
+  return lhs == BigInt_8{str};
+}
+
+inline bool operator==(const std::string &str, const BigInt_8 &rhs) {
+  return rhs == BigInt_8{str};
+}
+
+template <typename T, typename>
+bool operator==(const BigInt_8 &lhs, const T &rhs) {
+  return lhs == BigInt_8{rhs};
+}
+
+template <typename T, typename>
+bool operator==(const T &lhs, const BigInt_8 &rhs) {
+  return BigInt_8{lhs} == rhs;
+}
+
 inline bool BigInt_8::operator!=(const BigInt_8 &rhs) const {
   return !(*this == rhs);
 }
+
+inline bool operator!=(const BigInt_8 &lhs, const char *str) {
+  return lhs != BigInt_8{std::string{str}};
+}
+
+inline bool operator!=(const char *str, const BigInt_8 &rhs) {
+  return rhs != BigInt_8{std::string{str}};
+}
+
+inline bool operator!=(const BigInt_8 &lhs, const std::string &str) {
+  return lhs != BigInt_8{str};
+}
+
+inline bool operator!=(const std::string &str, const BigInt_8 &rhs) {
+  return rhs != BigInt_8{str};
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+bool operator!=(const BigInt_8 &lhs, const T &val) {
+  return lhs != BigInt_8{val};
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+bool operator!=(const T &val, const BigInt_8 &rhs) {
+  return rhs != BigInt_8{val};
+}
+
+// RELATIONAL OPERATORS --------------------------------------------------------
+
+// LESS THAN -------------------------------------------------------------------
 
 inline bool BigInt_8::operator<(const BigInt_8 &rhs) const {
   // opposite sign considerations ---------------------
@@ -168,16 +223,126 @@ inline bool BigInt_8::operator<(const BigInt_8 &rhs) const {
   // --------------------------------------------------
 }
 
+inline bool operator<(const BigInt_8 &lhs, const char *str) {
+  return lhs < BigInt_8{std::string{str}};
+}
+
+inline bool operator<(const char *str, const BigInt_8 &rhs) {
+  return BigInt_8{std::string{str}} < rhs;
+}
+
+inline bool operator<(const BigInt_8 &lhs, const std::string &str) {
+  return lhs < BigInt_8{std::string{str}};
+}
+
+inline bool operator<(const std::string &str, const BigInt_8 &rhs) {
+  return BigInt_8{std::string{str}} < rhs;
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+bool operator<(const BigInt_8 &lhs, const T &val) {
+  return lhs < BigInt_8{val};
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+bool operator<(const T &val, const BigInt_8 &rhs) {
+  return BigInt_8{val} < rhs;
+}
+
 inline bool BigInt_8::operator>(const BigInt_8 &rhs) const {
   return rhs < *this;
 }
+
+// GREATER THAN ----------------------------------------------------------------
+
+inline bool operator>(const BigInt_8 &lhs, const char *str) {
+  return lhs > BigInt_8{std::string{str}};
+}
+
+inline bool operator>(const char *str, const BigInt_8 &rhs) {
+  return BigInt_8{std::string{str}} > rhs;
+}
+
+inline bool operator>(const BigInt_8 &lhs, const std::string &str) {
+  return lhs > BigInt_8{str};
+}
+
+inline bool operator>(const std::string &str, const BigInt_8 &rhs) {
+  return BigInt_8{str} > rhs;
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+bool operator>(const BigInt_8 &lhs, const T &val) {
+  return lhs > BigInt_8{val};
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+bool operator>(const T &val, const BigInt_8 &rhs) {
+  return BigInt_8{val} > rhs;
+}
+
+// LESS THAN OR EQUAL TO -------------------------------------------------------
 
 inline bool BigInt_8::operator<=(const BigInt_8 &rhs) const {
   return !(*this > rhs);
 }
 
+inline bool operator<=(const BigInt_8 &lhs, const char *str) {
+  return lhs <= BigInt_8{std::string{str}};
+}
+
+inline bool operator<=(const char *str, const BigInt_8 &rhs) {
+  return BigInt_8{std::string{str}} <= rhs;
+}
+
+inline bool operator<=(const BigInt_8 &lhs, const std::string &str) {
+  return lhs <= BigInt_8{str};
+}
+
+inline bool operator<=(const std::string &str, const BigInt_8 &rhs) {
+  return BigInt_8{str} <= rhs;
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+bool operator<=(const BigInt_8 &lhs, const T &val) {
+  return lhs <= BigInt_8{val};
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+bool operator<=(const T &val, const BigInt_8 &rhs) {
+  return BigInt_8{val} <= rhs;
+}
+
+// GREATER THAN OR EQUAL TO ----------------------------------------------------
+
 inline bool BigInt_8::operator>=(const BigInt_8 &rhs) const {
   return !(*this < rhs);
+}
+
+inline bool operator>=(const BigInt_8 &lhs, const char *str) {
+  return lhs >= BigInt_8{std::string{str}};
+}
+
+inline bool operator>=(const char *str, const BigInt_8 &rhs) {
+  return BigInt_8{std::string{str}} >= rhs;
+}
+
+inline bool operator>=(const BigInt_8 &lhs, const std::string &str) {
+  return lhs >= BigInt_8{str};
+}
+
+inline bool operator>=(const std::string &str, const BigInt_8 &rhs) {
+  return BigInt_8{str} >= rhs;
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+bool operator>=(const BigInt_8 &lhs, const T &val) {
+  return lhs >= BigInt_8{val};
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+bool operator>=(const T &val, const BigInt_8 &rhs) {
+  return BigInt_8{val} >= rhs;
 }
 
 // ADDITION OPERATOR -----------------------------------------------------------
