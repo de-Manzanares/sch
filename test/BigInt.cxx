@@ -15,7 +15,7 @@ TEST_CASE("constructor") {
     for (int i = 0; i < 500; ++i) {
       std::string str;
       const size_t length = dist_length(rand_engine);
-      for (int j = 0; j < length; ++j) {
+      for (size_t j = 0; j < length; ++j) {
         str += static_cast<char>(dist_digit(rand_engine) + '0');
       }
       std::cout << str.size() << '\n';
@@ -27,7 +27,6 @@ TEST_CASE("constructor") {
 TEST_CASE("stream extraction") {
   for (int i = 0; i < 1; ++i) {
     std::string str;
-    const size_t length = dist_length(rand_engine);
     for (int j = 0; j < 1000; ++j) {
       str += static_cast<char>(dist_digit(rand_engine) + '0');
     }

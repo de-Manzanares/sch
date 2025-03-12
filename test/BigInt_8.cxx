@@ -40,7 +40,7 @@ char randomBase10digit() { return randomInRange(0, 9) + '0'; } // NOLINT
 std::string randomString(const size_t lb, const size_t ub) {
   std::string str;
   const size_t length = randomInRange(lb, ub);
-  for (int i = 0; i < length; ++i) {
+  for (size_t i = 0; i < length; ++i) {
     str += randomBase10digit();
   }
   return str;

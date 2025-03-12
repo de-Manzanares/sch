@@ -363,7 +363,7 @@ bool operator>=(const T &val, const BigInt_8 &rhs) {
 
 // ADDITION OPERATOR -----------------------------------------------------------
 
-inline BigInt_8 BigInt_8::operator+(const BigInt_8 &rhs) const {
+inline BigInt_8 BigInt_8::operator+(const BigInt_8 &rhs) const { // NOLINT
   // todo optimizations for adding to 0 or 1 and so on
   // Initially, addition and subtraction were implemented assuming two
   // non-negative integers. Sign handling was introduced afterward; the most
@@ -476,7 +476,8 @@ BigInt_8 operator+(const T &val, const BigInt_8 &rhs) {
 // SUBTRACTION OPERATOR --------------------------------------------------------
 
 // is there a way to work around using copies to maintain constness?
-inline BigInt_8 BigInt_8::operator-(const BigInt_8 &rhs) const {
+
+inline BigInt_8 BigInt_8::operator-(const BigInt_8 &rhs) const { // NOLINT
   // todo optimizations for subtracting to and from 0 or 1 and so on
   // Initially, addition and subtraction were implemented assuming two
   // non-negative integers. Sign handling was introduced afterward; the most
@@ -739,8 +740,7 @@ inline BigInt_8 &BigInt_8::operator-=(const std::string &str) {
   return *this;
 }
 
-template <typename T, typename>
-BigInt_8 &BigInt_8::operator-=(const T &val) {
+template <typename T, typename> BigInt_8 &BigInt_8::operator-=(const T &val) {
   *this = *this - BigInt_8{val};
   return *this;
 }
@@ -760,8 +760,7 @@ inline BigInt_8 &BigInt_8::operator*=(const std::string &str) {
   return *this;
 }
 
-template <typename T, typename >
-BigInt_8 &BigInt_8::operator*=(const T &val) {
+template <typename T, typename> BigInt_8 &BigInt_8::operator*=(const T &val) {
   *this = *this * BigInt_8{val};
   return *this;
 }

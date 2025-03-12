@@ -40,7 +40,8 @@ inline BigInt::BigInt(const std::string &str) {
     // Perform manual division of _str by BASE
     for (const char c : _str) {
       const uint64_t current = remainder * 10 + (c - '0');
-      quotient.push_back((current / BASE) + '0');
+      // (*-narrowing-conversions)
+      quotient.push_back((current / BASE) + '0'); // NOLINT
       remainder = current % BASE;
     }
 
@@ -48,8 +49,8 @@ inline BigInt::BigInt(const std::string &str) {
     _digits.push_back(remainder);
 
     // Remove leading zeros in quotient
-    size_t firstNonZero = quotient.find_first_not_of('0');
-    if (firstNonZero != std::string::npos)
+    if (const size_t firstNonZero = quotient.find_first_not_of('0');
+        firstNonZero != std::string::npos)
       _str = quotient.substr(firstNonZero);
     else
       _str = "0"; // Ensure loop terminates
@@ -77,12 +78,13 @@ inline void BigInt::normalize() {
 inline std::ostream &operator<<(std::ostream &os, const BigInt &bint) {
 
   std::vector<BigInt_8> bint_8;
+  bint_8.reserve(bint._digits.size());
 
   for (const auto &digit : bint._digits) {
-    bint_8.push_back(BigInt_8{std::to_string(digit)});
+    bint_8.emplace_back(std::to_string(digit));
   }
   for (size_t i = 0; i < bint_8.size(); i++) {
-    bint_8[i] = bint_8[i] * pow(pow(BigInt_8{"2"},32), i);
+    bint_8[i] = bint_8[i] * pow(pow(BigInt_8{"2"}, 32), i);
   }
   BigInt_8 res;
   for (const auto &num : bint_8) {
