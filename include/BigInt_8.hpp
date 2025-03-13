@@ -98,9 +98,13 @@ class BigInt_8 {
   static void s_carryDown(size_t &it, const BigInt_8 &bint_8,
                           BigInt_8 &difference);
 
-  // Multiplication operator helpers ---------------------------
+  // Multiplication operator -----------------------------------
   static BigInt_8 longMultiplication(const BigInt_8 &bottom,
                                      const BigInt_8 &top);
+
+  // Division operator -----------------------------------------
+  static std::pair<BigInt_8, BigInt_8> longDivision(const BigInt_8 &dividend,
+                                                    const BigInt_8 &divisor);
 };
 
 //------------------------------------------------------------------------------
@@ -116,7 +120,7 @@ inline BigInt_8::BigInt_8(const std::string &str) {
   // ensure there are no other non-numeric characters
   if (!std::all_of(str.begin() + offset, str.end(), isdigit)) {
     throw std::invalid_argument(
-        "BigInt_8::BigUInt_8(): string contains non-numeric characters");
+        "BigInt_8::BigUInt_8() : string contains non-numeric characters");
   }
   _data = std::vector<uint8_t>(str.rbegin(), str.rend() - offset);
   for (auto &digit : _data) {
@@ -676,40 +680,62 @@ BigInt_8 operator*(const T &val, const BigInt_8 &rhs) {
 
 // DIVISION OPERATOR -----------------------------------------------------------
 
+// todo modulo with negative numbers ... ?
+
 inline BigInt_8 BigInt_8::operator/(const BigInt_8 &rhs) const {
-  BigInt_8 dividend{*this};
-  BigInt_8 divisor{rhs};
+  return longDivision(*this, rhs).first;
+}
+
+/**
+ * @brief School-book division
+ * @param dividend the number to be divided
+ * @param divisor the number to divide by
+ * @return {quotient,remainder}
+ */
+inline std::pair<BigInt_8, BigInt_8>
+BigInt_8::longDivision(const BigInt_8 &dividend, const BigInt_8 &divisor) {
+  if (divisor == "0") {
+    throw std::runtime_error(
+        "BigInt_8::operator/() : Division by zero is undefined");
+  }
+
+  auto chooseSign = [&dividend, &divisor]() {
+    return dividend._sign == divisor._sign ? sign::positive : sign::negative;
+  };
+
+  BigInt_8 m_dividend{dividend}; // mutable copy
+  BigInt_8 m_divisor{divisor};   // mutable copy
   BigInt_8 quotient{};
 
-  dividend._sign = sign::positive;
-  divisor._sign = sign::positive;
+  m_dividend._sign = sign::positive;
+  m_divisor._sign = sign::positive;
 
-  if (divisor == dividend) {
+  if (m_divisor == m_dividend) {
     quotient = 1;
-    quotient._sign = this->_sign == rhs._sign ? sign::positive : sign::negative;
-    return quotient;
+    quotient._sign = chooseSign();
+    return {quotient, 0};
   }
-  if (divisor > dividend) {
-    return BigInt_8{0};
+  if (m_divisor > m_dividend) {
+    return {0, dividend};
   }
-  if (divisor == 1) {
-    quotient = *this;
-    quotient._sign = this->_sign == rhs._sign ? sign::positive : sign::negative;
-    return quotient;
+  if (m_divisor == 1) {
+    quotient = m_dividend;
+    quotient._sign = chooseSign();
+    return {quotient, 0};
   }
 
   BigInt_8 remainder{};
   std::vector<BigInt_8> products(10);
   products[0] = 0;
   std::generate(std::next(products.begin()), products.end(),
-                [acc = BigInt_8{0}, &divisor]() mutable {
-                  acc += divisor;
+                [acc = BigInt_8{0}, &m_divisor]() mutable {
+                  acc += m_divisor;
                   return acc;
                 });
 
   // find the first place of the quotient
-  auto it = dividend._data.rbegin();
-  while (it != dividend._data.rend()) {
+  auto it = m_dividend._data.rbegin();
+  while (it != m_dividend._data.rend()) {
     remainder._data.insert(remainder._data.begin(), *it);
     ++it;
 
@@ -718,13 +744,12 @@ inline BigInt_8 BigInt_8::operator/(const BigInt_8 &rhs) const {
     multiple = std::distance(products.begin(),
                              std::prev(std::upper_bound(
                                  products.begin(), products.end(), remainder)));
-    // }
     quotient._data.insert(quotient._data.begin(), multiple);
-    remainder -= divisor * multiple;
+    remainder -= m_divisor * multiple;
   }
   quotient.normalize();
-  quotient._sign = this->_sign == rhs._sign ? sign::positive : sign::negative;
-  return quotient;
+  quotient._sign = chooseSign();
+  return {quotient, remainder};
 }
 
 // SELF ASSIGNMENT OPERATORS ---------------------------------------------------
