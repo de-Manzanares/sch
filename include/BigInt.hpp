@@ -1004,6 +1004,14 @@ inline void BigInt::normalize() {
 //------------------------------------------------------------------------------
 // Non-member functions
 
+/**
+ * @tparam T A built-in integral type (signed or unsigned).
+ *           Must be non-negative when calling this function.
+ * @param base The base value (x in x^y).
+ * @param exp  The exponent value (y in x^y).
+ * @return The result of x^y as a BigInt.
+ * @throws std::invalid_argument if `exp` is negative.
+ */
 template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
 BigInt pow(const BigInt &base, const T exp) {
   if (exp < 0) {
