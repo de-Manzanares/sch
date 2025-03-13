@@ -65,6 +65,11 @@ class BigInt_8 {
   BigInt_8 &operator*=(const T &val);
 
   BigInt_8 &operator/=(const BigInt_8 &rhs);
+  BigInt_8 &operator/=(const char *str);
+  BigInt_8 &operator/=(const std::string &str);
+  template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+  BigInt_8 &operator/=(const T &val);
+
   BigInt_8 &operator%=(const BigInt_8 &rhs);
   BigInt_8 &operator<<=(const BigInt_8 &rhs);
   BigInt_8 &operator>>=(const BigInt_8 &rhs);
@@ -752,6 +757,32 @@ BigInt_8::longDivision(const BigInt_8 &dividend, const BigInt_8 &divisor) {
   return {quotient, remainder};
 }
 
+inline BigInt_8 operator/(const BigInt_8 &lhs, const char *str) {
+  return lhs / BigInt_8{std::string{str}};
+}
+
+inline BigInt_8 operator/(const char *str, const BigInt_8 &rhs) {
+  return BigInt_8{std::string{str}} / rhs;
+}
+
+inline BigInt_8 operator/(const BigInt_8 &lhs, const std::string &str) {
+  return lhs / BigInt_8{str};
+}
+
+inline BigInt_8 operator/(const std::string &str, const BigInt_8 &rhs) {
+  return BigInt_8{str} / rhs;
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+BigInt_8 operator/(const BigInt_8 &lhs, const T &val) {
+  return lhs / BigInt_8{val};
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+BigInt_8 operator/(const T &val, const BigInt_8 &rhs) {
+  return BigInt_8{val} / rhs;
+}
+
 // SELF ASSIGNMENT OPERATORS ---------------------------------------------------
 
 inline BigInt_8 &BigInt_8::operator+=(const BigInt_8 &rhs) {
@@ -811,6 +842,26 @@ inline BigInt_8 &BigInt_8::operator*=(const std::string &str) {
 
 template <typename T, typename> BigInt_8 &BigInt_8::operator*=(const T &val) {
   *this = *this * BigInt_8{val};
+  return *this;
+}
+
+inline BigInt_8 &BigInt_8::operator/=(const BigInt_8 &rhs) {
+  *this = *this / rhs;
+  return *this;
+}
+
+inline BigInt_8 &BigInt_8::operator/=(const char *str) {
+  *this = *this / BigInt_8{std::string{str}};
+  return *this;
+}
+
+inline BigInt_8 &BigInt_8::operator/=(const std::string &str) {
+  *this = *this / BigInt_8{str};
+  return *this;
+}
+
+template <typename T, typename> BigInt_8 &BigInt_8::operator/=(const T &val) {
+  *this = *this / BigInt_8{val};
   return *this;
 }
 
