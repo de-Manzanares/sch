@@ -20,7 +20,7 @@ class BigInt {
   BigInt() = default;
   explicit BigInt(const std::string &str);
   template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-  BigInt(const T &val) : BigInt(std::to_string(val)) {} // NOLINT
+  BigInt(const T val) : BigInt(std::to_string(val)) {} // NOLINT
   ~BigInt() = default;
 
   BigInt(const BigInt &) = default;       // copy constructor
@@ -32,7 +32,7 @@ class BigInt {
   BigInt &operator=(const char *str);
   BigInt &operator=(const std::string &str);
   template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-  BigInt &operator=(const T &val);
+  BigInt &operator=(T val);
 
   bool operator==(const BigInt &rhs) const;
   bool operator!=(const BigInt &rhs) const;
@@ -51,31 +51,31 @@ class BigInt {
   BigInt &operator+=(const char *str);
   BigInt &operator+=(const std::string &str);
   template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-  BigInt &operator+=(const T &val);
+  BigInt &operator+=(T val);
 
   BigInt &operator-=(const BigInt &rhs);
   BigInt &operator-=(const char *str);
   BigInt &operator-=(const std::string &str);
   template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-  BigInt &operator-=(const T &val);
+  BigInt &operator-=(T val);
 
   BigInt &operator*=(const BigInt &rhs);
   BigInt &operator*=(const char *str);
   BigInt &operator*=(const std::string &str);
   template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-  BigInt &operator*=(const T &val);
+  BigInt &operator*=(T val);
 
   BigInt &operator/=(const BigInt &rhs);
   BigInt &operator/=(const char *str);
   BigInt &operator/=(const std::string &str);
   template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-  BigInt &operator/=(const T &val);
+  BigInt &operator/=(T val);
 
   BigInt &operator%=(const BigInt &rhs);
   BigInt &operator%=(const char *str);
   BigInt &operator%=(const std::string &str);
   template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-  BigInt &operator%=(const T &val);
+  BigInt &operator%=(T val);
 
   BigInt &operator-();
   BigInt operator-() const;
@@ -150,7 +150,7 @@ inline BigInt &BigInt::operator=(const std::string &str) {
   return *this;
 }
 
-template <typename T, typename> BigInt &BigInt::operator=(const T &val) {
+template <typename T, typename> BigInt &BigInt::operator=(const T val) {
   *this = BigInt{val};
   return *this;
 }
@@ -208,12 +208,12 @@ inline bool operator!=(const std::string &str, const BigInt &rhs) {
 }
 
 template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-bool operator!=(const BigInt &lhs, const T &val) {
+bool operator!=(const BigInt &lhs, const T val) {
   return lhs != BigInt{val};
 }
 
 template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-bool operator!=(const T &val, const BigInt &rhs) {
+bool operator!=(const T val, const BigInt &rhs) {
   return rhs != BigInt{val};
 }
 
@@ -266,12 +266,12 @@ inline bool operator<(const std::string &str, const BigInt &rhs) {
 }
 
 template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-bool operator<(const BigInt &lhs, const T &val) {
+bool operator<(const BigInt &lhs, const T val) {
   return lhs < BigInt{val};
 }
 
 template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-bool operator<(const T &val, const BigInt &rhs) {
+bool operator<(const T val, const BigInt &rhs) {
   return BigInt{val} < rhs;
 }
 
@@ -296,12 +296,12 @@ inline bool operator>(const std::string &str, const BigInt &rhs) {
 }
 
 template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-bool operator>(const BigInt &lhs, const T &val) {
+bool operator>(const BigInt &lhs, const T val) {
   return lhs > BigInt{val};
 }
 
 template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-bool operator>(const T &val, const BigInt &rhs) {
+bool operator>(const T val, const BigInt &rhs) {
   return BigInt{val} > rhs;
 }
 
@@ -328,12 +328,12 @@ inline bool operator<=(const std::string &str, const BigInt &rhs) {
 }
 
 template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-bool operator<=(const BigInt &lhs, const T &val) {
+bool operator<=(const BigInt &lhs, const T val) {
   return lhs <= BigInt{val};
 }
 
 template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-bool operator<=(const T &val, const BigInt &rhs) {
+bool operator<=(const T val, const BigInt &rhs) {
   return BigInt{val} <= rhs;
 }
 
@@ -360,12 +360,12 @@ inline bool operator>=(const std::string &str, const BigInt &rhs) {
 }
 
 template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-bool operator>=(const BigInt &lhs, const T &val) {
+bool operator>=(const BigInt &lhs, const T val) {
   return lhs >= BigInt{val};
 }
 
 template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-bool operator>=(const T &val, const BigInt &rhs) {
+bool operator>=(const T val, const BigInt &rhs) {
   return BigInt{val} >= rhs;
 }
 
@@ -472,12 +472,12 @@ inline BigInt operator+(const std::string &str, const BigInt &rhs) {
 }
 
 template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-BigInt operator+(const BigInt &lhs, const T &val) {
+BigInt operator+(const BigInt &lhs, const T val) {
   return lhs + BigInt{val};
 }
 
 template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-BigInt operator+(const T &val, const BigInt &rhs) {
+BigInt operator+(const T val, const BigInt &rhs) {
   return BigInt{val} + rhs;
 }
 
@@ -592,12 +592,12 @@ inline BigInt operator-(const std::string &str, const BigInt &rhs) {
 }
 
 template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-BigInt operator-(const BigInt &lhs, const T &val) {
+BigInt operator-(const BigInt &lhs, const T val) {
   return lhs - BigInt{val};
 }
 
 template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-BigInt operator-(const T &val, const BigInt &rhs) {
+BigInt operator-(const T val, const BigInt &rhs) {
   return BigInt{val} - rhs;
 }
 
@@ -673,12 +673,12 @@ inline BigInt operator*(const std::string &str, const BigInt &rhs) {
 }
 
 template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-BigInt operator*(const BigInt &lhs, const T &val) {
+BigInt operator*(const BigInt &lhs, const T val) {
   return lhs * BigInt{val};
 }
 
 template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-BigInt operator*(const T &val, const BigInt &rhs) {
+BigInt operator*(const T val, const BigInt &rhs) {
   return BigInt{val} * rhs;
 }
 
@@ -785,12 +785,12 @@ inline BigInt operator/(const std::string &str, const BigInt &rhs) {
 }
 
 template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-BigInt operator/(const BigInt &lhs, const T &val) {
+BigInt operator/(const BigInt &lhs, const T val) {
   return lhs / BigInt{val};
 }
 
 template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-BigInt operator/(const T &val, const BigInt &rhs) {
+BigInt operator/(const T val, const BigInt &rhs) {
   return BigInt{val} / rhs;
 }
 
@@ -811,12 +811,12 @@ inline BigInt operator%(const std::string &str, const BigInt &rhs) {
 }
 
 template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-BigInt operator%(const BigInt &lhs, const T &val) {
+BigInt operator%(const BigInt &lhs, const T val) {
   return lhs % BigInt{val};
 }
 
 template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-BigInt operator%(const T &val, const BigInt &rhs) {
+BigInt operator%(const T val, const BigInt &rhs) {
   return BigInt{val} % rhs;
 }
 
@@ -837,7 +837,7 @@ inline BigInt &BigInt::operator+=(const std::string &str) {
   return *this;
 }
 
-template <typename T, typename> BigInt &BigInt::operator+=(const T &val) {
+template <typename T, typename> BigInt &BigInt::operator+=(const T val) {
   *this = *this + BigInt{val};
   return *this;
 }
@@ -857,7 +857,7 @@ inline BigInt &BigInt::operator-=(const std::string &str) {
   return *this;
 }
 
-template <typename T, typename> BigInt &BigInt::operator-=(const T &val) {
+template <typename T, typename> BigInt &BigInt::operator-=(const T val) {
   *this = *this - BigInt{val};
   return *this;
 }
@@ -877,7 +877,7 @@ inline BigInt &BigInt::operator*=(const std::string &str) {
   return *this;
 }
 
-template <typename T, typename> BigInt &BigInt::operator*=(const T &val) {
+template <typename T, typename> BigInt &BigInt::operator*=(const T val) {
   *this = *this * BigInt{val};
   return *this;
 }
@@ -897,7 +897,7 @@ inline BigInt &BigInt::operator/=(const std::string &str) {
   return *this;
 }
 
-template <typename T, typename> BigInt &BigInt::operator/=(const T &val) {
+template <typename T, typename> BigInt &BigInt::operator/=(const T val) {
   *this = *this / BigInt{val};
   return *this;
 }
@@ -917,7 +917,7 @@ inline BigInt &BigInt::operator%=(const std::string &str) {
   return *this;
 }
 
-template <typename T, typename> BigInt &BigInt::operator%=(const T &val) {
+template <typename T, typename> BigInt &BigInt::operator%=(const T val) {
   *this = *this % BigInt{val};
   return *this;
 }
