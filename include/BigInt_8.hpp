@@ -19,7 +19,7 @@ class BigInt_8 {
   BigInt_8() = default;
   explicit BigInt_8(const std::string &str);
   template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-  explicit BigInt_8(const T &val) : BigInt_8(std::to_string(val)) {}
+  BigInt_8(const T &val) : BigInt_8(std::to_string(val)) {} // NOLINT
   ~BigInt_8() = default;
 
   BigInt_8(const BigInt_8 &) = default;       // copy constructor
@@ -148,7 +148,7 @@ template <typename T, typename> BigInt_8 &BigInt_8::operator=(const T &val) {
 // EQUALITY OPERATORS-----------------------------------------------------------
 
 inline bool BigInt_8::operator==(const BigInt_8 &rhs) const {
-  return (_data == rhs._data && _sign == rhs._sign);
+  return (_data == rhs._data && _sign == rhs._sign); // NOLINT
 }
 
 inline bool operator==(const BigInt_8 &lhs, const char *str) {
@@ -679,27 +679,51 @@ BigInt_8 operator*(const T &val, const BigInt_8 &rhs) {
 inline BigInt_8 BigInt_8::operator/(const BigInt_8 &rhs) const {
   BigInt_8 dividend{*this};
   BigInt_8 divisor{rhs};
-  BigInt_8 quotient{"0"};
-  BigInt_8 remainder{"0"};
+  BigInt_8 quotient{};
 
   dividend._sign = sign::positive;
   divisor._sign = sign::positive;
 
   if (divisor == dividend) {
-    quotient = BigInt_8{"1"};
+    quotient = 1;
     quotient._sign = this->_sign == rhs._sign ? sign::positive : sign::negative;
     return quotient;
   }
   if (divisor > dividend) {
-    return BigInt_8{"0"};
+    return BigInt_8{0};
+  }
+  if (divisor == 1) {
+    quotient = *this;
+    quotient._sign = this->_sign == rhs._sign ? sign::positive : sign::negative;
+    return quotient;
   }
 
-  // std::map<uint8_t, BigInt_8> products = {{1,divisor},{2,divisor*2},};
+  BigInt_8 remainder{};
+  std::vector<BigInt_8> products(10);
+  products[0] = 0;
+  std::generate(std::next(products.begin()), products.end(),
+                [acc = BigInt_8{0}, &divisor]() mutable {
+                  acc += divisor;
+                  return acc;
+                });
 
-  for (auto digit = dividend._data.rbegin(); digit != divisor._data.rend();
-       ++digit) {
+  // find the first place of the quotient
+  auto it = dividend._data.rbegin();
+  while (it != dividend._data.rend()) {
+    remainder._data.insert(remainder._data.begin(), *it);
+    ++it;
+
+    uint8_t multiple{};
+    remainder.normalize();
+    multiple = std::distance(products.begin(),
+                             std::prev(std::upper_bound(
+                                 products.begin(), products.end(), remainder)));
+    // }
+    quotient._data.insert(quotient._data.begin(), multiple);
+    remainder -= divisor * multiple;
   }
-
+  quotient.normalize();
+  quotient._sign = this->_sign == rhs._sign ? sign::positive : sign::negative;
   return quotient;
 }
 
