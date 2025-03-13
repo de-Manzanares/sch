@@ -76,9 +76,6 @@ class BigInt_8 {
   template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
   BigInt_8 &operator%=(const T &val);
 
-  BigInt_8 &operator<<=(const BigInt_8 &rhs);
-  BigInt_8 &operator>>=(const BigInt_8 &rhs);
-
   BigInt_8 &operator-();
   BigInt_8 operator-() const;
   BigInt_8 &operator++();
