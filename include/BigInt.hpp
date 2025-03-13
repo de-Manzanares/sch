@@ -85,6 +85,7 @@ class BigInt {
   friend std::ostream &operator<<(std::ostream &os, const BigInt &b);
 
   void normalize();
+  [[nodiscard]] std::string to_string() const;
 
  private:
   // constants
@@ -976,16 +977,7 @@ inline BigInt &BigInt::operator--() {
 // Stream operators
 
 inline std::ostream &operator<<(std::ostream &os, const BigInt &b) {
-  if (b._data.empty()) {
-    os << "0";
-    return os;
-  }
-  if (b._sign == sign::negative) {
-    os << '-';
-  }
-  for (auto it = b._data.rbegin(); it != b._data.rend(); ++it) {
-    os << static_cast<char>(*it + '0');
-  }
+  os << b.to_string();
   return os;
 }
 
@@ -999,6 +991,24 @@ inline void BigInt::normalize() {
   if (_data.empty() || _data == std::vector{uint8_t{0}}) {
     _sign = sign::positive;
   }
+}
+
+/**
+ * @return Base-10 string representation
+ */
+inline std::string BigInt::to_string() const {
+  if (_data.empty()) {
+    return std::string{"0"};
+  }
+  std::string str;
+  str.reserve(_data.size());
+  if (_sign == sign::negative) {
+    str.push_back('-');
+  }
+  for (auto it = _data.rbegin(); it != _data.rend(); ++it) {
+    str.push_back(static_cast<char>(*it + '0'));
+  }
+  return str;
 }
 
 //------------------------------------------------------------------------------
