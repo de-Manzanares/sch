@@ -754,6 +754,7 @@ BigInt_8::longDivision(const BigInt_8 &dividend, const BigInt_8 &divisor) {
   // find the first place of the quotient
   auto it = m_dividend._data.rbegin();
   while (it != m_dividend._data.rend()) {
+    // todo maybe little endian order is not the best? lol
     remainder._data.insert(remainder._data.begin(), *it);
     ++it;
 
@@ -762,9 +763,11 @@ BigInt_8::longDivision(const BigInt_8 &dividend, const BigInt_8 &divisor) {
     multiple = std::distance(products.begin(),
                              std::prev(std::upper_bound(
                                  products.begin(), products.end(), remainder)));
-    quotient._data.insert(quotient._data.begin(), multiple);
+    quotient._data.emplace_back(multiple);
     remainder -= m_divisor * multiple;
   }
+
+  std::reverse(quotient._data.begin(), quotient._data.end());
   quotient.normalize();
   quotient._sign = chooseQuotientSign();
   remainder._sign = chooseRemainderSign();
