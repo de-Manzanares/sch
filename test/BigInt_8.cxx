@@ -10,11 +10,10 @@ namespace BigInt_8_test {
 //------------------------------------------------------------------------------
 
 /// one less than the number of digits in LONG_LONG_MAX
-const size_t LL_SUM_DIF_TEST_LENGTH =
-    std::log(LONG_LONG_MAX) / std::log(10); // NOLINT
+const size_t LL_FULL_LENGTH = std::log(LONG_LONG_MAX) / std::log(10); // NOLINT
 
 /// half of one less than the number of digits in LONG_LONG_MAX
-const size_t LL_PRODUCT_TEST_LENGTH = LL_SUM_DIF_TEST_LENGTH / 2;
+const size_t LL_HALF_LENGTH = LL_FULL_LENGTH / 2;
 
 std::ranlux48_base rand_engine{std::random_device{}()};
 
@@ -79,7 +78,7 @@ TEST_CASE("comparison operators") {
     long long n[2];
     sch::BigInt_8 bint8[2];
     for (int k = 0; k < 2; ++k) {
-      std::string str = randomString(1, LL_SUM_DIF_TEST_LENGTH);
+      std::string str = randomString(1, LL_FULL_LENGTH);
       randomizeSign(str);
       n[k] = std::stoll(str);
       bint8[k] = n[k];
@@ -120,7 +119,7 @@ TEST_CASE("operator + : addition") {
     std::ostringstream os[2];
 
     for (int k = 0; k < 2; ++k) {
-      std::string str = randomString(1, LL_SUM_DIF_TEST_LENGTH);
+      std::string str = randomString(1, LL_FULL_LENGTH);
       randomizeSign(str);
       n[k] = std::stoll(str);
       bint8[k] = n[k];
@@ -138,7 +137,7 @@ TEST_CASE("operator - : subtraction") {
     std::ostringstream os[2];
 
     for (int k = 0; k < 2; ++k) {
-      std::string str = randomString(1, LL_SUM_DIF_TEST_LENGTH);
+      std::string str = randomString(1, LL_FULL_LENGTH);
       randomizeSign(str);
       n[k] = std::stoll(str);
       bint8[k] = n[k];
@@ -156,7 +155,7 @@ TEST_CASE("operator: * multiplication") {
     std::ostringstream os[2];
 
     for (int k = 0; k < 2; ++k) {
-      std::string str = randomString(1, LL_PRODUCT_TEST_LENGTH);
+      std::string str = randomString(1, LL_HALF_LENGTH);
       randomizeSign(str);
       n[k] = std::stoll(str);
       bint8[k] = n[k];
@@ -174,7 +173,7 @@ TEST_CASE("operator: / division") {
     std::ostringstream os[2];
 
     for (int k = 0; k < 2; ++k) {
-      std::string str = randomString(1, LL_PRODUCT_TEST_LENGTH);
+      std::string str = randomString(1, LL_FULL_LENGTH);
       randomizeSign(str);
       n[k] = std::stoll(str);
       if (n[k] == 0) {
@@ -195,7 +194,7 @@ TEST_CASE("operator: % modulo") {
     std::ostringstream os[2];
 
     for (int k = 0; k < 2; ++k) {
-      std::string str = randomString(1, LL_PRODUCT_TEST_LENGTH);
+      std::string str = randomString(1, LL_FULL_LENGTH);
       randomizeSign(str);
       n[k] = std::stoll(str);
       if (n[k] == 0) {
