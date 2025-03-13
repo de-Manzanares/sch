@@ -161,6 +161,18 @@ inline bool BigInt::operator==(const BigInt &rhs) const {
   return (_data == rhs._data && _sign == rhs._sign); // NOLINT
 }
 
+// for comparison to zero
+
+inline bool operator==(const BigInt &lhs, const int rhs) {
+  return lhs == BigInt{rhs};
+}
+
+// for comparison to zero
+
+inline bool operator==(const int lhs, const BigInt &rhs) {
+  return BigInt{lhs} == rhs;
+}
+
 inline bool operator==(const BigInt &lhs, const char *str) {
   return lhs == BigInt{std::string{str}};
 }
