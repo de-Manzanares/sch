@@ -71,6 +71,11 @@ class BigInt_8 {
   BigInt_8 &operator/=(const T &val);
 
   BigInt_8 &operator%=(const BigInt_8 &rhs);
+  BigInt_8 &operator%=(const char *str);
+  BigInt_8 &operator%=(const std::string &str);
+  template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+  BigInt_8 &operator%=(const T &val);
+
   BigInt_8 &operator<<=(const BigInt_8 &rhs);
   BigInt_8 &operator>>=(const BigInt_8 &rhs);
 
@@ -683,12 +688,14 @@ BigInt_8 operator*(const T &val, const BigInt_8 &rhs) {
   return BigInt_8{val} * rhs;
 }
 
-// DIVISION OPERATOR -----------------------------------------------------------
-
-// todo modulo with negative numbers ... ?
+// DIVISION and MODULO OPERATORS -----------------------------------------------
 
 inline BigInt_8 BigInt_8::operator/(const BigInt_8 &rhs) const {
   return longDivision(*this, rhs).first;
+}
+
+inline BigInt_8 BigInt_8::operator%(const BigInt_8 &rhs) const {
+  return longDivision(*this, rhs).second;
 }
 
 /**
@@ -704,20 +711,27 @@ BigInt_8::longDivision(const BigInt_8 &dividend, const BigInt_8 &divisor) {
         "BigInt_8::operator/() : Division by zero is undefined");
   }
 
-  auto chooseSign = [&dividend, &divisor]() {
-    return dividend._sign == divisor._sign ? sign::positive : sign::negative;
-  };
-
   BigInt_8 m_dividend{dividend}; // mutable copy
   BigInt_8 m_divisor{divisor};   // mutable copy
   BigInt_8 quotient{};
+  BigInt_8 remainder{};
 
   m_dividend._sign = sign::positive;
   m_divisor._sign = sign::positive;
 
+  auto chooseQuotientSign = [&dividend, &divisor]() {
+    return dividend._sign == divisor._sign ? sign::positive : sign::negative;
+  };
+  auto chooseRemainderSign = [&dividend, &remainder]() {
+    if (remainder == "0") {
+      return sign::positive;
+    }
+    return dividend._sign == sign::positive ? sign::positive : sign::negative;
+  };
+
   if (m_divisor == m_dividend) {
     quotient = 1;
-    quotient._sign = chooseSign();
+    quotient._sign = chooseQuotientSign();
     return {quotient, 0};
   }
   if (m_divisor > m_dividend) {
@@ -725,11 +739,10 @@ BigInt_8::longDivision(const BigInt_8 &dividend, const BigInt_8 &divisor) {
   }
   if (m_divisor == 1) {
     quotient = m_dividend;
-    quotient._sign = chooseSign();
+    quotient._sign = chooseQuotientSign();
     return {quotient, 0};
   }
 
-  BigInt_8 remainder{};
   std::vector<BigInt_8> products(10);
   products[0] = 0;
   std::generate(std::next(products.begin()), products.end(),
@@ -753,7 +766,8 @@ BigInt_8::longDivision(const BigInt_8 &dividend, const BigInt_8 &divisor) {
     remainder -= m_divisor * multiple;
   }
   quotient.normalize();
-  quotient._sign = chooseSign();
+  quotient._sign = chooseQuotientSign();
+  remainder._sign = chooseRemainderSign();
   return {quotient, remainder};
 }
 
@@ -781,6 +795,32 @@ BigInt_8 operator/(const BigInt_8 &lhs, const T &val) {
 template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
 BigInt_8 operator/(const T &val, const BigInt_8 &rhs) {
   return BigInt_8{val} / rhs;
+}
+
+inline BigInt_8 operator%(const BigInt_8 &lhs, const char *str) {
+  return lhs % BigInt_8{std::string{str}};
+}
+
+inline BigInt_8 operator%(const char *str, const BigInt_8 &rhs) {
+  return BigInt_8{std::string{str}} % rhs;
+}
+
+inline BigInt_8 operator%(const BigInt_8 &lhs, const std::string &str) {
+  return lhs % BigInt_8{str};
+}
+
+inline BigInt_8 operator%(const std::string &str, const BigInt_8 &rhs) {
+  return BigInt_8{str} % rhs;
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+BigInt_8 operator%(const BigInt_8 &lhs, const T &val) {
+  return lhs % BigInt_8{val};
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+BigInt_8 operator%(const T &val, const BigInt_8 &rhs) {
+  return BigInt_8{val} % rhs;
 }
 
 // SELF ASSIGNMENT OPERATORS ---------------------------------------------------
@@ -862,6 +902,26 @@ inline BigInt_8 &BigInt_8::operator/=(const std::string &str) {
 
 template <typename T, typename> BigInt_8 &BigInt_8::operator/=(const T &val) {
   *this = *this / BigInt_8{val};
+  return *this;
+}
+
+inline BigInt_8 &BigInt_8::operator%=(const BigInt_8 &rhs) {
+  *this = *this % rhs;
+  return *this;
+}
+
+inline BigInt_8 &BigInt_8::operator%=(const char *str) {
+  *this = *this % BigInt_8{std::string{str}};
+  return *this;
+}
+
+inline BigInt_8 &BigInt_8::operator%=(const std::string &str) {
+  *this = *this % BigInt_8{str};
+  return *this;
+}
+
+template <typename T, typename> BigInt_8 &BigInt_8::operator%=(const T &val) {
+  *this = *this % BigInt_8{val};
   return *this;
 }
 

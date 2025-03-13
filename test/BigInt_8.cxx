@@ -188,6 +188,27 @@ TEST_CASE("operator: / division") {
   }
 }
 
+TEST_CASE("operator: % modulo") {
+  for (int i = 0; i < 1000; ++i) {
+    long long n[2];
+    sch::BigInt_8 bint8[2];
+    std::ostringstream os[2];
+
+    for (int k = 0; k < 2; ++k) {
+      std::string str = randomString(1, LL_PRODUCT_TEST_LENGTH);
+      randomizeSign(str);
+      n[k] = std::stoll(str);
+      if (n[k] == 0) {
+        n[k] = randomInRange(1, 9); // NOLINT
+      }
+      bint8[k] = n[k];
+    }
+    os[0] << n[0] % n[1];
+    os[1] << bint8[0] % bint8[1];
+    CHECK(os[0].str() == os[1].str());
+  }
+}
+
 // TODO consider sign
 TEST_CASE("sch::pow()") {
   for (uint i = 0; i < 11; ++i) {
