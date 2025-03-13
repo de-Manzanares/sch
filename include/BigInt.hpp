@@ -103,16 +103,14 @@ class BigInt {
   // Subtraction operator helpers ------------------------------
   static void subtract(size_t &it_lhs, BigInt &lhs, size_t &it_rhs,
                        const BigInt &rhs, BigInt &difference);
-  static void s_carryDown(size_t &it, const BigInt &bint_8,
-                          BigInt &difference);
+  static void s_carryDown(size_t &it, const BigInt &bint_8, BigInt &difference);
 
   // Multiplication operator -----------------------------------
-  static BigInt longMultiplication(const BigInt &bottom,
-                                     const BigInt &top);
+  static BigInt longMultiplication(const BigInt &bottom, const BigInt &top);
 
   // Division operator -----------------------------------------
   static std::pair<BigInt, BigInt> longDivision(const BigInt &dividend,
-                                                    const BigInt &divisor);
+                                                const BigInt &divisor);
 };
 
 //------------------------------------------------------------------------------
@@ -277,9 +275,7 @@ bool operator<(const T &val, const BigInt &rhs) {
   return BigInt{val} < rhs;
 }
 
-inline bool BigInt::operator>(const BigInt &rhs) const {
-  return rhs < *this;
-}
+inline bool BigInt::operator>(const BigInt &rhs) const { return rhs < *this; }
 
 // GREATER THAN ----------------------------------------------------------------
 
@@ -423,7 +419,7 @@ inline BigInt BigInt::operator+(const BigInt &rhs) const { // NOLINT
  * @param[in,out] sum the sum
  */
 inline void BigInt::add(size_t &it_lhs, const BigInt &lhs, size_t &it_rhs,
-                          const BigInt &rhs, bool &carry, BigInt &sum) {
+                        const BigInt &rhs, bool &carry, BigInt &sum) {
   while (it_lhs < lhs._data.size() && it_rhs < rhs._data.size()) {
     sum._data.push_back(lhs._data[it_lhs] + rhs._data[it_rhs] +
                         (carry ? 1 : 0));
@@ -445,8 +441,8 @@ inline void BigInt::add(size_t &it_lhs, const BigInt &lhs, size_t &it_rhs,
  * @param[in,out] carry carry 1?
  * @param[in,out] sum the sum
  */
-inline void BigInt::a_carryDown(size_t &it, const BigInt &bint_8,
-                                  bool &carry, BigInt &sum) {
+inline void BigInt::a_carryDown(size_t &it, const BigInt &bint_8, bool &carry,
+                                BigInt &sum) {
   while (it < bint_8._data.size()) {
     sum._data.push_back(bint_8._data[it] + (carry ? 1 : 0));
     if (sum._data.back() > BASE - 1) {
@@ -513,8 +509,8 @@ inline BigInt BigInt::operator-(const BigInt &rhs) const { // NOLINT
   BigInt difference{};
   BigInt _lhs{*this}; // mutable copy
   BigInt _rhs{rhs};   // mutable copy
-  size_t it_lhs{0};     // iterate through the digits of the lhs
-  size_t it_rhs{0};     // iterate through the digits of the rhs
+  size_t it_lhs{0};   // iterate through the digits of the lhs
+  size_t it_rhs{0};   // iterate through the digits of the rhs
 
   difference._data.reserve(_data.size() > rhs._data.size() ? _data.size()
                                                            : rhs._data.size());
@@ -543,7 +539,7 @@ inline BigInt BigInt::operator-(const BigInt &rhs) const { // NOLINT
  * @param[in,out] difference the difference
  */
 inline void BigInt::subtract(size_t &it_lhs, BigInt &lhs, size_t &it_rhs,
-                               const BigInt &rhs, BigInt &difference) {
+                             const BigInt &rhs, BigInt &difference) {
   while (it_lhs < lhs._data.size() && it_rhs < rhs._data.size()) {
     if (lhs._data[it_lhs] < rhs._data[it_rhs]) {
       lhs._data[it_lhs] += 10;
@@ -572,7 +568,7 @@ inline void BigInt::subtract(size_t &it_lhs, BigInt &lhs, size_t &it_rhs,
  * @param[in,out] difference the difference
  */
 inline void BigInt::s_carryDown(size_t &it, const BigInt &bint_8,
-                                  BigInt &difference) {
+                                BigInt &difference) {
   while (it < bint_8._data.size()) {
     difference._data.push_back(bint_8._data[it]);
     ++it;
@@ -620,11 +616,11 @@ inline BigInt BigInt::operator*(const BigInt &rhs) const {
  * @return the product of the two factors
  */
 inline BigInt BigInt::longMultiplication(const BigInt &bottom,
-                                             const BigInt &top) {
+                                         const BigInt &top) {
   BigInt final_product{};       // the sum of the intermediate products
   std::vector<BigInt> products; // the intermediate products
-  uint8_t carry{0};               // what value is being carried?
-  size_t latest_prod{0};          // latest intermediate product
+  uint8_t carry{0};             // what value is being carried?
+  size_t latest_prod{0};        // latest intermediate product
 
   products.reserve(bottom._data.size());
 
@@ -702,8 +698,8 @@ inline BigInt BigInt::operator%(const BigInt &rhs) const {
  * @param divisor the number to divide by
  * @return {quotient,remainder}
  */
-inline std::pair<BigInt, BigInt>
-BigInt::longDivision(const BigInt &dividend, const BigInt &divisor) {
+inline std::pair<BigInt, BigInt> BigInt::longDivision(const BigInt &dividend,
+                                                      const BigInt &divisor) {
   if (divisor == "0") {
     throw std::runtime_error(
         "BigInt::operator/() : Division by zero is undefined");
@@ -1008,22 +1004,28 @@ inline void BigInt::normalize() {
 //------------------------------------------------------------------------------
 // Non-member functions
 
-inline BigInt pow(const BigInt &base, const uint exp) {
-  BigInt _base = base;
-  uint _exp = exp;
-  if (BigInt(std::to_string(_exp)) == BigInt(std::string{'0'})) {
-    return BigInt(std::string{'1'});
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+BigInt pow(const BigInt &base, const T exp) {
+  if (exp < 0) {
+    throw(std::invalid_argument("BigInt::pow() : negative exponent"));
   }
-  if (base == BigInt(std::string{'0'})) {
-    return BigInt(std::string{'0'});
+  if (exp == 0) { // precedes the next check because 0^0 == 1
+    return 1;
   }
-  BigInt res{std::string{'1'}};
-  while (_exp > 0) {
-    if (_exp % 2 == 1) {
-      res *= _base;
+  if (base == BigInt{0}) {
+    return 0;
+  }
+
+  BigInt m_base = base;                       // mutable copy
+  auto m_exp = static_cast<std::size_t>(exp); // mutable copy
+  BigInt res{1};                              // result
+
+  while (m_exp > 0) {
+    if (m_exp % 2 == 1) {
+      res *= m_base;
     }
-    _base *= _base;
-    _exp /= 2;
+    m_base *= m_base;
+    m_exp /= 2;
   }
   return res;
 }
