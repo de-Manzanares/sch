@@ -223,17 +223,31 @@ TEST_CASE("sch::pow()") {
 }
 
 TEST_CASE("counting to 1 million") {
+  // todo fix sign change on increment
   sch::BigInt n{0};
   for (size_t i = 0; i < 1E6; ++i) { // NOLINT
     ++n;
   }
+  CHECK(n == 1000000);
+  n = -1000001;
+  for (size_t i = 0; i < 1E6; ++i) { // NOLINT
+    ++n;
+  }
+  CHECK(n == sch::BigInt{-1});
 }
 
 TEST_CASE("counting from 1 million") {
-  sch::BigInt n{100000};
+  // todo fix sign change on decrement
+  sch::BigInt n{1000000};
   for (size_t i = 1E6; i > 0; --i) {
     --n;
   }
+  CHECK(n == sch::BigInt{0});
+  n = -1;
+  for (size_t i = 1E6; i > 0; --i) {
+    --n;
+  }
+  CHECK(n == -1000001);
 }
 
 } // namespace BigInt_test

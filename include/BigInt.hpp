@@ -5,7 +5,6 @@
 #include <cstdint>
 #include <execution>
 #include <numeric>
-#include <ostream>
 #include <stdexcept>
 #include <string>
 #include <type_traits>
@@ -940,7 +939,12 @@ inline BigInt BigInt::operator-() const {
 //------------------------------------------------------------------------------
 // Increment decrement operators
 
-inline BigInt &BigInt::operator++() {
+inline BigInt &BigInt::operator++() { // NOLINT(*-no-recursion)
+  if (_sign == sign::negative) {
+    // -X + 1 = -(X - 1) Use `operator--()` on the absolute value
+    *this = -(--(-*this));
+    return *this;
+  }
   size_t i{0};
   // while there is carry propagation
   while (i < _data.size() && ++_data[i] == 10) {
@@ -954,10 +958,10 @@ inline BigInt &BigInt::operator++() {
   return *this;
 }
 
-inline BigInt &BigInt::operator--() {
+inline BigInt &BigInt::operator--() { // NOLINT(*-no-recursion)
   if (_sign == sign::negative) {
-    // -X - 1 = -(X + 1) → Use `operator++()` on the absolute value
-    *this = -(-*this + BigInt{"1"});
+    // -X - 1 = -(X + 1) Use `operator++()` on the absolute value
+    *this = -(++(-*this));
     return *this;
   }
 
@@ -969,6 +973,9 @@ inline BigInt &BigInt::operator--() {
       break;
     }
     _data[i++] = 9; // Borrow needed
+  }
+  if (_data.back() == 0 && _data.size() != 1) {
+    _data.pop_back();
   }
   return *this;
 }
