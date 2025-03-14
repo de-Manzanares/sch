@@ -1,0 +1,19 @@
+<map id="include/BigInt.hpp" name="include/BigInt.hpp">
+<area shape="rect" id="Node000001" title="Arbitrary precision integer." alt="" coords="335,5,473,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,91,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="346,33,105,81,104,76,345,28"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="115,79,181,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="364,33,196,80,194,74,362,28"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="205,79,291,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="380,33,287,75,285,70,378,28"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="315,79,389,104"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="398,33,371,69,366,66,393,29"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="414,79,501,104"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="415,29,443,66,438,69,411,33"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="525,79,584,104"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="429,28,519,70,516,75,427,33"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="609,79,701,104"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="445,28,602,72,600,77,444,33"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="725,79,787,104"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="471,28,712,76,711,81,470,33"/>
+</map>
