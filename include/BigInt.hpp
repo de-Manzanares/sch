@@ -95,15 +95,15 @@ class BigInt {
   std::vector<uint8_t> _data{}; ///< @note little endian order
 
   // Addition operator helpers ---------------------------------
-  static void add(size_t &it_lhs, const BigInt &lhs, size_t &it_rhs,
+  static void add(std::size_t &it_lhs, const BigInt &lhs, std::size_t &it_rhs,
                   const BigInt &rhs, bool &carry, BigInt &sum);
-  static void a_carryDown(size_t &it, const BigInt &bint_8, bool &carry,
+  static void a_carryDown(std::size_t &it, const BigInt &bint_8, bool &carry,
                           BigInt &sum);
 
   // Subtraction operator helpers ------------------------------
-  static void subtract(size_t &it_lhs, BigInt &lhs, size_t &it_rhs,
+  static void subtract(std::size_t &it_lhs, BigInt &lhs, std::size_t &it_rhs,
                        const BigInt &rhs, BigInt &difference);
-  static void s_carryDown(size_t &it, const BigInt &bint_8, BigInt &difference);
+  static void s_carryDown(std::size_t &it, const BigInt &bint_8, BigInt &difference);
 
   // Multiplication operator -----------------------------------
   static BigInt longMultiplication(const BigInt &bottom, const BigInt &top);
@@ -404,8 +404,8 @@ inline BigInt BigInt::operator+(const BigInt &rhs) const { // NOLINT
 
   BigInt sum;
   bool carry = false;
-  size_t it_lhs{0}; // iterate through the digits of the lhs
-  size_t it_rhs{0}; // iterate through the digits of the rhs
+  std::size_t it_lhs{0}; // iterate through the digits of the lhs
+  std::size_t it_rhs{0}; // iterate through the digits of the rhs
 
   sum._data.reserve(_data.size() > rhs._data.size() ? _data.size()
                                                     : rhs._data.size());
@@ -430,7 +430,7 @@ inline BigInt BigInt::operator+(const BigInt &rhs) const { // NOLINT
  * @param[in,out] carry carry 1?
  * @param[in,out] sum the sum
  */
-inline void BigInt::add(size_t &it_lhs, const BigInt &lhs, size_t &it_rhs,
+inline void BigInt::add(std::size_t &it_lhs, const BigInt &lhs, std::size_t &it_rhs,
                         const BigInt &rhs, bool &carry, BigInt &sum) {
   while (it_lhs < lhs._data.size() && it_rhs < rhs._data.size()) {
     sum._data.push_back(lhs._data[it_lhs] + rhs._data[it_rhs] +
@@ -453,7 +453,7 @@ inline void BigInt::add(size_t &it_lhs, const BigInt &lhs, size_t &it_rhs,
  * @param[in,out] carry carry 1?
  * @param[in,out] sum the sum
  */
-inline void BigInt::a_carryDown(size_t &it, const BigInt &bint_8, bool &carry,
+inline void BigInt::a_carryDown(std::size_t &it, const BigInt &bint_8, bool &carry,
                                 BigInt &sum) {
   while (it < bint_8._data.size()) {
     sum._data.push_back(bint_8._data[it] + (carry ? 1 : 0));
@@ -521,8 +521,8 @@ inline BigInt BigInt::operator-(const BigInt &rhs) const { // NOLINT
   BigInt difference{};
   BigInt _lhs{*this}; // mutable copy
   BigInt _rhs{rhs};   // mutable copy
-  size_t it_lhs{0};   // iterate through the digits of the lhs
-  size_t it_rhs{0};   // iterate through the digits of the rhs
+  std::size_t it_lhs{0};   // iterate through the digits of the lhs
+  std::size_t it_rhs{0};   // iterate through the digits of the rhs
 
   difference._data.reserve(_data.size() > rhs._data.size() ? _data.size()
                                                            : rhs._data.size());
@@ -550,7 +550,7 @@ inline BigInt BigInt::operator-(const BigInt &rhs) const { // NOLINT
  * @param rhs the subtrahend
  * @param[in,out] difference the difference
  */
-inline void BigInt::subtract(size_t &it_lhs, BigInt &lhs, size_t &it_rhs,
+inline void BigInt::subtract(std::size_t &it_lhs, BigInt &lhs, std::size_t &it_rhs,
                              const BigInt &rhs, BigInt &difference) {
   while (it_lhs < lhs._data.size() && it_rhs < rhs._data.size()) {
     if (lhs._data[it_lhs] < rhs._data[it_rhs]) {
@@ -558,7 +558,7 @@ inline void BigInt::subtract(size_t &it_lhs, BigInt &lhs, size_t &it_rhs,
       if (lhs._data[it_lhs + 1] != 0) {
         lhs._data[it_lhs + 1] -= 1;
       } else {
-        size_t tmp_it{1};
+        std::size_t tmp_it{1};
         while ((it_lhs + tmp_it) < lhs._data.size() - 1 &&
                lhs._data[it_lhs + tmp_it] == 0) {
           lhs._data[it_lhs + tmp_it] = 9;
@@ -579,7 +579,7 @@ inline void BigInt::subtract(size_t &it_lhs, BigInt &lhs, size_t &it_rhs,
  * @param bint_8 the number we are iterating through
  * @param[in,out] difference the difference
  */
-inline void BigInt::s_carryDown(size_t &it, const BigInt &bint_8,
+inline void BigInt::s_carryDown(std::size_t &it, const BigInt &bint_8,
                                 BigInt &difference) {
   while (it < bint_8._data.size()) {
     difference._data.push_back(bint_8._data[it]);
@@ -632,7 +632,7 @@ inline BigInt BigInt::longMultiplication(const BigInt &bottom,
   BigInt final_product{};       // the sum of the intermediate products
   std::vector<BigInt> products; // the intermediate products
   uint8_t carry{0};             // what value is being carried?
-  size_t latest_prod{0};        // latest intermediate product
+  std::size_t latest_prod{0};        // latest intermediate product
 
   products.reserve(bottom._data.size());
 
@@ -957,7 +957,7 @@ inline BigInt &BigInt::operator++() { // NOLINT(*-no-recursion)
     *this = -(--(-*this));
     return *this;
   }
-  size_t i{0};
+  std::size_t i{0};
   // while there is carry propagation
   while (i < _data.size() && ++_data[i] == 10) {
     // propagate
@@ -978,7 +978,7 @@ inline BigInt &BigInt::operator--() { // NOLINT(*-no-recursion)
   }
 
   // Normal case: subtract 1 from a positive BigInt
-  size_t i = 0;
+  std::size_t i = 0;
   while (i < _data.size()) {
     if (_data[i] > 0) {
       --_data[i]; // No borrow needed
