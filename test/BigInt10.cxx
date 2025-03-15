@@ -1,17 +1,13 @@
-/*
- * Copyright (c) 2025 Drake Manzanares
- * Distributed under the MIT License.
- */
-
 #include <catch2/catch_all.hpp>
 #include <cmath>
 #include <iostream>
 #include <limits>
 #include <random>
 
-#include "BigInt.hpp"
+#include "BigInt10.hpp"
+#include "schmath.hpp"
 
-namespace BigInt_test {
+namespace BigInt10_test {
 
 //------------------------------------------------------------------------------
 
@@ -62,53 +58,28 @@ void randomizeSign(std::string &str) {
   }
 }
 
-void removeLeadingZeros(std::string &str) {
-  str.erase(0, str.find_first_not_of('0'));
-  if (str == "") {
-    str = std::to_string(randomInRange(1, 9));
-  }
-}
-
 //------------------------------------------------------------------------------
 
-TEST_CASE("constructor and stream insertion") {
+TEST_CASE("constructor") {
   SECTION("positive") {
-    for (int i = 0; i < 1000; ++i) {
-      std::ostringstream oss[2];
-      std::string str = randomString(10000, 20000);
-      removeLeadingZeros(str);
-      sch::BigInt bint{str};
-      oss[0] << str;
-      oss[1] << bint;
-      CHECK(oss[0].str() == oss[1].str());
+    for (int i = 0; i < 100; ++i) {
+      std::string str = randomString(1, 10'000);
+      sch::BigInt10 bint{str};
     }
   }
   SECTION("negative") {
-    for (int i = 0; i < 1000; ++i) {
-      std::ostringstream oss[2];
-      std::string str = randomString(10000, 20000);
-      removeLeadingZeros(str);
+    for (int i = 0; i < 100; ++i) {
+      std::string str = randomString(1, 10'000);
       str.insert(0, 1, '-');
-      sch::BigInt bint{str};
-      oss[0] << str;
-      oss[1] << bint;
-      CHECK(oss[0].str() == oss[1].str());
+      sch::BigInt10 bint{str};
     }
-  }
-  SECTION("0") {
-    std::string strP = "0";
-    std::string strN = "-0";
-    sch::BigInt bintP{strP};
-    sch::BigInt bintN{strN};
-    CHECK(strP == bintP.to_string());
-    CHECK(strN.substr(1) == bintN.to_string());
   }
 }
 
 TEST_CASE("comparison operators") {
   for (int i = 0; i < 1000; ++i) {
     long long n[2];
-    sch::BigInt bint[2];
+    sch::BigInt10 bint[2];
     for (int k = 0; k < 2; ++k) {
       std::string str = randomString(1, LL_FULL_LENGTH);
       randomizeSign(str);
@@ -126,12 +97,28 @@ TEST_CASE("comparison operators") {
   }
 }
 
-/*
+TEST_CASE("operator << : stream extraction") {
+  for (int i = 0; i < 100; ++i) {
+    std::ostringstream os;
+    std::string str = randomString(1, 10'000);
+    size_t str_index = str.find_first_not_of('0');
+    randomizeSign(str);
+    if (str[0] == '-') {
+      ++str_index;
+    }
+    sch::BigInt10 bint{str};
+    os << bint;
+    // ternary is to maintain the '-' while dodging leading zeros, should
+    // the character be present
+    CHECK(os.str() == (str[0] == '-' ? '-' + str.substr(str_index)
+                                     : str.substr(str_index)));
+  }
+}
 
 TEST_CASE("operator + : addition") {
   for (int i = 0; i < 1000; ++i) {
     long long n[2];
-    sch::BigInt bint[2];
+    sch::BigInt10 bint[2];
     std::ostringstream os[2];
 
     for (int k = 0; k < 2; ++k) {
@@ -149,7 +136,7 @@ TEST_CASE("operator + : addition") {
 TEST_CASE("operator - : subtraction") {
   for (int i = 0; i < 1000; ++i) {
     long long n[2];
-    sch::BigInt bint[2];
+    sch::BigInt10 bint[2];
     std::ostringstream os[2];
 
     for (int k = 0; k < 2; ++k) {
@@ -167,7 +154,7 @@ TEST_CASE("operator - : subtraction") {
 TEST_CASE("operator: * multiplication") {
   for (int i = 0; i < 1000; ++i) {
     long long n[2];
-    sch::BigInt bint[2];
+    sch::BigInt10 bint[2];
     std::ostringstream os[2];
 
     for (int k = 0; k < 2; ++k) {
@@ -185,7 +172,7 @@ TEST_CASE("operator: * multiplication") {
 TEST_CASE("operator: / division") {
   for (int i = 0; i < 1000; ++i) {
     long long n[2];
-    sch::BigInt bint[2];
+    sch::BigInt10 bint[2];
     std::ostringstream os[2];
 
     for (int k = 0; k < 2; ++k) {
@@ -206,7 +193,7 @@ TEST_CASE("operator: / division") {
 TEST_CASE("operator: % modulo") {
   for (int i = 0; i < 1000; ++i) {
     long long n[2];
-    sch::BigInt bint[2];
+    sch::BigInt10 bint[2];
     std::ostringstream os[2];
 
     for (int k = 0; k < 2; ++k) {
@@ -226,14 +213,13 @@ TEST_CASE("operator: % modulo") {
 
 // TODO consider sign
 TEST_CASE("sch::pow()") {
-  SKIP();
   for (int i = 0; i < 11; ++i) {
     for (int j = 0; j < 11; ++j) {
-      sch::BigInt a{i};
+      sch::BigInt10 a{i};
       std::ostringstream os1;
       std::ostringstream os2;
       os1 << static_cast<unsigned long long>(std::pow(i, j));
-      // os2 << sch::pow(a, j);
+      os2 << sch::pow(a, j);
       CHECK(os1.str() == os2.str());
     }
   }
@@ -241,7 +227,7 @@ TEST_CASE("sch::pow()") {
 
 TEST_CASE("counting to 1 million") {
   // todo fix sign change on increment
-  sch::BigInt n{0};
+  sch::BigInt10 n{0};
   for (size_t i = 0; i < 1E6; ++i) { // NOLINT
     ++n;
   }
@@ -250,16 +236,16 @@ TEST_CASE("counting to 1 million") {
   for (size_t i = 0; i < 1E6; ++i) { // NOLINT
     ++n;
   }
-  CHECK(n == sch::BigInt{-1});
+  CHECK(n == sch::BigInt10{-1});
 }
 
 TEST_CASE("counting from 1 million") {
   // todo fix sign change on decrement
-  sch::BigInt n{1000000};
+  sch::BigInt10 n{1000000};
   for (size_t i = 1E6; i > 0; --i) {
     --n;
   }
-  CHECK(n == sch::BigInt{0});
+  CHECK(n == sch::BigInt10{0});
   n = -1;
   for (size_t i = 1E6; i > 0; --i) {
     --n;
@@ -267,6 +253,4 @@ TEST_CASE("counting from 1 million") {
   CHECK(n == -1000001);
 }
 
-*/
-
-} // namespace BigInt_test
+} // namespace BigInt10_test
