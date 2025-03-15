@@ -1,3 +1,14 @@
+
+/*
+ * Copyright (c) 2025 Drake Manzanares
+ * Distributed under the MIT License.
+ */
+
+/**
+ * @file BigInt.hpp
+ * @brief Arbitrary precision integer
+ */
+
 #ifndef SCH_INCLUDE_BigInt_HPP_
 #define SCH_INCLUDE_BigInt_HPP_
 
@@ -14,6 +25,10 @@ namespace sch {
 
 enum class sign : bool { negative, positive };
 
+/**
+ * @class BigInt
+ * @brief Arbitrary precision integer
+ */
 class BigInt {
  public:
   BigInt() = default;
@@ -103,7 +118,8 @@ class BigInt {
   // Subtraction operator helpers ------------------------------
   static void subtract(std::size_t &it_lhs, BigInt &lhs, std::size_t &it_rhs,
                        const BigInt &rhs, BigInt &difference);
-  static void s_carryDown(std::size_t &it, const BigInt &bint_8, BigInt &difference);
+  static void s_carryDown(std::size_t &it, const BigInt &bint_8,
+                          BigInt &difference);
 
   // Multiplication operator -----------------------------------
   static BigInt longMultiplication(const BigInt &bottom, const BigInt &top);
@@ -430,8 +446,9 @@ inline BigInt BigInt::operator+(const BigInt &rhs) const { // NOLINT
  * @param[in,out] carry carry 1?
  * @param[in,out] sum the sum
  */
-inline void BigInt::add(std::size_t &it_lhs, const BigInt &lhs, std::size_t &it_rhs,
-                        const BigInt &rhs, bool &carry, BigInt &sum) {
+inline void BigInt::add(std::size_t &it_lhs, const BigInt &lhs,
+                        std::size_t &it_rhs, const BigInt &rhs, bool &carry,
+                        BigInt &sum) {
   while (it_lhs < lhs._data.size() && it_rhs < rhs._data.size()) {
     sum._data.push_back(lhs._data[it_lhs] + rhs._data[it_rhs] +
                         (carry ? 1 : 0));
@@ -453,8 +470,8 @@ inline void BigInt::add(std::size_t &it_lhs, const BigInt &lhs, std::size_t &it_
  * @param[in,out] carry carry 1?
  * @param[in,out] sum the sum
  */
-inline void BigInt::a_carryDown(std::size_t &it, const BigInt &bint_8, bool &carry,
-                                BigInt &sum) {
+inline void BigInt::a_carryDown(std::size_t &it, const BigInt &bint_8,
+                                bool &carry, BigInt &sum) {
   while (it < bint_8._data.size()) {
     sum._data.push_back(bint_8._data[it] + (carry ? 1 : 0));
     if (sum._data.back() > BASE - 1) {
@@ -519,10 +536,10 @@ inline BigInt BigInt::operator-(const BigInt &rhs) const { // NOLINT
   }
 
   BigInt difference{};
-  BigInt _lhs{*this}; // mutable copy
-  BigInt _rhs{rhs};   // mutable copy
-  std::size_t it_lhs{0};   // iterate through the digits of the lhs
-  std::size_t it_rhs{0};   // iterate through the digits of the rhs
+  BigInt _lhs{*this};    // mutable copy
+  BigInt _rhs{rhs};      // mutable copy
+  std::size_t it_lhs{0}; // iterate through the digits of the lhs
+  std::size_t it_rhs{0}; // iterate through the digits of the rhs
 
   difference._data.reserve(_data.size() > rhs._data.size() ? _data.size()
                                                            : rhs._data.size());
@@ -550,8 +567,9 @@ inline BigInt BigInt::operator-(const BigInt &rhs) const { // NOLINT
  * @param rhs the subtrahend
  * @param[in,out] difference the difference
  */
-inline void BigInt::subtract(std::size_t &it_lhs, BigInt &lhs, std::size_t &it_rhs,
-                             const BigInt &rhs, BigInt &difference) {
+inline void BigInt::subtract(std::size_t &it_lhs, BigInt &lhs,
+                             std::size_t &it_rhs, const BigInt &rhs,
+                             BigInt &difference) {
   while (it_lhs < lhs._data.size() && it_rhs < rhs._data.size()) {
     if (lhs._data[it_lhs] < rhs._data[it_rhs]) {
       lhs._data[it_lhs] += 10;
@@ -632,7 +650,7 @@ inline BigInt BigInt::longMultiplication(const BigInt &bottom,
   BigInt final_product{};       // the sum of the intermediate products
   std::vector<BigInt> products; // the intermediate products
   uint8_t carry{0};             // what value is being carried?
-  std::size_t latest_prod{0};        // latest intermediate product
+  std::size_t latest_prod{0};   // latest intermediate product
 
   products.reserve(bottom._data.size());
 
