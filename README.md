@@ -1,42 +1,50 @@
+# sch
+
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/de-Manzanares/sch/.github%2Fworkflows%2Fcmake-multi-platform.yml?logo=githubactions&label=Test&style=flat-square)](https://github.com/de-Manzanares/sch/tree/master/test)
+[![codecov](https://codecov.io/gh/de-Manzanares/sch/graph/badge.svg?token=Y9345DJGVF)](https://codecov.io/gh/de-Manzanares/sch)
+![C++ Standard](https://img.shields.io/badge/C%2B%2B-17-blue)
+
 # BigInt - Arbitrary Precision Integer
 
 The BigInt class is an arbitrary precision integer that offers natural
 arithmetic syntax and semantics.
-
-## Features
 
 * Arbitrary Precision: The sky (RAM) is the limit.
 * Natural expression: Seamlessly interoperate with built-in integral types, strings, and character arrays.
     * built-in integral types being (signed or unsigned) `char`, `short`,
       `int`, `long`, `long long`, etc.
 
-## Example Usage
-
-From [Project Euler](https://projecteuler.net/about) [Problem 16](https://projecteuler.net/problem=16).
+ #### Example application 
+A solution to [Project Euler](https://projecteuler.net/about) [Problem 16](https://projecteuler.net/problem=16):
 
 ```cpp
-  // the sum of the digits of the number 2^1000
-  
-  const sch::BigInt n = sch::pow(2, 1000);
-  const std::string str = n.to_string();
+#include "BigInt.hpp"
+#include <iostream>
+
+// the sum of the digits of the number 2^1000
+int main() {
   sch::BigInt sum{};
-  for (const auto &ch : str) {
+  const sch::BigInt n = sch::pow(2, 1000);
+  for (const char ch : n.to_string()) {
     sum += ch - '0';
   }
   std::cout << sum << '\n';
+}
 ```
 
 ## How to Use
 
-Simply include the BigInt.hpp header in your project and compile with a C++17 (or later) compliant compiler.
+* [Getting BigInt](#getting-bigint)
+* [Example Code](#example-code)
+* [BigInt Class Reference](https://de-manzanares.github.io/sch/classsch_1_1BigInt.html)
 
-```cpp
-#include "sch/BigInt.hpp"
-```
+### Getting BigInt
 
-## BigInt API Reference
+Download the single file and place in your project's include path.
 
-### Constructors
+### Example Code
+
+#### Constructors
 
 ```cpp
 std::string str0{"2147483647"};
@@ -55,7 +63,7 @@ sch::BigInt g{-2147483647};   // construct with built-in integral type
 sch::BigInt h{a * -1};        // construct with BigInt
 ```
 
-### Assignment Operator
+#### Assignment Operator
 
 Assign from other BigInts, C‑strings, standard strings, and built-in integral types:
 
@@ -78,7 +86,7 @@ a = -2147483647;   // assign from built-in integral type
 a = b * -1;        // assign from BigInt
 ```
 
-### To String; Stream Insertion
+#### To String; Stream Insertion
 
 `BigInt::to_string()` returns a base-10 string representation of the value.
 
@@ -93,7 +101,7 @@ a = b * -1;        // assign from BigInt
   std::cout << str << '\n'; // -123456
 ```
 
-### Arithmetic Operators
+#### Arithmetic Operators
 
 The class overloads the standard arithmetic operators:
 ``+ - * / % += -= *= /= %=``
@@ -122,7 +130,7 @@ of the operand.
   std::cout << c << '\n'; // -211191818
 ```
 
-### Comparison Operators
+#### Comparison Operators
 
 The class overloads the standard comparison operators:
 ``== != < > <= >=``
@@ -146,7 +154,7 @@ BigInt can be on either side (or both sides) of the operand.
   bool cmp6 = (a != b);                     // BigInt != BigInt
 ```
 
-### Exponentiation
+#### Exponentiation
 
 The base can be provided as a c-string, standard string, built-in integral type, or BigInt.
 The exponent must be a non-negative (signed or unsigned) built-in integral type.
@@ -162,7 +170,7 @@ The function throws std::invalid_argument if the exponent is negative.
   }
 ```
 
-### Unary Negation:
+#### Unary Negation:
 
 Be careful with this ...
 
@@ -184,7 +192,7 @@ if used on a non-const BigInt, it will modify the object.
   // a == ca != ma
 ```
 
-### Increment/Decrement:
+#### Increment/Decrement:
 
 The class defines the prefix increment/decrement operators, but not the postfix.
 
