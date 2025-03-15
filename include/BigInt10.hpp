@@ -5,12 +5,12 @@
  */
 
 /**
- * @file BigInt.hpp
+ * @file BigInt10.hpp
  * @brief Arbitrary precision integer
  */
 
-#ifndef SCH_INCLUDE_BigInt_HPP_
-#define SCH_INCLUDE_BigInt_HPP_
+#ifndef SCH_INCLUDE_BigInt10_HPP_
+#define SCH_INCLUDE_BigInt10_HPP_
 
 #include <algorithm>
 #include <cstdint>
@@ -26,77 +26,77 @@ namespace sch {
 enum class sign : bool { negative, positive };
 
 /**
- * @class BigInt
+ * @class BigInt10
  * @brief Arbitrary precision integer
  */
-class BigInt {
+class BigInt10 {
  public:
-  BigInt() = default;
-  explicit BigInt(const std::string &str);
+  BigInt10() = default;
+  explicit BigInt10(const std::string &str);
   template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-  BigInt(const T val) : BigInt(std::to_string(val)) {} // NOLINT
-  ~BigInt() = default;
+  BigInt10(const T val) : BigInt10(std::to_string(val)) {} // NOLINT
+  ~BigInt10() = default;
 
-  BigInt(const BigInt &) = default;       // copy constructor
-  BigInt(BigInt &&) = default;            // move constructor
-  BigInt &operator=(BigInt &&) = default; // move assignment
+  BigInt10(const BigInt10 &) = default;       // copy constructor
+  BigInt10(BigInt10 &&) = default;            // move constructor
+  BigInt10 &operator=(BigInt10 &&) = default; // move assignment
 
   // Copy assignment
-  BigInt &operator=(const BigInt &) = default;
-  BigInt &operator=(const char *str);
-  BigInt &operator=(const std::string &str);
+  BigInt10 &operator=(const BigInt10 &) = default;
+  BigInt10 &operator=(const char *str);
+  BigInt10 &operator=(const std::string &str);
   template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-  BigInt &operator=(T val);
+  BigInt10 &operator=(T val);
 
-  bool operator==(const BigInt &rhs) const;
-  bool operator!=(const BigInt &rhs) const;
-  bool operator<(const BigInt &rhs) const;
-  bool operator>(const BigInt &rhs) const;
-  bool operator<=(const BigInt &rhs) const;
-  bool operator>=(const BigInt &rhs) const;
+  bool operator==(const BigInt10 &rhs) const;
+  bool operator!=(const BigInt10 &rhs) const;
+  bool operator<(const BigInt10 &rhs) const;
+  bool operator>(const BigInt10 &rhs) const;
+  bool operator<=(const BigInt10 &rhs) const;
+  bool operator>=(const BigInt10 &rhs) const;
 
-  BigInt operator+(const BigInt &rhs) const;
-  BigInt operator-(const BigInt &rhs) const;
-  BigInt operator*(const BigInt &rhs) const;
-  BigInt operator/(const BigInt &rhs) const;
-  BigInt operator%(const BigInt &rhs) const;
+  BigInt10 operator+(const BigInt10 &rhs) const;
+  BigInt10 operator-(const BigInt10 &rhs) const;
+  BigInt10 operator*(const BigInt10 &rhs) const;
+  BigInt10 operator/(const BigInt10 &rhs) const;
+  BigInt10 operator%(const BigInt10 &rhs) const;
 
-  BigInt &operator+=(const BigInt &rhs);
-  BigInt &operator+=(const char *str);
-  BigInt &operator+=(const std::string &str);
+  BigInt10 &operator+=(const BigInt10 &rhs);
+  BigInt10 &operator+=(const char *str);
+  BigInt10 &operator+=(const std::string &str);
   template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-  BigInt &operator+=(T val);
+  BigInt10 &operator+=(T val);
 
-  BigInt &operator-=(const BigInt &rhs);
-  BigInt &operator-=(const char *str);
-  BigInt &operator-=(const std::string &str);
+  BigInt10 &operator-=(const BigInt10 &rhs);
+  BigInt10 &operator-=(const char *str);
+  BigInt10 &operator-=(const std::string &str);
   template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-  BigInt &operator-=(T val);
+  BigInt10 &operator-=(T val);
 
-  BigInt &operator*=(const BigInt &rhs);
-  BigInt &operator*=(const char *str);
-  BigInt &operator*=(const std::string &str);
+  BigInt10 &operator*=(const BigInt10 &rhs);
+  BigInt10 &operator*=(const char *str);
+  BigInt10 &operator*=(const std::string &str);
   template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-  BigInt &operator*=(T val);
+  BigInt10 &operator*=(T val);
 
-  BigInt &operator/=(const BigInt &rhs);
-  BigInt &operator/=(const char *str);
-  BigInt &operator/=(const std::string &str);
+  BigInt10 &operator/=(const BigInt10 &rhs);
+  BigInt10 &operator/=(const char *str);
+  BigInt10 &operator/=(const std::string &str);
   template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-  BigInt &operator/=(T val);
+  BigInt10 &operator/=(T val);
 
-  BigInt &operator%=(const BigInt &rhs);
-  BigInt &operator%=(const char *str);
-  BigInt &operator%=(const std::string &str);
+  BigInt10 &operator%=(const BigInt10 &rhs);
+  BigInt10 &operator%=(const char *str);
+  BigInt10 &operator%=(const std::string &str);
   template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-  BigInt &operator%=(T val);
+  BigInt10 &operator%=(T val);
 
-  BigInt &operator-();
-  BigInt operator-() const;
-  BigInt &operator++();
-  BigInt &operator--();
+  BigInt10 &operator-();
+  BigInt10 operator-() const;
+  BigInt10 &operator++();
+  BigInt10 &operator--();
 
-  friend std::ostream &operator<<(std::ostream &os, const BigInt &b);
+  friend std::ostream &operator<<(std::ostream &os, const BigInt10 &b);
 
   void normalize();
   [[nodiscard]] std::string to_string() const;
@@ -110,30 +110,30 @@ class BigInt {
   std::vector<uint8_t> _data{}; ///< @note little endian order
 
   // Addition operator helpers ---------------------------------
-  static void add(std::size_t &it_lhs, const BigInt &lhs, std::size_t &it_rhs,
-                  const BigInt &rhs, bool &carry, BigInt &sum);
-  static void a_carryDown(std::size_t &it, const BigInt &bint_8, bool &carry,
-                          BigInt &sum);
+  static void add(std::size_t &it_lhs, const BigInt10 &lhs, std::size_t &it_rhs,
+                  const BigInt10 &rhs, bool &carry, BigInt10 &sum);
+  static void a_carryDown(std::size_t &it, const BigInt10 &bint_8, bool &carry,
+                          BigInt10 &sum);
 
   // Subtraction operator helpers ------------------------------
-  static void subtract(std::size_t &it_lhs, BigInt &lhs, std::size_t &it_rhs,
-                       const BigInt &rhs, BigInt &difference);
-  static void s_carryDown(std::size_t &it, const BigInt &bint_8,
-                          BigInt &difference);
+  static void subtract(std::size_t &it_lhs, BigInt10 &lhs, std::size_t &it_rhs,
+                       const BigInt10 &rhs, BigInt10 &difference);
+  static void s_carryDown(std::size_t &it, const BigInt10 &bint_8,
+                          BigInt10 &difference);
 
   // Multiplication operator -----------------------------------
-  static BigInt longMultiplication(const BigInt &bottom, const BigInt &top);
+  static BigInt10 longMultiplication(const BigInt10 &bottom, const BigInt10 &top);
 
   // Division operator -----------------------------------------
-  static std::pair<BigInt, BigInt> longDivision(const BigInt &dividend,
-                                                const BigInt &divisor);
+  static std::pair<BigInt10, BigInt10> longDivision(const BigInt10 &dividend,
+                                                const BigInt10 &divisor);
 };
 
 //------------------------------------------------------------------------------
 // Constructors
 
 // String constructor
-inline BigInt::BigInt(const std::string &str) {
+inline BigInt10::BigInt10(const std::string &str) {
   int offset = 0;           // to ignore negative sign, if it exists
   if (str.front() == '-') { // check for sign
     offset = 1;
@@ -142,114 +142,114 @@ inline BigInt::BigInt(const std::string &str) {
   // ensure there are no other non-numeric characters
   if (!std::all_of(str.begin() + offset, str.end(), isdigit)) {
     throw std::invalid_argument(
-        "BigInt::BigUInt_8() : string contains non-numeric characters");
+        "BigInt10::BigUInt_8() : string contains non-numeric characters");
   }
   _data = std::vector<uint8_t>(str.rbegin(), str.rend() - offset);
   for (auto &digit : _data) {
     digit -= '0';
   }
-  // the BigInt objects can sometimes be initialized with leading zeros
-  // having leading zeros will cause incorrect comparisons between BigInts
+  // the BigInt10 objects can sometimes be initialized with leading zeros
+  // having leading zeros will cause incorrect comparisons between BigInt10s
   // best to get rid of them now
   this->normalize();
 }
 
 // COPY ASSIGNMENT -------------------------------------------------------------
 
-inline BigInt &BigInt::operator=(const char *str) {
-  *this = BigInt{std::string(str)};
+inline BigInt10 &BigInt10::operator=(const char *str) {
+  *this = BigInt10{std::string(str)};
   return *this;
 }
 
-inline BigInt &BigInt::operator=(const std::string &str) {
-  *this = BigInt{str};
+inline BigInt10 &BigInt10::operator=(const std::string &str) {
+  *this = BigInt10{str};
   return *this;
 }
 
-template <typename T, typename> BigInt &BigInt::operator=(const T val) {
-  *this = BigInt{val};
+template <typename T, typename> BigInt10 &BigInt10::operator=(const T val) {
+  *this = BigInt10{val};
   return *this;
 }
 
 // EQUALITY OPERATORS-----------------------------------------------------------
 
-inline bool BigInt::operator==(const BigInt &rhs) const {
+inline bool BigInt10::operator==(const BigInt10 &rhs) const {
   return (_data == rhs._data && _sign == rhs._sign); // NOLINT
 }
 
 // for comparison to zero
 
-inline bool operator==(const BigInt &lhs, const int rhs) {
-  return lhs == BigInt{rhs};
+inline bool operator==(const BigInt10 &lhs, const int rhs) {
+  return lhs == BigInt10{rhs};
 }
 
 // for comparison to zero
 
-inline bool operator==(const int lhs, const BigInt &rhs) {
-  return BigInt{lhs} == rhs;
+inline bool operator==(const int lhs, const BigInt10 &rhs) {
+  return BigInt10{lhs} == rhs;
 }
 
-inline bool operator==(const BigInt &lhs, const char *str) {
-  return lhs == BigInt{std::string{str}};
+inline bool operator==(const BigInt10 &lhs, const char *str) {
+  return lhs == BigInt10{std::string{str}};
 }
 
-inline bool operator==(const char *str, const BigInt &rhs) {
-  return rhs == BigInt{std::string{str}};
+inline bool operator==(const char *str, const BigInt10 &rhs) {
+  return rhs == BigInt10{std::string{str}};
 }
 
-inline bool operator==(const BigInt &lhs, const std::string &str) {
-  return lhs == BigInt{str};
+inline bool operator==(const BigInt10 &lhs, const std::string &str) {
+  return lhs == BigInt10{str};
 }
 
-inline bool operator==(const std::string &str, const BigInt &rhs) {
-  return rhs == BigInt{str};
-}
-
-template <typename T, typename>
-bool operator==(const BigInt &lhs, const T &rhs) {
-  return lhs == BigInt{rhs};
+inline bool operator==(const std::string &str, const BigInt10 &rhs) {
+  return rhs == BigInt10{str};
 }
 
 template <typename T, typename>
-bool operator==(const T &lhs, const BigInt &rhs) {
-  return BigInt{lhs} == rhs;
+bool operator==(const BigInt10 &lhs, const T &rhs) {
+  return lhs == BigInt10{rhs};
 }
 
-inline bool BigInt::operator!=(const BigInt &rhs) const {
+template <typename T, typename>
+bool operator==(const T &lhs, const BigInt10 &rhs) {
+  return BigInt10{lhs} == rhs;
+}
+
+inline bool BigInt10::operator!=(const BigInt10 &rhs) const {
   return !(*this == rhs);
 }
 
-inline bool operator!=(const BigInt &lhs, const char *str) {
-  return lhs != BigInt{std::string{str}};
+inline bool operator!=(const BigInt10 &lhs, const char *str) {
+  return lhs != BigInt10{std::string{str}};
 }
 
-inline bool operator!=(const char *str, const BigInt &rhs) {
-  return rhs != BigInt{std::string{str}};
+inline bool operator!=(const char *str, const BigInt10 &rhs) {
+  return rhs != BigInt10{std::string{str}};
 }
 
-inline bool operator!=(const BigInt &lhs, const std::string &str) {
-  return lhs != BigInt{str};
+inline bool operator!=(const BigInt10 &lhs, const std::string &str) {
+  return lhs != BigInt10{str};
 }
 
-inline bool operator!=(const std::string &str, const BigInt &rhs) {
-  return rhs != BigInt{str};
-}
-
-template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-bool operator!=(const BigInt &lhs, const T val) {
-  return lhs != BigInt{val};
+inline bool operator!=(const std::string &str, const BigInt10 &rhs) {
+  return rhs != BigInt10{str};
 }
 
 template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-bool operator!=(const T val, const BigInt &rhs) {
-  return rhs != BigInt{val};
+bool operator!=(const BigInt10 &lhs, const T val) {
+  return lhs != BigInt10{val};
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+bool operator!=(const T val, const BigInt10 &rhs) {
+  return rhs != BigInt10{val};
 }
 
 // RELATIONAL OPERATORS --------------------------------------------------------
 
 // LESS THAN -------------------------------------------------------------------
 
-inline bool BigInt::operator<(const BigInt &rhs) const {
+inline bool BigInt10::operator<(const BigInt10 &rhs) const {
   // opposite sign considerations ---------------------
   if (_sign == sign::negative && rhs._sign == sign::positive) {
     return true;
@@ -277,129 +277,129 @@ inline bool BigInt::operator<(const BigInt &rhs) const {
   // --------------------------------------------------
 }
 
-inline bool operator<(const BigInt &lhs, const char *str) {
-  return lhs < BigInt{std::string{str}};
+inline bool operator<(const BigInt10 &lhs, const char *str) {
+  return lhs < BigInt10{std::string{str}};
 }
 
-inline bool operator<(const char *str, const BigInt &rhs) {
-  return BigInt{std::string{str}} < rhs;
+inline bool operator<(const char *str, const BigInt10 &rhs) {
+  return BigInt10{std::string{str}} < rhs;
 }
 
-inline bool operator<(const BigInt &lhs, const std::string &str) {
-  return lhs < BigInt{std::string{str}};
+inline bool operator<(const BigInt10 &lhs, const std::string &str) {
+  return lhs < BigInt10{std::string{str}};
 }
 
-inline bool operator<(const std::string &str, const BigInt &rhs) {
-  return BigInt{std::string{str}} < rhs;
-}
-
-template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-bool operator<(const BigInt &lhs, const T val) {
-  return lhs < BigInt{val};
+inline bool operator<(const std::string &str, const BigInt10 &rhs) {
+  return BigInt10{std::string{str}} < rhs;
 }
 
 template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-bool operator<(const T val, const BigInt &rhs) {
-  return BigInt{val} < rhs;
+bool operator<(const BigInt10 &lhs, const T val) {
+  return lhs < BigInt10{val};
 }
 
-inline bool BigInt::operator>(const BigInt &rhs) const { return rhs < *this; }
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+bool operator<(const T val, const BigInt10 &rhs) {
+  return BigInt10{val} < rhs;
+}
+
+inline bool BigInt10::operator>(const BigInt10 &rhs) const { return rhs < *this; }
 
 // GREATER THAN ----------------------------------------------------------------
 
-inline bool operator>(const BigInt &lhs, const char *str) {
-  return lhs > BigInt{std::string{str}};
+inline bool operator>(const BigInt10 &lhs, const char *str) {
+  return lhs > BigInt10{std::string{str}};
 }
 
-inline bool operator>(const char *str, const BigInt &rhs) {
-  return BigInt{std::string{str}} > rhs;
+inline bool operator>(const char *str, const BigInt10 &rhs) {
+  return BigInt10{std::string{str}} > rhs;
 }
 
-inline bool operator>(const BigInt &lhs, const std::string &str) {
-  return lhs > BigInt{str};
+inline bool operator>(const BigInt10 &lhs, const std::string &str) {
+  return lhs > BigInt10{str};
 }
 
-inline bool operator>(const std::string &str, const BigInt &rhs) {
-  return BigInt{str} > rhs;
-}
-
-template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-bool operator>(const BigInt &lhs, const T val) {
-  return lhs > BigInt{val};
+inline bool operator>(const std::string &str, const BigInt10 &rhs) {
+  return BigInt10{str} > rhs;
 }
 
 template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-bool operator>(const T val, const BigInt &rhs) {
-  return BigInt{val} > rhs;
+bool operator>(const BigInt10 &lhs, const T val) {
+  return lhs > BigInt10{val};
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+bool operator>(const T val, const BigInt10 &rhs) {
+  return BigInt10{val} > rhs;
 }
 
 // LESS THAN OR EQUAL TO -------------------------------------------------------
 
-inline bool BigInt::operator<=(const BigInt &rhs) const {
+inline bool BigInt10::operator<=(const BigInt10 &rhs) const {
   return !(*this > rhs);
 }
 
-inline bool operator<=(const BigInt &lhs, const char *str) {
-  return lhs <= BigInt{std::string{str}};
+inline bool operator<=(const BigInt10 &lhs, const char *str) {
+  return lhs <= BigInt10{std::string{str}};
 }
 
-inline bool operator<=(const char *str, const BigInt &rhs) {
-  return BigInt{std::string{str}} <= rhs;
+inline bool operator<=(const char *str, const BigInt10 &rhs) {
+  return BigInt10{std::string{str}} <= rhs;
 }
 
-inline bool operator<=(const BigInt &lhs, const std::string &str) {
-  return lhs <= BigInt{str};
+inline bool operator<=(const BigInt10 &lhs, const std::string &str) {
+  return lhs <= BigInt10{str};
 }
 
-inline bool operator<=(const std::string &str, const BigInt &rhs) {
-  return BigInt{str} <= rhs;
-}
-
-template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-bool operator<=(const BigInt &lhs, const T val) {
-  return lhs <= BigInt{val};
+inline bool operator<=(const std::string &str, const BigInt10 &rhs) {
+  return BigInt10{str} <= rhs;
 }
 
 template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-bool operator<=(const T val, const BigInt &rhs) {
-  return BigInt{val} <= rhs;
+bool operator<=(const BigInt10 &lhs, const T val) {
+  return lhs <= BigInt10{val};
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+bool operator<=(const T val, const BigInt10 &rhs) {
+  return BigInt10{val} <= rhs;
 }
 
 // GREATER THAN OR EQUAL TO ----------------------------------------------------
 
-inline bool BigInt::operator>=(const BigInt &rhs) const {
+inline bool BigInt10::operator>=(const BigInt10 &rhs) const {
   return !(*this < rhs);
 }
 
-inline bool operator>=(const BigInt &lhs, const char *str) {
-  return lhs >= BigInt{std::string{str}};
+inline bool operator>=(const BigInt10 &lhs, const char *str) {
+  return lhs >= BigInt10{std::string{str}};
 }
 
-inline bool operator>=(const char *str, const BigInt &rhs) {
-  return BigInt{std::string{str}} >= rhs;
+inline bool operator>=(const char *str, const BigInt10 &rhs) {
+  return BigInt10{std::string{str}} >= rhs;
 }
 
-inline bool operator>=(const BigInt &lhs, const std::string &str) {
-  return lhs >= BigInt{str};
+inline bool operator>=(const BigInt10 &lhs, const std::string &str) {
+  return lhs >= BigInt10{str};
 }
 
-inline bool operator>=(const std::string &str, const BigInt &rhs) {
-  return BigInt{str} >= rhs;
-}
-
-template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-bool operator>=(const BigInt &lhs, const T val) {
-  return lhs >= BigInt{val};
+inline bool operator>=(const std::string &str, const BigInt10 &rhs) {
+  return BigInt10{str} >= rhs;
 }
 
 template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-bool operator>=(const T val, const BigInt &rhs) {
-  return BigInt{val} >= rhs;
+bool operator>=(const BigInt10 &lhs, const T val) {
+  return lhs >= BigInt10{val};
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+bool operator>=(const T val, const BigInt10 &rhs) {
+  return BigInt10{val} >= rhs;
 }
 
 // ADDITION OPERATOR -----------------------------------------------------------
 
-inline BigInt BigInt::operator+(const BigInt &rhs) const { // NOLINT
+inline BigInt10 BigInt10::operator+(const BigInt10 &rhs) const { // NOLINT
   // todo optimizations for adding to 0 or 1 and so on
   // Initially, addition and subtraction were implemented assuming two
   // non-negative integers. Sign handling was introduced afterward; the most
@@ -418,7 +418,7 @@ inline BigInt BigInt::operator+(const BigInt &rhs) const { // NOLINT
     return -(-*this + -rhs);
   }
 
-  BigInt sum;
+  BigInt10 sum;
   bool carry = false;
   std::size_t it_lhs{0}; // iterate through the digits of the lhs
   std::size_t it_rhs{0}; // iterate through the digits of the rhs
@@ -446,9 +446,9 @@ inline BigInt BigInt::operator+(const BigInt &rhs) const { // NOLINT
  * @param[in,out] carry carry 1?
  * @param[in,out] sum the sum
  */
-inline void BigInt::add(std::size_t &it_lhs, const BigInt &lhs,
-                        std::size_t &it_rhs, const BigInt &rhs, bool &carry,
-                        BigInt &sum) {
+inline void BigInt10::add(std::size_t &it_lhs, const BigInt10 &lhs,
+                        std::size_t &it_rhs, const BigInt10 &rhs, bool &carry,
+                        BigInt10 &sum) {
   while (it_lhs < lhs._data.size() && it_rhs < rhs._data.size()) {
     sum._data.push_back(lhs._data[it_lhs] + rhs._data[it_rhs] +
                         (carry ? 1 : 0));
@@ -470,8 +470,8 @@ inline void BigInt::add(std::size_t &it_lhs, const BigInt &lhs,
  * @param[in,out] carry carry 1?
  * @param[in,out] sum the sum
  */
-inline void BigInt::a_carryDown(std::size_t &it, const BigInt &bint_8,
-                                bool &carry, BigInt &sum) {
+inline void BigInt10::a_carryDown(std::size_t &it, const BigInt10 &bint_8,
+                                bool &carry, BigInt10 &sum) {
   while (it < bint_8._data.size()) {
     sum._data.push_back(bint_8._data[it] + (carry ? 1 : 0));
     if (sum._data.back() > BASE - 1) {
@@ -484,44 +484,44 @@ inline void BigInt::a_carryDown(std::size_t &it, const BigInt &bint_8,
   }
 }
 
-inline BigInt operator+(const BigInt &lhs, const char *str) {
-  return lhs + BigInt{std::string{str}};
+inline BigInt10 operator+(const BigInt10 &lhs, const char *str) {
+  return lhs + BigInt10{std::string{str}};
 }
 
-inline BigInt operator+(const char *str, const BigInt &rhs) {
-  return BigInt{std::string{str}} + rhs;
+inline BigInt10 operator+(const char *str, const BigInt10 &rhs) {
+  return BigInt10{std::string{str}} + rhs;
 }
 
-inline BigInt operator+(const BigInt &lhs, const std::string &str) {
-  return lhs + BigInt{str};
+inline BigInt10 operator+(const BigInt10 &lhs, const std::string &str) {
+  return lhs + BigInt10{str};
 }
 
-inline BigInt operator+(const std::string &str, const BigInt &rhs) {
-  return BigInt{str} + rhs;
-}
-
-template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-BigInt operator+(const BigInt &lhs, const T val) {
-  return lhs + BigInt{val};
+inline BigInt10 operator+(const std::string &str, const BigInt10 &rhs) {
+  return BigInt10{str} + rhs;
 }
 
 template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-BigInt operator+(const T val, const BigInt &rhs) {
-  return BigInt{val} + rhs;
+BigInt10 operator+(const BigInt10 &lhs, const T val) {
+  return lhs + BigInt10{val};
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+BigInt10 operator+(const T val, const BigInt10 &rhs) {
+  return BigInt10{val} + rhs;
 }
 
 // SUBTRACTION OPERATOR --------------------------------------------------------
 
 // is there a way to work around using copies to maintain constness?
 
-inline BigInt BigInt::operator-(const BigInt &rhs) const { // NOLINT
+inline BigInt10 BigInt10::operator-(const BigInt10 &rhs) const { // NOLINT
   // todo optimizations for subtracting to and from 0 or 1 and so on
   // Initially, addition and subtraction were implemented assuming two
   // non-negative integers. Sign handling was introduced afterward; the most
   // straightforward approach to implementation was(is?,were?) the conditional
   // statements below. This allows us to reuse the subtraction (addition) logic.
   if (*this == rhs) {
-    return BigInt{"0"};
+    return BigInt10{"0"};
   }
   if (_sign != rhs._sign) {
     if (_sign == sign::negative) {
@@ -535,9 +535,9 @@ inline BigInt BigInt::operator-(const BigInt &rhs) const { // NOLINT
     return -(rhs) - (-(*this));
   }
 
-  BigInt difference{};
-  BigInt _lhs{*this};    // mutable copy
-  BigInt _rhs{rhs};      // mutable copy
+  BigInt10 difference{};
+  BigInt10 _lhs{*this};    // mutable copy
+  BigInt10 _rhs{rhs};      // mutable copy
   std::size_t it_lhs{0}; // iterate through the digits of the lhs
   std::size_t it_rhs{0}; // iterate through the digits of the rhs
 
@@ -567,9 +567,9 @@ inline BigInt BigInt::operator-(const BigInt &rhs) const { // NOLINT
  * @param rhs the subtrahend
  * @param[in,out] difference the difference
  */
-inline void BigInt::subtract(std::size_t &it_lhs, BigInt &lhs,
-                             std::size_t &it_rhs, const BigInt &rhs,
-                             BigInt &difference) {
+inline void BigInt10::subtract(std::size_t &it_lhs, BigInt10 &lhs,
+                             std::size_t &it_rhs, const BigInt10 &rhs,
+                             BigInt10 &difference) {
   while (it_lhs < lhs._data.size() && it_rhs < rhs._data.size()) {
     if (lhs._data[it_lhs] < rhs._data[it_rhs]) {
       lhs._data[it_lhs] += 10;
@@ -597,43 +597,43 @@ inline void BigInt::subtract(std::size_t &it_lhs, BigInt &lhs,
  * @param bint_8 the number we are iterating through
  * @param[in,out] difference the difference
  */
-inline void BigInt::s_carryDown(std::size_t &it, const BigInt &bint_8,
-                                BigInt &difference) {
+inline void BigInt10::s_carryDown(std::size_t &it, const BigInt10 &bint_8,
+                                BigInt10 &difference) {
   while (it < bint_8._data.size()) {
     difference._data.push_back(bint_8._data[it]);
     ++it;
   }
 }
 
-inline BigInt operator-(const BigInt &lhs, const char *str) {
-  return lhs - BigInt{std::string{str}};
+inline BigInt10 operator-(const BigInt10 &lhs, const char *str) {
+  return lhs - BigInt10{std::string{str}};
 }
 
-inline BigInt operator-(const char *str, const BigInt &rhs) {
-  return BigInt{std::string{str}} - rhs;
+inline BigInt10 operator-(const char *str, const BigInt10 &rhs) {
+  return BigInt10{std::string{str}} - rhs;
 }
 
-inline BigInt operator-(const BigInt &lhs, const std::string &str) {
-  return lhs - BigInt{str};
+inline BigInt10 operator-(const BigInt10 &lhs, const std::string &str) {
+  return lhs - BigInt10{str};
 }
 
-inline BigInt operator-(const std::string &str, const BigInt &rhs) {
-  return BigInt{str} - rhs;
-}
-
-template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-BigInt operator-(const BigInt &lhs, const T val) {
-  return lhs - BigInt{val};
+inline BigInt10 operator-(const std::string &str, const BigInt10 &rhs) {
+  return BigInt10{str} - rhs;
 }
 
 template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-BigInt operator-(const T val, const BigInt &rhs) {
-  return BigInt{val} - rhs;
+BigInt10 operator-(const BigInt10 &lhs, const T val) {
+  return lhs - BigInt10{val};
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+BigInt10 operator-(const T val, const BigInt10 &rhs) {
+  return BigInt10{val} - rhs;
 }
 
 // MULTIPLICATION OPERATOR -----------------------------------------------------
 
-inline BigInt BigInt::operator*(const BigInt &rhs) const {
+inline BigInt10 BigInt10::operator*(const BigInt10 &rhs) const {
   // minimize number of operations by putting the shorter number on the "bottom"
   return _data.size() < rhs._data.size() ? longMultiplication(*this, rhs)
                                          : longMultiplication(rhs, *this);
@@ -645,10 +645,10 @@ inline BigInt BigInt::operator*(const BigInt &rhs) const {
  * @param top the number on the "top" of the long multiplication setup
  * @return the product of the two factors
  */
-inline BigInt BigInt::longMultiplication(const BigInt &bottom,
-                                         const BigInt &top) {
-  BigInt final_product{};       // the sum of the intermediate products
-  std::vector<BigInt> products; // the intermediate products
+inline BigInt10 BigInt10::longMultiplication(const BigInt10 &bottom,
+                                         const BigInt10 &top) {
+  BigInt10 final_product{};       // the sum of the intermediate products
+  std::vector<BigInt10> products; // the intermediate products
   uint8_t carry{0};             // what value is being carried?
   std::size_t latest_prod{0};   // latest intermediate product
 
@@ -679,46 +679,46 @@ inline BigInt BigInt::longMultiplication(const BigInt &bottom,
     carry = 0;     // reset for the next intermediate product
   }
   final_product = std::reduce(std::execution::par, products.begin(),
-                              products.end(), BigInt{});
+                              products.end(), BigInt10{});
   final_product._sign =
       bottom._sign == top._sign ? sign::positive : sign::negative;
   final_product.normalize();
   return final_product;
 }
 
-inline BigInt operator*(const BigInt &lhs, const char *str) {
-  return lhs * BigInt{std::string{str}};
+inline BigInt10 operator*(const BigInt10 &lhs, const char *str) {
+  return lhs * BigInt10{std::string{str}};
 }
 
-inline BigInt operator*(const char *str, const BigInt &rhs) {
-  return BigInt{std::string{str}} * rhs;
+inline BigInt10 operator*(const char *str, const BigInt10 &rhs) {
+  return BigInt10{std::string{str}} * rhs;
 }
 
-inline BigInt operator*(const BigInt &lhs, const std::string &str) {
-  return lhs * BigInt{str};
+inline BigInt10 operator*(const BigInt10 &lhs, const std::string &str) {
+  return lhs * BigInt10{str};
 }
 
-inline BigInt operator*(const std::string &str, const BigInt &rhs) {
-  return BigInt{str} * rhs;
-}
-
-template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-BigInt operator*(const BigInt &lhs, const T val) {
-  return lhs * BigInt{val};
+inline BigInt10 operator*(const std::string &str, const BigInt10 &rhs) {
+  return BigInt10{str} * rhs;
 }
 
 template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-BigInt operator*(const T val, const BigInt &rhs) {
-  return BigInt{val} * rhs;
+BigInt10 operator*(const BigInt10 &lhs, const T val) {
+  return lhs * BigInt10{val};
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+BigInt10 operator*(const T val, const BigInt10 &rhs) {
+  return BigInt10{val} * rhs;
 }
 
 // DIVISION and MODULO OPERATORS -----------------------------------------------
 
-inline BigInt BigInt::operator/(const BigInt &rhs) const {
+inline BigInt10 BigInt10::operator/(const BigInt10 &rhs) const {
   return longDivision(*this, rhs).first;
 }
 
-inline BigInt BigInt::operator%(const BigInt &rhs) const {
+inline BigInt10 BigInt10::operator%(const BigInt10 &rhs) const {
   return longDivision(*this, rhs).second;
 }
 
@@ -728,17 +728,17 @@ inline BigInt BigInt::operator%(const BigInt &rhs) const {
  * @param divisor the number to divide by
  * @return {quotient,remainder}
  */
-inline std::pair<BigInt, BigInt> BigInt::longDivision(const BigInt &dividend,
-                                                      const BigInt &divisor) {
+inline std::pair<BigInt10, BigInt10> BigInt10::longDivision(const BigInt10 &dividend,
+                                                      const BigInt10 &divisor) {
   if (divisor == "0") {
     throw std::runtime_error(
-        "BigInt::operator/() : Division by zero is undefined");
+        "BigInt10::operator/() : Division by zero is undefined");
   }
 
-  BigInt m_dividend{dividend}; // mutable copy
-  BigInt m_divisor{divisor};   // mutable copy
-  BigInt quotient{};
-  BigInt remainder{};
+  BigInt10 m_dividend{dividend}; // mutable copy
+  BigInt10 m_divisor{divisor};   // mutable copy
+  BigInt10 quotient{};
+  BigInt10 remainder{};
 
   m_dividend._sign = sign::positive;
   m_divisor._sign = sign::positive;
@@ -767,10 +767,10 @@ inline std::pair<BigInt, BigInt> BigInt::longDivision(const BigInt &dividend,
     return {quotient, 0};
   }
 
-  std::vector<BigInt> products(10);
+  std::vector<BigInt10> products(10);
   products[0] = 0;
   std::generate(std::next(products.begin()), products.end(),
-                [acc = BigInt{0}, &m_divisor]() mutable {
+                [acc = BigInt10{0}, &m_divisor]() mutable {
                   acc += m_divisor;
                   return acc;
                 });
@@ -799,170 +799,170 @@ inline std::pair<BigInt, BigInt> BigInt::longDivision(const BigInt &dividend,
   return {quotient, remainder};
 }
 
-inline BigInt operator/(const BigInt &lhs, const char *str) {
-  return lhs / BigInt{std::string{str}};
+inline BigInt10 operator/(const BigInt10 &lhs, const char *str) {
+  return lhs / BigInt10{std::string{str}};
 }
 
-inline BigInt operator/(const char *str, const BigInt &rhs) {
-  return BigInt{std::string{str}} / rhs;
+inline BigInt10 operator/(const char *str, const BigInt10 &rhs) {
+  return BigInt10{std::string{str}} / rhs;
 }
 
-inline BigInt operator/(const BigInt &lhs, const std::string &str) {
-  return lhs / BigInt{str};
+inline BigInt10 operator/(const BigInt10 &lhs, const std::string &str) {
+  return lhs / BigInt10{str};
 }
 
-inline BigInt operator/(const std::string &str, const BigInt &rhs) {
-  return BigInt{str} / rhs;
-}
-
-template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-BigInt operator/(const BigInt &lhs, const T val) {
-  return lhs / BigInt{val};
+inline BigInt10 operator/(const std::string &str, const BigInt10 &rhs) {
+  return BigInt10{str} / rhs;
 }
 
 template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-BigInt operator/(const T val, const BigInt &rhs) {
-  return BigInt{val} / rhs;
-}
-
-inline BigInt operator%(const BigInt &lhs, const char *str) {
-  return lhs % BigInt{std::string{str}};
-}
-
-inline BigInt operator%(const char *str, const BigInt &rhs) {
-  return BigInt{std::string{str}} % rhs;
-}
-
-inline BigInt operator%(const BigInt &lhs, const std::string &str) {
-  return lhs % BigInt{str};
-}
-
-inline BigInt operator%(const std::string &str, const BigInt &rhs) {
-  return BigInt{str} % rhs;
+BigInt10 operator/(const BigInt10 &lhs, const T val) {
+  return lhs / BigInt10{val};
 }
 
 template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-BigInt operator%(const BigInt &lhs, const T val) {
-  return lhs % BigInt{val};
+BigInt10 operator/(const T val, const BigInt10 &rhs) {
+  return BigInt10{val} / rhs;
+}
+
+inline BigInt10 operator%(const BigInt10 &lhs, const char *str) {
+  return lhs % BigInt10{std::string{str}};
+}
+
+inline BigInt10 operator%(const char *str, const BigInt10 &rhs) {
+  return BigInt10{std::string{str}} % rhs;
+}
+
+inline BigInt10 operator%(const BigInt10 &lhs, const std::string &str) {
+  return lhs % BigInt10{str};
+}
+
+inline BigInt10 operator%(const std::string &str, const BigInt10 &rhs) {
+  return BigInt10{str} % rhs;
 }
 
 template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-BigInt operator%(const T val, const BigInt &rhs) {
-  return BigInt{val} % rhs;
+BigInt10 operator%(const BigInt10 &lhs, const T val) {
+  return lhs % BigInt10{val};
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+BigInt10 operator%(const T val, const BigInt10 &rhs) {
+  return BigInt10{val} % rhs;
 }
 
 // SELF ASSIGNMENT OPERATORS ---------------------------------------------------
 
-inline BigInt &BigInt::operator+=(const BigInt &rhs) {
+inline BigInt10 &BigInt10::operator+=(const BigInt10 &rhs) {
   *this = *this + rhs;
   return *this;
 }
 
-inline BigInt &BigInt::operator+=(const char *str) {
-  *this = *this + BigInt{std::string{str}};
+inline BigInt10 &BigInt10::operator+=(const char *str) {
+  *this = *this + BigInt10{std::string{str}};
   return *this;
 }
 
-inline BigInt &BigInt::operator+=(const std::string &str) {
-  *this = *this + BigInt{str};
+inline BigInt10 &BigInt10::operator+=(const std::string &str) {
+  *this = *this + BigInt10{str};
   return *this;
 }
 
-template <typename T, typename> BigInt &BigInt::operator+=(const T val) {
-  *this = *this + BigInt{val};
+template <typename T, typename> BigInt10 &BigInt10::operator+=(const T val) {
+  *this = *this + BigInt10{val};
   return *this;
 }
 
-inline BigInt &BigInt::operator-=(const BigInt &rhs) {
+inline BigInt10 &BigInt10::operator-=(const BigInt10 &rhs) {
   *this = *this - rhs;
   return *this;
 }
 
-inline BigInt &BigInt::operator-=(const char *str) {
-  *this = *this - BigInt{std::string{str}};
+inline BigInt10 &BigInt10::operator-=(const char *str) {
+  *this = *this - BigInt10{std::string{str}};
   return *this;
 }
 
-inline BigInt &BigInt::operator-=(const std::string &str) {
-  *this = *this - BigInt{str};
+inline BigInt10 &BigInt10::operator-=(const std::string &str) {
+  *this = *this - BigInt10{str};
   return *this;
 }
 
-template <typename T, typename> BigInt &BigInt::operator-=(const T val) {
-  *this = *this - BigInt{val};
+template <typename T, typename> BigInt10 &BigInt10::operator-=(const T val) {
+  *this = *this - BigInt10{val};
   return *this;
 }
 
-inline BigInt &BigInt::operator*=(const BigInt &rhs) {
+inline BigInt10 &BigInt10::operator*=(const BigInt10 &rhs) {
   *this = *this * rhs;
   return *this;
 }
 
-inline BigInt &BigInt::operator*=(const char *str) {
-  *this = *this * BigInt{std::string{str}};
+inline BigInt10 &BigInt10::operator*=(const char *str) {
+  *this = *this * BigInt10{std::string{str}};
   return *this;
 }
 
-inline BigInt &BigInt::operator*=(const std::string &str) {
-  *this = *this * BigInt{str};
+inline BigInt10 &BigInt10::operator*=(const std::string &str) {
+  *this = *this * BigInt10{str};
   return *this;
 }
 
-template <typename T, typename> BigInt &BigInt::operator*=(const T val) {
-  *this = *this * BigInt{val};
+template <typename T, typename> BigInt10 &BigInt10::operator*=(const T val) {
+  *this = *this * BigInt10{val};
   return *this;
 }
 
-inline BigInt &BigInt::operator/=(const BigInt &rhs) {
+inline BigInt10 &BigInt10::operator/=(const BigInt10 &rhs) {
   *this = *this / rhs;
   return *this;
 }
 
-inline BigInt &BigInt::operator/=(const char *str) {
-  *this = *this / BigInt{std::string{str}};
+inline BigInt10 &BigInt10::operator/=(const char *str) {
+  *this = *this / BigInt10{std::string{str}};
   return *this;
 }
 
-inline BigInt &BigInt::operator/=(const std::string &str) {
-  *this = *this / BigInt{str};
+inline BigInt10 &BigInt10::operator/=(const std::string &str) {
+  *this = *this / BigInt10{str};
   return *this;
 }
 
-template <typename T, typename> BigInt &BigInt::operator/=(const T val) {
-  *this = *this / BigInt{val};
+template <typename T, typename> BigInt10 &BigInt10::operator/=(const T val) {
+  *this = *this / BigInt10{val};
   return *this;
 }
 
-inline BigInt &BigInt::operator%=(const BigInt &rhs) {
+inline BigInt10 &BigInt10::operator%=(const BigInt10 &rhs) {
   *this = *this % rhs;
   return *this;
 }
 
-inline BigInt &BigInt::operator%=(const char *str) {
-  *this = *this % BigInt{std::string{str}};
+inline BigInt10 &BigInt10::operator%=(const char *str) {
+  *this = *this % BigInt10{std::string{str}};
   return *this;
 }
 
-inline BigInt &BigInt::operator%=(const std::string &str) {
-  *this = *this % BigInt{str};
+inline BigInt10 &BigInt10::operator%=(const std::string &str) {
+  *this = *this % BigInt10{str};
   return *this;
 }
 
-template <typename T, typename> BigInt &BigInt::operator%=(const T val) {
-  *this = *this % BigInt{val};
+template <typename T, typename> BigInt10 &BigInt10::operator%=(const T val) {
+  *this = *this % BigInt10{val};
   return *this;
 }
 
 // ------------------------------------------------------------------------------
 // Unary operators
 
-inline BigInt &BigInt::operator-() {
+inline BigInt10 &BigInt10::operator-() {
   _sign = (_sign == sign::positive ? sign::negative : sign::positive);
   return *this;
 }
 
-inline BigInt BigInt::operator-() const {
-  BigInt tmp = *this;
+inline BigInt10 BigInt10::operator-() const {
+  BigInt10 tmp = *this;
   tmp._sign = (tmp._sign == sign::positive ? sign::negative : sign::positive);
   return tmp;
 }
@@ -970,7 +970,7 @@ inline BigInt BigInt::operator-() const {
 //------------------------------------------------------------------------------
 // Increment decrement operators
 
-inline BigInt &BigInt::operator++() { // NOLINT(*-no-recursion)
+inline BigInt10 &BigInt10::operator++() { // NOLINT(*-no-recursion)
   if (_sign == sign::negative) {
     // -X + 1 = -(X - 1) Use `operator--()` on the absolute value
     *this = -(--(-*this));
@@ -989,14 +989,14 @@ inline BigInt &BigInt::operator++() { // NOLINT(*-no-recursion)
   return *this;
 }
 
-inline BigInt &BigInt::operator--() { // NOLINT(*-no-recursion)
+inline BigInt10 &BigInt10::operator--() { // NOLINT(*-no-recursion)
   if (_sign == sign::negative) {
     // -X - 1 = -(X + 1) Use `operator++()` on the absolute value
     *this = -(++(-*this));
     return *this;
   }
 
-  // Normal case: subtract 1 from a positive BigInt
+  // Normal case: subtract 1 from a positive BigInt10
   std::size_t i = 0;
   while (i < _data.size()) {
     if (_data[i] > 0) {
@@ -1014,7 +1014,7 @@ inline BigInt &BigInt::operator--() { // NOLINT(*-no-recursion)
 //------------------------------------------------------------------------------
 // Stream operators
 
-inline std::ostream &operator<<(std::ostream &os, const BigInt &b) {
+inline std::ostream &operator<<(std::ostream &os, const BigInt10 &b) {
   os << b.to_string();
   return os;
 }
@@ -1022,7 +1022,7 @@ inline std::ostream &operator<<(std::ostream &os, const BigInt &b) {
 //------------------------------------------------------------------------------
 // Member functions
 
-inline void BigInt::normalize() {
+inline void BigInt10::normalize() {
   while (_data.size() > 1 && _data.back() == 0) {
     _data.pop_back();
   }
@@ -1034,7 +1034,7 @@ inline void BigInt::normalize() {
 /**
  * @return Base-10 string representation
  */
-inline std::string BigInt::to_string() const {
+inline std::string BigInt10::to_string() const {
   if (_data.empty()) {
     return std::string{"0"};
   }
@@ -1057,24 +1057,24 @@ inline std::string BigInt::to_string() const {
  *           Must be non-negative when calling this function.
  * @param base The base value (x in x^y).
  * @param exp  The exponent value (y in x^y).
- * @return The result of x^y as a BigInt.
+ * @return The result of x^y as a BigInt10.
  * @throws std::invalid_argument if `exp` is negative.
  */
 template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-BigInt pow(const BigInt &base, const T exp) {
+BigInt10 pow(const BigInt10 &base, const T exp) {
   if (exp < 0) {
-    throw(std::invalid_argument("BigInt::pow() : negative exponent"));
+    throw(std::invalid_argument("BigInt10::pow() : negative exponent"));
   }
   if (exp == 0) { // precedes the next check because 0^0 == 1
     return 1;
   }
-  if (base == BigInt{0}) {
+  if (base == BigInt10{0}) {
     return 0;
   }
 
-  BigInt m_base = base;                       // mutable copy
+  BigInt10 m_base = base;                       // mutable copy
   auto m_exp = static_cast<std::size_t>(exp); // mutable copy
-  BigInt res{1};                              // result
+  BigInt10 res{1};                              // result
 
   while (m_exp > 0) {
     if (m_exp % 2 == 1) {
@@ -1088,4 +1088,4 @@ BigInt pow(const BigInt &base, const T exp) {
 
 } // namespace sch
 
-#endif // SCH_INCLUDE_BigInt_HPP_
+#endif // SCH_INCLUDE_BigInt10_HPP_
