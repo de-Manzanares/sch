@@ -100,16 +100,13 @@ $(function(){initNavTree('index.html',''); initResizable(true); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="md_README"></a></p>
-<p><a href="https://github.com/de-Manzanares/sch/tree/master/test"><img src="https://img.shields.io/github/actions/workflow/status/de-Manzanares/sch/.github%2Fworkflows%2Fcmake-multi-platform.yml?logo=githubactions&amp;label=Test&amp;style=flat-square" alt="GitHub Actions Workflow Status" class="inline"/></a> <a href="https://codecov.io/gh/de-Manzanares/sch"><img src="https://codecov.io/gh/de-Manzanares/sch/graph/badge.svg?token=Y9345DJGVF" alt="codecov" style="pointer-events: none;" class="inline"/></a> <img src="https://img.shields.io/badge/C%2B%2B-17-blue" alt="C++ Standard" class="inline"/></p>
+<p><a href="https://github.com/de-Manzanares/sch/tree/master/test"><img src="https://img.shields.io/github/actions/workflow/status/de-Manzanares/sch/.github%2Fworkflows%2Fcmake-multi-platform.yml?logo=githubactions&amp;label=Test" alt="GitHub Actions Workflow Status" class="inline"/></a> <a href="https://codecov.io/gh/de-Manzanares/sch"><img src="https://codecov.io/gh/de-Manzanares/sch/graph/badge.svg?token=Y9345DJGVF" alt="codecov" style="pointer-events: none;" class="inline"/></a> <img src="https://img.shields.io/badge/C%2B%2B-17-blue" alt="C++ Standard" class="inline"/></p>
 <h1><a class="anchor" id="autotoc_md1"></a>
 BigInt - Arbitrary Precision Integer</h1>
 <p>The BigInt class is an arbitrary precision integer that offers natural arithmetic syntax and semantics.</p>
 <ul>
 <li>Arbitrary Precision: The sky (RAM) is the limit.</li>
-<li>Natural expression: Seamlessly interoperate with built-in integral types, strings, and character arrays.<ul>
-<li>built-in integral types being (signed or unsigned) <code>char</code>, <code>short</code>, <code>int</code>, <code>long</code>, <code>long long</code>, etc.</li>
-</ul>
-</li>
+<li>Natural expression: Seamlessly interoperate with <a href="https://en.cppreference.com/w/cpp/language/types#Integral_types">built-in integral types</a>, strings, and character arrays.</li>
 </ul>
 <h4><a class="anchor" id="autotoc_md2"></a>
 Example application</h4>
@@ -138,7 +135,16 @@ How to Use</h2>
 </ul>
 <h3><a class="anchor" id="autotoc_md4"></a>
 Getting BigInt</h3>
-<p>Download the single file and place in your project's include path.</p>
+<p>If you are using CMake, you can use <a href="https://cmake.org/cmake/help/latest/module/FetchContent.html">FetchContent</a>:</p>
+<div class="fragment"><div class="line">include(FetchContent)</div>
+<div class="line">FetchContent_Declare(</div>
+<div class="line">        sch</div>
+<div class="line">        GIT_REPOSITORY https://github.com/de-Manzanares/sch.git</div>
+<div class="line">        GIT_TAG v0.1.0 # or a later release</div>
+<div class="line">)</div>
+<div class="line">FetchContent_MakeAvailable(sch)</div>
+<div class="line">target_link_libraries(your-target PRIVATE sch)</div>
+</div><!-- fragment --><p>Otherwise, you can download the header file from the <a href="https://github.com/de-Manzanares/sch/releases">Releases</a> section and build as you would.</p>
 <h3><a class="anchor" id="autotoc_md5"></a>
 Example Code</h3>
 <h4><a class="anchor" id="autotoc_md6"></a>
