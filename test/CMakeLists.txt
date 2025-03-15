@@ -10,7 +10,7 @@ if (SCH_ENABLE_TESTS)
     )
     FetchContent_MakeAvailable(Catch2)
 
-    add_executable(BigInt-test BigInt.cxx ${CMAKE_SOURCE_DIR}/include/BigInt.hpp)
+    add_executable(BigInt-test BigInt.cxx ../include/BigInt.hpp)
     target_include_directories(BigInt-test PRIVATE ../include)
     target_link_libraries(BigInt-test PRIVATE Catch2::Catch2WithMain)
     target_compile_options(BigInt-test PRIVATE
@@ -21,7 +21,7 @@ if (SCH_ENABLE_TESTS)
             $<$<CXX_COMPILER_ID:GNU,Clang>:--coverage -lgcov>
     )
 
-    add_executable(BigInt-perf-test BigInt_perf.cxx ${CMAKE_SOURCE_DIR}/include/BigInt.hpp)
+    add_executable(BigInt-perf-test BigInt_perf.cxx ../include/BigInt.hpp)
     target_include_directories(BigInt-perf-test PRIVATE ../include)
     target_link_libraries(BigInt-perf-test PRIVATE Catch2::Catch2WithMain)
     target_compile_options(BigInt-perf-test PRIVATE

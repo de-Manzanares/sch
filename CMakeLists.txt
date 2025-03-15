@@ -6,4 +6,4 @@ option(SCH_ENABLE_TESTS OFF)
 add_subdirectory(test)
 
 add_library(sch INTERFACE)
-target_include_directories(sch INTERFACE ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(sch INTERFACE include)
