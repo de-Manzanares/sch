@@ -1,6 +1,7 @@
 #include <catch2/catch_all.hpp>
 #include <cmath>
 #include <iostream>
+#include <limits>
 #include <random>
 
 #include "BigInt.hpp"
@@ -10,7 +11,8 @@ namespace BigInt_test {
 //------------------------------------------------------------------------------
 
 /// one less than the number of digits in LONG_LONG_MAX
-const size_t LL_FULL_LENGTH = std::log(LONG_LONG_MAX) / std::log(10); // NOLINT
+const size_t LL_FULL_LENGTH =
+    std::log(std::numeric_limits<long long>::max()) / std::log(10); // NOLINT
 
 /// half of one less than the number of digits in LONG_LONG_MAX
 const size_t LL_HALF_LENGTH = LL_FULL_LENGTH / 2;
@@ -210,8 +212,8 @@ TEST_CASE("operator: % modulo") {
 
 // TODO consider sign
 TEST_CASE("sch::pow()") {
-  for (uint i = 0; i < 11; ++i) {
-    for (uint j = 0; j < 11; ++j) {
+  for (int i = 0; i < 11; ++i) {
+    for (int j = 0; j < 11; ++j) {
       sch::BigInt a{i};
       std::ostringstream os1;
       std::ostringstream os2;
