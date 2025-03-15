@@ -766,6 +766,7 @@ inline std::pair<BigInt, BigInt> BigInt::longDivision(const BigInt &dividend,
 
     uint8_t multiple{};
     remainder.normalize();
+    // narrowing conversion
     multiple = std::distance(products.begin(),
                              std::prev(std::upper_bound(
                                  products.begin(), products.end(), remainder)));
