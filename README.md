@@ -1,6 +1,6 @@
 # sch
 
-[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/de-Manzanares/sch/.github%2Fworkflows%2Fcmake-multi-platform.yml?logo=githubactions&label=Test&style=flat-square)](https://github.com/de-Manzanares/sch/tree/master/test)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/de-Manzanares/sch/.github%2Fworkflows%2Fcmake-multi-platform.yml?logo=githubactions&label=Test)](https://github.com/de-Manzanares/sch/tree/master/test)
 [![codecov](https://codecov.io/gh/de-Manzanares/sch/graph/badge.svg?token=Y9345DJGVF)](https://codecov.io/gh/de-Manzanares/sch)
 ![C++ Standard](https://img.shields.io/badge/C%2B%2B-17-blue)
 
@@ -10,11 +10,12 @@ The BigInt class is an arbitrary precision integer that offers natural
 arithmetic syntax and semantics.
 
 * Arbitrary Precision: The sky (RAM) is the limit.
-* Natural expression: Seamlessly interoperate with built-in integral types, strings, and character arrays.
-    * built-in integral types being (signed or unsigned) `char`, `short`,
-      `int`, `long`, `long long`, etc.
+* Natural expression: Seamlessly interoperate with
+  [built-in integral types](https://en.cppreference.com/w/cpp/language/types#Integral_types),
+  strings, and character arrays.
 
- #### Example application 
+#### Example application
+
 A solution to [Project Euler](https://projecteuler.net/about) [Problem 16](https://projecteuler.net/problem=16):
 
 ```cpp
@@ -40,7 +41,23 @@ int main() {
 
 ### Getting BigInt
 
-Download the single file and place in your project's include path.
+If you are using CMake, you can use
+[FetchContent](https://cmake.org/cmake/help/latest/module/FetchContent.html):
+
+```cmake
+include(FetchContent)
+FetchContent_Declare(
+        sch
+        GIT_REPOSITORY https://github.com/de-Manzanares/sch.git
+        GIT_TAG v0.1.0 # or a later release
+)
+FetchContent_MakeAvailable(sch)
+target_link_libraries(your-target PRIVATE sch)
+```
+
+Otherwise, you can download the header file from the
+[Releases ](https://github.com/de-Manzanares/sch/releases)
+section and build as you would.
 
 ### Example Code
 
