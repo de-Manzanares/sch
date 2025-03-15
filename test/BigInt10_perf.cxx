@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "BigInt10.hpp"
+#include "schmath.hpp"
 
 namespace BigInt10_perf_test {
 

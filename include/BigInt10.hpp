@@ -12,6 +12,7 @@
 #ifndef SCH_INCLUDE_BigInt10_HPP_
 #define SCH_INCLUDE_BigInt10_HPP_
 
+#include "sign.h"
 #include <algorithm>
 #include <cstdint>
 #include <execution>
@@ -22,8 +23,6 @@
 #include <vector>
 
 namespace sch {
-
-enum class sign : bool { negative, positive };
 
 /**
  * @class BigInt10
@@ -122,11 +121,12 @@ class BigInt10 {
                           BigInt10 &difference);
 
   // Multiplication operator -----------------------------------
-  static BigInt10 longMultiplication(const BigInt10 &bottom, const BigInt10 &top);
+  static BigInt10 longMultiplication(const BigInt10 &bottom,
+                                     const BigInt10 &top);
 
   // Division operator -----------------------------------------
   static std::pair<BigInt10, BigInt10> longDivision(const BigInt10 &dividend,
-                                                const BigInt10 &divisor);
+                                                    const BigInt10 &divisor);
 };
 
 //------------------------------------------------------------------------------
@@ -303,7 +303,9 @@ bool operator<(const T val, const BigInt10 &rhs) {
   return BigInt10{val} < rhs;
 }
 
-inline bool BigInt10::operator>(const BigInt10 &rhs) const { return rhs < *this; }
+inline bool BigInt10::operator>(const BigInt10 &rhs) const {
+  return rhs < *this;
+}
 
 // GREATER THAN ----------------------------------------------------------------
 
@@ -447,8 +449,8 @@ inline BigInt10 BigInt10::operator+(const BigInt10 &rhs) const { // NOLINT
  * @param[in,out] sum the sum
  */
 inline void BigInt10::add(std::size_t &it_lhs, const BigInt10 &lhs,
-                        std::size_t &it_rhs, const BigInt10 &rhs, bool &carry,
-                        BigInt10 &sum) {
+                          std::size_t &it_rhs, const BigInt10 &rhs, bool &carry,
+                          BigInt10 &sum) {
   while (it_lhs < lhs._data.size() && it_rhs < rhs._data.size()) {
     sum._data.push_back(lhs._data[it_lhs] + rhs._data[it_rhs] +
                         (carry ? 1 : 0));
@@ -471,7 +473,7 @@ inline void BigInt10::add(std::size_t &it_lhs, const BigInt10 &lhs,
  * @param[in,out] sum the sum
  */
 inline void BigInt10::a_carryDown(std::size_t &it, const BigInt10 &bint_8,
-                                bool &carry, BigInt10 &sum) {
+                                  bool &carry, BigInt10 &sum) {
   while (it < bint_8._data.size()) {
     sum._data.push_back(bint_8._data[it] + (carry ? 1 : 0));
     if (sum._data.back() > BASE - 1) {
@@ -536,8 +538,8 @@ inline BigInt10 BigInt10::operator-(const BigInt10 &rhs) const { // NOLINT
   }
 
   BigInt10 difference{};
-  BigInt10 _lhs{*this};    // mutable copy
-  BigInt10 _rhs{rhs};      // mutable copy
+  BigInt10 _lhs{*this};  // mutable copy
+  BigInt10 _rhs{rhs};    // mutable copy
   std::size_t it_lhs{0}; // iterate through the digits of the lhs
   std::size_t it_rhs{0}; // iterate through the digits of the rhs
 
@@ -568,8 +570,8 @@ inline BigInt10 BigInt10::operator-(const BigInt10 &rhs) const { // NOLINT
  * @param[in,out] difference the difference
  */
 inline void BigInt10::subtract(std::size_t &it_lhs, BigInt10 &lhs,
-                             std::size_t &it_rhs, const BigInt10 &rhs,
-                             BigInt10 &difference) {
+                               std::size_t &it_rhs, const BigInt10 &rhs,
+                               BigInt10 &difference) {
   while (it_lhs < lhs._data.size() && it_rhs < rhs._data.size()) {
     if (lhs._data[it_lhs] < rhs._data[it_rhs]) {
       lhs._data[it_lhs] += 10;
@@ -598,7 +600,7 @@ inline void BigInt10::subtract(std::size_t &it_lhs, BigInt10 &lhs,
  * @param[in,out] difference the difference
  */
 inline void BigInt10::s_carryDown(std::size_t &it, const BigInt10 &bint_8,
-                                BigInt10 &difference) {
+                                  BigInt10 &difference) {
   while (it < bint_8._data.size()) {
     difference._data.push_back(bint_8._data[it]);
     ++it;
@@ -646,11 +648,11 @@ inline BigInt10 BigInt10::operator*(const BigInt10 &rhs) const {
  * @return the product of the two factors
  */
 inline BigInt10 BigInt10::longMultiplication(const BigInt10 &bottom,
-                                         const BigInt10 &top) {
+                                             const BigInt10 &top) {
   BigInt10 final_product{};       // the sum of the intermediate products
   std::vector<BigInt10> products; // the intermediate products
-  uint8_t carry{0};             // what value is being carried?
-  std::size_t latest_prod{0};   // latest intermediate product
+  uint8_t carry{0};               // what value is being carried?
+  std::size_t latest_prod{0};     // latest intermediate product
 
   products.reserve(bottom._data.size());
 
@@ -728,8 +730,8 @@ inline BigInt10 BigInt10::operator%(const BigInt10 &rhs) const {
  * @param divisor the number to divide by
  * @return {quotient,remainder}
  */
-inline std::pair<BigInt10, BigInt10> BigInt10::longDivision(const BigInt10 &dividend,
-                                                      const BigInt10 &divisor) {
+inline std::pair<BigInt10, BigInt10>
+BigInt10::longDivision(const BigInt10 &dividend, const BigInt10 &divisor) {
   if (divisor == "0") {
     throw std::runtime_error(
         "BigInt10::operator/() : Division by zero is undefined");
@@ -1047,43 +1049,6 @@ inline std::string BigInt10::to_string() const {
     str.push_back(static_cast<char>(*it + '0'));
   }
   return str;
-}
-
-//------------------------------------------------------------------------------
-// Non-member functions
-
-/**
- * @tparam T A built-in integral type (signed or unsigned).
- *           Must be non-negative when calling this function.
- * @param base The base value (x in x^y).
- * @param exp  The exponent value (y in x^y).
- * @return The result of x^y as a BigInt10.
- * @throws std::invalid_argument if `exp` is negative.
- */
-template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-BigInt10 pow(const BigInt10 &base, const T exp) {
-  if (exp < 0) {
-    throw(std::invalid_argument("BigInt10::pow() : negative exponent"));
-  }
-  if (exp == 0) { // precedes the next check because 0^0 == 1
-    return 1;
-  }
-  if (base == BigInt10{0}) {
-    return 0;
-  }
-
-  BigInt10 m_base = base;                       // mutable copy
-  auto m_exp = static_cast<std::size_t>(exp); // mutable copy
-  BigInt10 res{1};                              // result
-
-  while (m_exp > 0) {
-    if (m_exp % 2 == 1) {
-      res *= m_base;
-    }
-    m_base *= m_base;
-    m_exp /= 2;
-  }
-  return res;
 }
 
 } // namespace sch
