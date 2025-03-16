@@ -29,6 +29,8 @@ namespace sch {
  * @brief Arbitrary precision integer
  */
 class BigInt10 {
+  friend class BigInt;
+
  public:
   BigInt10() = default;
   explicit BigInt10(const std::string &str);
@@ -142,7 +144,7 @@ inline BigInt10::BigInt10(const std::string &str) {
   // ensure there are no other non-numeric characters
   if (!std::all_of(str.begin() + offset, str.end(), isdigit)) {
     throw std::invalid_argument(
-        "BigInt10::BigUInt_8() : string contains non-numeric characters");
+        "BigInt10::BigInt10() : string contains non-numeric characters");
   }
   _data = std::vector<uint8_t>(str.rbegin(), str.rend() - offset);
   for (auto &digit : _data) {

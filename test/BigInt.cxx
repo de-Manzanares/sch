@@ -62,25 +62,42 @@ void randomizeSign(std::string &str) {
   }
 }
 
+void removeLeadingZeros(std::string &str) {
+  str.erase(0, str.find_first_not_of('0'));
+  if (str == "") {
+    str = std::to_string(randomInRange(1, 9));
+  }
+}
+
 //------------------------------------------------------------------------------
 
-/*
-
-TEST_CASE("constructor") {
+TEST_CASE("constructor and stream insertion") {
   SECTION("positive") {
-    for (int i = 0; i < 100; ++i) {
-      std::string str = randomString(1, 10'000);
+    for (int i = 0; i < 10; ++i) {
+      std::ostringstream oss[2];
+      std::string str = randomString(1, 1000);
+      removeLeadingZeros(str);
       sch::BigInt bint{str};
+      oss[0] << str;
+      oss[1] << bint;
+      CHECK(oss[0].str() == oss[1].str());
     }
   }
   SECTION("negative") {
-    for (int i = 0; i < 100; ++i) {
-      std::string str = randomString(1, 10'000);
+    for (int i = 0; i < 10; ++i) {
+      std::ostringstream oss[2];
+      std::string str = randomString(1, 1000);
+      removeLeadingZeros(str);
       str.insert(0, 1, '-');
       sch::BigInt bint{str};
+      oss[0] << str;
+      oss[1] << bint;
+      CHECK(oss[0].str() == oss[1].str());
     }
   }
 }
+
+/*
 
 TEST_CASE("comparison operators") {
   for (int i = 0; i < 1000; ++i) {
