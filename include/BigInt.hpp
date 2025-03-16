@@ -104,8 +104,8 @@ class BigInt {
 
  private:
   // constants
-  static constexpr std::uint64_t EXP = 63;
-  static constexpr std::uint64_t BASE = 1ULL << EXP; ///< base 2^EXP
+  static constexpr std::uint64_t EXP = 9; // 10^EXP
+  static constexpr std::uint64_t BASE = 1'000'000'000;
 
   // private variables
   sign _sign = sign::positive;          ///< sign of the number
@@ -115,30 +115,54 @@ class BigInt {
 // CONSTRUCTORS ----------------------------------------------------------------
 
 inline BigInt::BigInt(const std::string &str) {
-  BigInt10 bstr{str};
-  if (bstr._sign == sign::negative) {
-    this->_sign = sign::negative;
+  int minusSignOffset = 0;  // to ignore negative sign, if it exists
+  if (str.front() == '-') { // check for sign
+    minusSignOffset = 1;
+    _sign = sign::negative;
   }
-  bstr._sign = sign::positive;
-  const BigInt10 base{BASE};
-  while (bstr > base) {
-    auto [quotient, remainder] = BigInt10::longDivision(bstr, BASE);
-    _digits.push_back(std::stoull((remainder).to_string()));
-    bstr = quotient;
+  // ensure there are no other non-numeric characters
+  if (!std::all_of(str.begin() + minusSignOffset, str.end(), isdigit)) {
+    throw std::invalid_argument(
+        "BigInt10::BigInt10() : string contains non-numeric characters");
   }
-  _digits.push_back(std::stoull((bstr).to_string()));
+
+  _digits.reserve(str.size() / EXP + 1);
+
+  // to grab the first undersized chunk
+  const std::size_t chunkOffset = (str.size() - minusSignOffset) % EXP;
+  // start grabbing the regular-sized chunks from here
+  const std::size_t offset = chunkOffset + minusSignOffset;
+
+  // grab the first undersized chunk
+  if (chunkOffset != 0) {
+    _digits.emplace_back(std::stoull(
+        std::string{str.begin() + minusSignOffset, str.begin() + offset}));
+  }
+
+  // grab the rest of the chunks
+  for (std::size_t i = offset; i < str.size(); i += EXP) {
+    _digits.emplace_back(std::stoll(str.substr(i, EXP)));
+  }
+
+  // little endian order lol
+  std::reverse(_digits.begin(), _digits.end());
 }
 
 inline std::string BigInt::to_string() const {
-  BigInt10 b10;
   std::string str;
-  for (int i = 0; i < _digits.size(); ++i) {
-    b10 += _digits[i] * pow(pow(2, EXP), i);
-  }
   if (_sign == sign::negative) {
-    str.push_back('-');
+    str += "-";
   }
-  str += b10.to_string();
+  // the first "digit" doesn't need leading zeros
+  str += std::to_string(*_digits.rbegin());
+
+  for (auto it = _digits.rbegin() + 1; it != _digits.rend(); ++it) {
+    std::string tmp{std::to_string(*it)};
+    while (tmp.size() < EXP) {
+      tmp.insert(0, 1, '0'); // leading zeros for each chunk
+    }
+    str += tmp;
+  }
   return str;
 }
 

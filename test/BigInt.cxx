@@ -73,9 +73,9 @@ void removeLeadingZeros(std::string &str) {
 
 TEST_CASE("constructor and stream insertion") {
   SECTION("positive") {
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < 1000; ++i) {
       std::ostringstream oss[2];
-      std::string str = randomString(1, 1000);
+      std::string str = randomString(10000, 10000);
       removeLeadingZeros(str);
       sch::BigInt bint{str};
       oss[0] << str;
@@ -84,9 +84,9 @@ TEST_CASE("constructor and stream insertion") {
     }
   }
   SECTION("negative") {
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < 1000; ++i) {
       std::ostringstream oss[2];
-      std::string str = randomString(1, 1000);
+      std::string str = randomString(10000, 10000);
       removeLeadingZeros(str);
       str.insert(0, 1, '-');
       sch::BigInt bint{str};
