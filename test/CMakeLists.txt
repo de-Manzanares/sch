@@ -10,16 +10,34 @@ if (SCH_ENABLE_TESTS)
     )
     FetchContent_MakeAvailable(Catch2)
 
+    set(DEBUGCompilerOptions -Wall -Wextra -Wpedantic)
+    set(COVCompilerOptions --coverage ${DEBUGCompilerOptions})
+    set(COVLinkerOptions --coverage)
+    set(SANCompilerOptions -fsanitize=address,undefined ${DEBUGCompilerOptions})
+    set(SANLinkerOptions -fsanitize=address,undefined)
+
+
     add_executable(BigInt-test BigInt.cxx ../include/BigInt.hpp)
     target_include_directories(BigInt-test PRIVATE ../include)
     target_link_libraries(BigInt-test PRIVATE Catch2::Catch2WithMain)
-    target_compile_options(BigInt-test PRIVATE
-            $<$<CXX_COMPILER_ID:GNU,Clang>:--coverage -Wall -Wextra -Wpedantic>
-            $<$<CXX_COMPILER_ID:MSVC>:/W4>
-    )
-    target_link_options(BigInt-test PRIVATE
-            $<$<CXX_COMPILER_ID:GNU,Clang>:--coverage -lgcov>
-    )
+    if (${CMAKE_BUILD_TYPE} STREQUAL "DebugCOV")
+        target_compile_options(BigInt-test PRIVATE
+                $<$<CXX_COMPILER_ID:GNU,Clang>:${COVCompilerOptions}>
+                $<$<CXX_COMPILER_ID:MSVC>:/W4>
+        )
+        target_link_options(BigInt-test PRIVATE
+                $<$<CXX_COMPILER_ID:GNU,Clang>:${COVLinkerOptions}>
+        )
+    endif ()
+    if (${CMAKE_BUILD_TYPE} STREQUAL "DebugSAN")
+        target_compile_options(BigInt-test PRIVATE
+                $<$<CXX_COMPILER_ID:GNU,Clang>:${SANCompilerOptions}>
+                $<$<CXX_COMPILER_ID:MSVC>:/W4>
+        )
+        target_link_options(BigInt-test PRIVATE
+                $<$<CXX_COMPILER_ID:GNU,Clang>:${SANLinkerOptions}>
+        )
+    endif ()
 
     add_test(NAME BigInt-test COMMAND BigInt-test)
     set_tests_properties(BigInt-test PROPERTIES LABELS unit)
