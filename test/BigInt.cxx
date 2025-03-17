@@ -75,7 +75,7 @@ TEST_CASE("constructor and stream insertion") {
   SECTION("positive") {
     for (int i = 0; i < 1000; ++i) {
       std::ostringstream oss[2];
-      std::string str = randomString(10000, 10000);
+      std::string str = randomString(10000, 20000);
       removeLeadingZeros(str);
       sch::BigInt bint{str};
       oss[0] << str;
@@ -86,7 +86,7 @@ TEST_CASE("constructor and stream insertion") {
   SECTION("negative") {
     for (int i = 0; i < 1000; ++i) {
       std::ostringstream oss[2];
-      std::string str = randomString(10000, 10000);
+      std::string str = randomString(10000, 20000);
       removeLeadingZeros(str);
       str.insert(0, 1, '-');
       sch::BigInt bint{str};
@@ -95,9 +95,15 @@ TEST_CASE("constructor and stream insertion") {
       CHECK(oss[0].str() == oss[1].str());
     }
   }
+  SECTION("0") {
+    std::string strP = "0";
+    std::string strN = "-0";
+    sch::BigInt bintP{strP};
+    sch::BigInt bintN{strN};
+    CHECK(strP == bintP.to_string());
+    CHECK(strN.substr(1) == bintN.to_string());
+  }
 }
-
-/*
 
 TEST_CASE("comparison operators") {
   for (int i = 0; i < 1000; ++i) {
@@ -120,23 +126,7 @@ TEST_CASE("comparison operators") {
   }
 }
 
-TEST_CASE("operator << : stream extraction") {
-  for (int i = 0; i < 100; ++i) {
-    std::ostringstream os;
-    std::string str = randomString(1, 10'000);
-    size_t str_index = str.find_first_not_of('0');
-    randomizeSign(str);
-    if (str[0] == '-') {
-      ++str_index;
-    }
-    sch::BigInt bint{str};
-    os << bint;
-    // ternary is to maintain the '-' while dodging leading zeros, should
-    // the character be present
-    CHECK(os.str() == (str[0] == '-' ? '-' + str.substr(str_index)
-                                     : str.substr(str_index)));
-  }
-}
+/*
 
 TEST_CASE("operator + : addition") {
   for (int i = 0; i < 1000; ++i) {

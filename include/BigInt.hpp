@@ -43,11 +43,14 @@ class BigInt {
   BigInt &operator=(BigInt &&) = default; // move assignment
 
   // Copy assignment
+
   BigInt &operator=(const BigInt &) = default;
   BigInt &operator=(const char *str);
   BigInt &operator=(const std::string &str);
   template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
   BigInt &operator=(T val);
+
+  // Comparison operators
 
   bool operator==(const BigInt &rhs) const;
   bool operator!=(const BigInt &rhs) const;
@@ -112,7 +115,7 @@ class BigInt {
   std::vector<std::uint64_t> _digits{}; ///< @note little endian order
 };
 
-// CONSTRUCTORS ----------------------------------------------------------------
+// CONSTRUCTOR -----------------------------------------------------------------
 
 inline BigInt::BigInt(const std::string &str) {
   int minusSignOffset = 0;  // to ignore negative sign, if it exists
@@ -146,6 +149,85 @@ inline BigInt::BigInt(const std::string &str) {
 
   // little endian order lol
   std::reverse(_digits.begin(), _digits.end());
+  this->normalize(); // to remove empty elements
+}
+
+// COPY ASSIGNMENT -------------------------------------------------------------
+
+inline BigInt &BigInt::operator=(const char *str) {
+  *this = BigInt{std::string{str}};
+  return *this;
+}
+
+inline BigInt &BigInt::operator=(const std::string &str) {
+  *this = BigInt{str};
+  return *this;
+}
+
+template <typename T, typename> BigInt &BigInt::operator=(T val) {
+  *this = BigInt{val};
+  return *this;
+}
+
+// COMPARISON OPERATORS --------------------------------------------------------
+
+inline bool BigInt::operator==(const BigInt &rhs) const {
+  // NOLINTNEXTLINE _sign field is definitely initialized
+  return _digits == rhs._digits && _sign == rhs._sign;
+}
+
+inline bool BigInt::operator!=(const BigInt &rhs) const {
+  return !(*this == rhs);
+}
+
+inline bool BigInt::operator<(const BigInt &rhs) const {
+  // opposite sign considerations ---------------------
+  if (_sign == sign::negative && rhs._sign == sign::positive) {
+    return true;
+  }
+  if (_sign == sign::positive && rhs._sign == sign::negative) {
+    return false;
+  }
+  // same sign considerations -------------------------
+  // different lengths ------------------
+  // if positive, shorter is smaller
+  // if negative, longer is smaller
+  if (_digits.size() != rhs._digits.size()) {
+    return (_sign == sign::positive ? _digits.size() < rhs._digits.size()
+                                    : rhs._digits.size() < _digits.size());
+  }
+  // same length ------------------------
+  // if positive, lexicographically "smaller" is smaller
+  // if negative, lexicographically "larger" is smaller
+  return (_sign == sign::positive
+              ? std::lexicographical_compare(_digits.rbegin(), _digits.rend(),
+                                             rhs._digits.rbegin(),
+                                             rhs._digits.rend())
+              : std::lexicographical_compare(rhs._digits.rbegin(),
+                                             rhs._digits.rend(),
+                                             _digits.rbegin(), _digits.rend()));
+  // --------------------------------------------------
+}
+
+inline bool BigInt::operator>(const BigInt &rhs) const { return rhs < *this; }
+
+inline bool BigInt::operator<=(const BigInt &rhs) const {
+  return !(*this > rhs);
+}
+
+inline bool BigInt::operator>=(const BigInt &rhs) const {
+  return !(*this < rhs);
+}
+
+// MEMBER FUNCTIONS ------------------------------------------------------------
+
+inline void BigInt::normalize() {
+  while (_digits.size() > 1 && _digits.back() == 0) {
+    _digits.pop_back();
+  }
+  if (_digits.empty() || (_digits.size() == 1 && _digits.front() == 0)) {
+    _sign = sign::positive;
+  }
 }
 
 inline std::string BigInt::to_string() const {
@@ -166,9 +248,181 @@ inline std::string BigInt::to_string() const {
   return str;
 }
 
+// FRIEND FUNCTIONS ------------------------------------------------------------
+
 inline std::ostream &operator<<(std::ostream &os, const BigInt &b) {
   os << b.to_string();
   return os;
+}
+
+// OVERLOADS -------------------------------------------------------------------
+
+// for comparison to zero
+
+inline bool operator==(const BigInt &lhs, const int rhs) {
+  return lhs == BigInt{rhs};
+}
+
+// for comparison to zero
+
+inline bool operator==(const int lhs, const BigInt &rhs) {
+  return BigInt{lhs} == rhs;
+}
+
+inline bool operator==(const BigInt &lhs, const char *str) {
+  return lhs == BigInt{std::string{str}};
+}
+
+inline bool operator==(const char *str, const BigInt &rhs) {
+  return rhs == BigInt{std::string{str}};
+}
+
+inline bool operator==(const BigInt &lhs, const std::string &str) {
+  return lhs == BigInt{str};
+}
+
+inline bool operator==(const std::string &str, const BigInt &rhs) {
+  return rhs == BigInt{str};
+}
+
+template <typename T, typename>
+bool operator==(const BigInt &lhs, const T &rhs) {
+  return lhs == BigInt{rhs};
+}
+
+template <typename T, typename>
+bool operator==(const T &lhs, const BigInt &rhs) {
+  return BigInt{lhs} == rhs;
+}
+
+inline bool operator!=(const BigInt &lhs, const char *str) {
+  return lhs != BigInt{std::string{str}};
+}
+
+inline bool operator!=(const char *str, const BigInt &rhs) {
+  return rhs != BigInt{std::string{str}};
+}
+
+inline bool operator!=(const BigInt &lhs, const std::string &str) {
+  return lhs != BigInt{str};
+}
+
+inline bool operator!=(const std::string &str, const BigInt &rhs) {
+  return rhs != BigInt{str};
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+bool operator!=(const BigInt &lhs, const T val) {
+  return lhs != BigInt{val};
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+bool operator!=(const T val, const BigInt &rhs) {
+  return rhs != BigInt{val};
+}
+
+inline bool operator<(const BigInt &lhs, const char *str) {
+  return lhs < BigInt{std::string{str}};
+}
+
+inline bool operator<(const char *str, const BigInt &rhs) {
+  return BigInt{std::string{str}} < rhs;
+}
+
+inline bool operator<(const BigInt &lhs, const std::string &str) {
+  return lhs < BigInt{str};
+}
+
+inline bool operator<(const std::string &str, const BigInt &rhs) {
+  return BigInt{str} < rhs;
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+bool operator<(const BigInt &lhs, const T val) {
+  return lhs < BigInt{val};
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+bool operator<(const T val, const BigInt &rhs) {
+  return BigInt{val} < rhs;
+}
+
+inline bool operator>(const BigInt &lhs, const char *str) {
+  return lhs > BigInt{std::string{str}};
+}
+
+inline bool operator>(const char *str, const BigInt &rhs) {
+  return BigInt{std::string{str}} > rhs;
+}
+
+inline bool operator>(const BigInt &lhs, const std::string &str) {
+  return lhs > BigInt{str};
+}
+
+inline bool operator>(const std::string &str, const BigInt &rhs) {
+  return BigInt{str} > rhs;
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+bool operator>(const BigInt &lhs, const T val) {
+  return lhs > BigInt{val};
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+bool operator>(const T val, const BigInt &rhs) {
+  return BigInt{val} > rhs;
+}
+
+inline bool operator<=(const BigInt &lhs, const char *str) {
+  return lhs <= BigInt{std::string{str}};
+}
+
+inline bool operator<=(const char *str, const BigInt &rhs) {
+  return BigInt{std::string{str}} <= rhs;
+}
+
+inline bool operator<=(const BigInt &lhs, const std::string &str) {
+  return lhs <= BigInt{str};
+}
+
+inline bool operator<=(const std::string &str, const BigInt &rhs) {
+  return BigInt{str} <= rhs;
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+bool operator<=(const BigInt &lhs, const T val) {
+  return lhs <= BigInt{val};
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+bool operator<=(const T val, const BigInt &rhs) {
+  return BigInt{val} <= rhs;
+}
+
+inline bool operator>=(const BigInt &lhs, const char *str) {
+  return lhs >= BigInt{std::string{str}};
+}
+
+inline bool operator>=(const char *str, const BigInt &rhs) {
+  return BigInt{std::string{str}} >= rhs;
+}
+
+inline bool operator>=(const BigInt &lhs, const std::string &str) {
+  return lhs >= BigInt{str};
+}
+
+inline bool operator>=(const std::string &str, const BigInt &rhs) {
+  return BigInt{str} >= rhs;
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+bool operator>=(const BigInt &lhs, const T val) {
+  return lhs >= BigInt{val};
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+bool operator>=(const T val, const BigInt &rhs) {
+  return BigInt{val} >= rhs;
 }
 
 } // namespace sch
