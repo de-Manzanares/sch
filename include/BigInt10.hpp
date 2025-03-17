@@ -305,11 +305,11 @@ bool operator<(const T val, const BigInt10 &rhs) {
   return BigInt10{val} < rhs;
 }
 
+// GREATER THAN ----------------------------------------------------------------
+
 inline bool BigInt10::operator>(const BigInt10 &rhs) const {
   return rhs < *this;
 }
-
-// GREATER THAN ----------------------------------------------------------------
 
 inline bool operator>(const BigInt10 &lhs, const char *str) {
   return lhs > BigInt10{std::string{str}};
