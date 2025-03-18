@@ -106,8 +106,8 @@ class BigInt {
 
  private:
   // constants
-  static constexpr std::uint64_t EXP = 9; // 10^EXP
-  static constexpr std::uint64_t BASE = 1'000'000'000;
+  static constexpr std::uint64_t EXP = 18; // 10^EXP
+  static constexpr std::uint64_t BASE = 1'000'000'000'000'000'000;
 
   // private variables
   sign _sign = sign::positive;          ///< sign of the number

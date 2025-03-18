@@ -133,7 +133,7 @@ TEST_CASE("operator + : addition") {
     std::ostringstream os[2];
 
     for (int k = 0; k < 2; ++k) {
-      const std::string str = randomString(1000, 2000);
+      const std::string str = randomString(10000, 20000);
       // randomizeSign(str);
       bint10[k] = str;
       bint[k] = str;
@@ -151,7 +151,7 @@ TEST_CASE("operator - : subtraction") {
     std::ostringstream os[2];
 
     for (int k = 0; k < 2; ++k) {
-      const std::string str = randomString(1000, 2000);
+      const std::string str = randomString(10000, 20000);
       // randomizeSign(str);
       bint10[k] = str;
       bint[k] = str;
