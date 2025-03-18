@@ -205,12 +205,12 @@ inline bool operator==(const std::string &str, const BigInt &rhs) {
   return rhs == BigInt{str};
 }
 
-template <typename T, typename>
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
 bool operator==(const BigInt &lhs, const T &rhs) {
   return lhs == BigInt{rhs};
 }
 
-template <typename T, typename>
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
 bool operator==(const T &lhs, const BigInt &rhs) {
   return BigInt{lhs} == rhs;
 }
