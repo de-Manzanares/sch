@@ -95,7 +95,6 @@ class BigInt {
   template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
   BigInt &operator%=(T val);
 
-  BigInt &operator-();
   BigInt operator-() const;
   BigInt &operator++();
   BigInt &operator--();
@@ -232,6 +231,14 @@ inline bool BigInt::operator>=(const BigInt &rhs) const {
 
 // ARITHMETIC OPERATORS --------------------------------------------------------
 
+// UNARY MINUS -----------------------------------------------------------------
+
+inline BigInt BigInt::operator-() const {
+  BigInt tmp = *this;
+  tmp._sign = (tmp._sign == sign::positive ? sign::negative : sign::positive);
+  return tmp;
+}
+
 // ADDITION --------------------------------------------------------------------
 
 inline BigInt BigInt::operator+(const BigInt &rhs) const { // NOLINT
@@ -241,17 +248,17 @@ inline BigInt BigInt::operator+(const BigInt &rhs) const { // NOLINT
   // straightforward approach to implementation was(is?,were?) the
   // conditional statements below. This allows us to reuse the subtraction
   // (addition) logic.
-  // if (_sign != rhs._sign) {
-  //   if (_sign == sign::negative) {
-  //     return rhs - -*this;
-  //   }
-  //   if (rhs._sign == sign::negative) {
-  //     return *this - -rhs;
-  //   }
-  // }
-  // if (_sign == sign::negative && rhs._sign == sign::negative) {
-  //   return -(-*this + -rhs);
-  // }
+  if (_sign != rhs._sign) {
+    if (_sign == sign::negative) {
+      return rhs - -*this;
+    }
+    if (rhs._sign == sign::negative) {
+      return *this - -rhs;
+    }
+  }
+  if (_sign == sign::negative && rhs._sign == sign::negative) {
+    return -(-*this + -rhs);
+  }
 
   BigInt sum;
   bool carry = false;
@@ -329,20 +336,20 @@ inline BigInt BigInt::operator-(const BigInt &rhs) const { // NOLINT
   // non-negative integers. Sign handling was introduced afterward; the most
   // straightforward approach to implementation was(is?,were?) the conditional
   // statements below. This allows us to reuse the subtraction (addition) logic.
-  // if (*this == rhs) {
-  //   return BigInt{"0"};
-  // }
-  // if (_sign != rhs._sign) {
-  //   if (_sign == sign::negative) {
-  //     return -(-(*this) + rhs);
-  //   }
-  //   if (rhs._sign == sign::negative) {
-  //     return *this + (-(rhs));
-  //   }
-  // }
-  // if (_sign == sign::negative && rhs._sign == sign::negative) {
-  //   return -(rhs) - (-(*this));
-  // }
+  if (*this == rhs) {
+    return BigInt{0};
+  }
+  if (_sign != rhs._sign) {
+    if (_sign == sign::negative) {
+      return -(-(*this) + rhs);
+    }
+    if (rhs._sign == sign::negative) {
+      return *this + (-(rhs));
+    }
+  }
+  if (_sign == sign::negative && rhs._sign == sign::negative) {
+    return -(rhs) - (-(*this));
+  }
 
   BigInt difference{};
   BigInt m_lhs{*this};   // mutable copy
