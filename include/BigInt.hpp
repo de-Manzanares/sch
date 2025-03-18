@@ -462,18 +462,6 @@ inline std::ostream &operator<<(std::ostream &os, const BigInt &b) {
 
 // COMPARISON OVERLOADS --------------------------------------------------------
 
-// for comparison to zero
-
-inline bool operator==(const BigInt &lhs, const int rhs) {
-  return lhs == BigInt{rhs};
-}
-
-// for comparison to zero
-
-inline bool operator==(const int lhs, const BigInt &rhs) {
-  return BigInt{lhs} == rhs;
-}
-
 inline bool operator==(const BigInt &lhs, const char *str) {
   return lhs == BigInt{std::string{str}};
 }
