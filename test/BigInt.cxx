@@ -126,25 +126,25 @@ TEST_CASE("comparison operators") {
   }
 }
 
-/*
-
 TEST_CASE("operator + : addition") {
   for (int i = 0; i < 1000; ++i) {
-    long long n[2];
+    sch::BigInt10 bint10[2];
     sch::BigInt bint[2];
     std::ostringstream os[2];
 
     for (int k = 0; k < 2; ++k) {
-      std::string str = randomString(1, LL_FULL_LENGTH);
-      randomizeSign(str);
-      n[k] = std::stoll(str);
-      bint[k] = n[k];
+      const std::string str = randomString(1000, 2000);
+      // randomizeSign(str);
+      bint10[k] = str;
+      bint[k] = str;
     }
-    os[0] << n[0] + n[1];
+    os[0] << bint10[0] + bint10[1];
     os[1] << bint[0] + bint[1];
     CHECK(os[0].str() == os[1].str());
   }
 }
+
+/*
 
 TEST_CASE("operator - : subtraction") {
   for (int i = 0; i < 1000; ++i) {
