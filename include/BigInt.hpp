@@ -95,24 +95,34 @@ class BigInt {
   template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
   BigInt &operator%=(T val);
 
-  BigInt &operator-();
   BigInt operator-() const;
   BigInt &operator++();
   BigInt &operator--();
 
   friend std::ostream &operator<<(std::ostream &os, const BigInt &b);
-
   void normalize();
   [[nodiscard]] std::string to_string() const;
 
  private:
   // constants
-  static constexpr std::uint64_t EXP = 9; // 10^EXP
-  static constexpr std::uint64_t BASE = 1'000'000'000;
+  static constexpr std::uint64_t EXP = 18; // 10^EXP
+  static constexpr std::uint64_t BASE = 1'000'000'000'000'000'000;
 
   // private variables
   sign _sign = sign::positive;          ///< sign of the number
   std::vector<std::uint64_t> _digits{}; ///< @note little endian order
+
+  // ADDITION HELPERS ----------------------------------------
+  static void add(std::size_t &it_lhs, const BigInt &lhs, std::size_t &it_rhs,
+                  const BigInt &rhs, bool &carry, BigInt &sum);
+  static void a_carryDown(std::size_t &it, const BigInt &bint_8, bool &carry,
+                          BigInt &sum);
+
+  // SUBTRACTION HELPERS -------------------------------------
+  static void subtract(std::size_t &it_lhs, BigInt &lhs, std::size_t &it_rhs,
+                       const BigInt &rhs, BigInt &difference);
+  static void s_carryDown(std::size_t &it, const BigInt &bint_8,
+                          BigInt &difference);
 };
 
 // CONSTRUCTOR -----------------------------------------------------------------
@@ -219,6 +229,199 @@ inline bool BigInt::operator>=(const BigInt &rhs) const {
   return !(*this < rhs);
 }
 
+// ARITHMETIC OPERATORS --------------------------------------------------------
+
+// UNARY MINUS -----------------------------------------------------------------
+
+inline BigInt BigInt::operator-() const {
+  BigInt tmp = *this;
+  tmp._sign = (tmp._sign == sign::positive ? sign::negative : sign::positive);
+  return tmp;
+}
+
+// ADDITION --------------------------------------------------------------------
+
+inline BigInt BigInt::operator+(const BigInt &rhs) const { // NOLINT
+  // todo optimizations for adding to 0 or 1 and so on
+  // Initially, addition and subtraction were implemented assuming two
+  // non-negative integers. Sign handling was introduced afterward; the most
+  // straightforward approach to implementation was(is?,were?) the
+  // conditional statements below. This allows us to reuse the subtraction
+  // (addition) logic.
+  if (_sign != rhs._sign) {
+    if (_sign == sign::negative) {
+      return rhs - -*this;
+    }
+    if (rhs._sign == sign::negative) {
+      return *this - -rhs;
+    }
+  }
+  if (_sign == sign::negative && rhs._sign == sign::negative) {
+    return -(-*this + -rhs);
+  }
+
+  BigInt sum;
+  bool carry = false;
+  std::size_t it_lhs{0}; // iterate through the digits of the lhs
+  std::size_t it_rhs{0}; // iterate through the digits of the rhs
+
+  sum._digits.reserve(_digits.size() > rhs._digits.size() ? _digits.size()
+                                                          : rhs._digits.size());
+
+  add(it_lhs, *this, it_rhs, rhs, carry, sum);
+  a_carryDown(it_lhs, *this, carry, sum);
+  a_carryDown(it_rhs, rhs, carry, sum);
+
+  if (carry) { // final carry
+    sum._digits.push_back(1);
+  }
+  sum.normalize();
+  return sum;
+}
+
+/**
+ * @brief School-book addition.
+ * @param[in,out] it_lhs iterate through the lhs digits
+ * @param[in] lhs the left-hand-side addend
+ * @param[in,out] it_rhs iterate through the rhs digits
+ * @param[in] rhs the right-hand-side addend
+ * @param[in,out] carry carry 1?
+ * @param[in,out] sum the sum
+ */
+inline void BigInt::add(std::size_t &it_lhs, const BigInt &lhs,
+                        std::size_t &it_rhs, const BigInt &rhs, bool &carry,
+                        BigInt &sum) {
+  while (it_lhs < lhs._digits.size() && it_rhs < rhs._digits.size()) {
+    sum._digits.push_back(lhs._digits[it_lhs] + rhs._digits[it_rhs] +
+                          (carry ? 1 : 0));
+    if (sum._digits.back() > BASE - 1) {
+      carry = true;
+      sum._digits.back() -= BASE;
+    } else {
+      carry = false;
+    }
+    ++it_lhs;
+    ++it_rhs;
+  }
+}
+
+/**
+ * @brief School-book addition -- performs all the x + 0 columns
+ * @param[in,out] it iterate through the digits
+ * @param bint_8 the number we are iterating through
+ * @param[in,out] carry carry 1?
+ * @param[in,out] sum the sum
+ */
+inline void BigInt::a_carryDown(std::size_t &it, const BigInt &bint_8,
+                                bool &carry, BigInt &sum) {
+  while (it < bint_8._digits.size()) {
+    sum._digits.push_back(bint_8._digits[it] + (carry ? 1 : 0));
+    if (sum._digits.back() > BASE - 1) {
+      carry = true;
+      sum._digits.back() -= BASE;
+    } else {
+      carry = false;
+    }
+    ++it;
+  }
+}
+
+// SUBTRACTION -----------------------------------------------------------------
+
+// is there a way to work around using copies to maintain constness?
+
+inline BigInt BigInt::operator-(const BigInt &rhs) const { // NOLINT
+  // todo optimizations for subtracting to and from 0 or 1 and so on
+  // Initially, addition and subtraction were implemented assuming two
+  // non-negative integers. Sign handling was introduced afterward; the most
+  // straightforward approach to implementation was(is?,were?) the conditional
+  // statements below. This allows us to reuse the subtraction (addition) logic.
+  if (*this == rhs) {
+    return BigInt{0};
+  }
+  if (_sign != rhs._sign) {
+    if (_sign == sign::negative) {
+      return -(-(*this) + rhs);
+    }
+    if (rhs._sign == sign::negative) {
+      return *this + (-(rhs));
+    }
+  }
+  if (_sign == sign::negative && rhs._sign == sign::negative) {
+    return -(rhs) - (-(*this));
+  }
+
+  BigInt difference{};
+  BigInt m_lhs{*this};   // mutable copy
+  BigInt m_rhs{rhs};     // mutable copy
+  std::size_t it_lhs{0}; // iterate through the digits of the lhs
+  std::size_t it_rhs{0}; // iterate through the digits of the rhs
+
+  difference._digits.reserve(_digits.size() > rhs._digits.size()
+                                 ? _digits.size()
+                                 : rhs._digits.size());
+
+  if (m_rhs > m_lhs) {
+    difference._sign = sign::negative; // otherwise dif sign is pos. by default
+  }
+  if (difference._sign == sign::positive) { // subtract rhs from lhs
+    subtract(it_lhs, m_lhs, it_rhs, m_rhs, difference);
+  } else { // subtract lhs from rhs
+    subtract(it_rhs, m_rhs, it_lhs, m_lhs, difference);
+  }
+  s_carryDown(it_lhs, m_lhs, difference);
+  s_carryDown(it_rhs, m_rhs, difference);
+
+  difference.normalize();
+  return difference;
+}
+
+/**
+ * @brief School-book subtraction
+ * @param[in,out] it_lhs iterate through the digits of the lhs
+ * @param[in,out] lhs the minuend
+ * @param[in,out] it_rhs iterate through the digits of the rhs
+ * @param rhs the subtrahend
+ * @param[in,out] difference the difference
+ */
+inline void BigInt::subtract(std::size_t &it_lhs, BigInt &lhs,
+                             std::size_t &it_rhs, const BigInt &rhs,
+                             BigInt &difference) {
+  while (it_lhs < lhs._digits.size() && it_rhs < rhs._digits.size()) {
+    if (lhs._digits[it_lhs] < rhs._digits[it_rhs]) {
+      lhs._digits[it_lhs] += BASE;
+      if (lhs._digits[it_lhs + 1] != 0) {
+        lhs._digits[it_lhs + 1] -= 1;
+      } else {
+        std::size_t tmp_it{1};
+        while ((it_lhs + tmp_it) < lhs._digits.size() - 1 &&
+               lhs._digits[it_lhs + tmp_it] == 0) {
+          lhs._digits[it_lhs + tmp_it] = BASE - 1;
+          ++tmp_it;
+        }
+        lhs._digits[it_lhs + tmp_it] -= 1;
+      }
+    }
+    difference._digits.push_back(lhs._digits[it_lhs] - rhs._digits[it_rhs]);
+    ++it_lhs;
+    ++it_rhs;
+  }
+}
+
+/**
+ * School-book subtraction -- performs all the x - 0 columns
+ * @param[in,out] it iterate through the digits
+ * @param bint_8 the number we are iterating through
+ * @param[in,out] difference the difference
+ */
+inline void BigInt::s_carryDown(std::size_t &it, const BigInt &bint_8,
+                                BigInt &difference) {
+  while (it < bint_8._digits.size()) {
+    difference._digits.push_back(bint_8._digits[it]);
+    ++it;
+  }
+}
+
 // MEMBER FUNCTIONS ------------------------------------------------------------
 
 inline void BigInt::normalize() {
@@ -257,17 +460,7 @@ inline std::ostream &operator<<(std::ostream &os, const BigInt &b) {
 
 // OVERLOADS -------------------------------------------------------------------
 
-// for comparison to zero
-
-inline bool operator==(const BigInt &lhs, const int rhs) {
-  return lhs == BigInt{rhs};
-}
-
-// for comparison to zero
-
-inline bool operator==(const int lhs, const BigInt &rhs) {
-  return BigInt{lhs} == rhs;
-}
+// COMPARISON OVERLOADS --------------------------------------------------------
 
 inline bool operator==(const BigInt &lhs, const char *str) {
   return lhs == BigInt{std::string{str}};
@@ -285,13 +478,13 @@ inline bool operator==(const std::string &str, const BigInt &rhs) {
   return rhs == BigInt{str};
 }
 
-template <typename T, typename>
-bool operator==(const BigInt &lhs, const T &rhs) {
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+bool operator==(const BigInt &lhs, const T rhs) {
   return lhs == BigInt{rhs};
 }
 
-template <typename T, typename>
-bool operator==(const T &lhs, const BigInt &rhs) {
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+bool operator==(const T lhs, const BigInt &rhs) {
   return BigInt{lhs} == rhs;
 }
 
@@ -423,6 +616,60 @@ bool operator>=(const BigInt &lhs, const T val) {
 template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
 bool operator>=(const T val, const BigInt &rhs) {
   return BigInt{val} >= rhs;
+}
+
+// ARITHMETIC OVERLOADS --------------------------------------------------------
+
+inline BigInt operator+(const BigInt &lhs, const char *str) {
+  return lhs + BigInt{std::string{str}};
+}
+
+inline BigInt operator+(const char *str, const BigInt &rhs) {
+  return BigInt{std::string{str}} + rhs;
+}
+
+inline BigInt operator+(const BigInt &lhs, const std::string &str) {
+  return lhs + BigInt{str};
+}
+
+inline BigInt operator+(const std::string &str, const BigInt &rhs) {
+  return BigInt{str} + rhs;
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+BigInt operator+(const BigInt &lhs, const T val) {
+  return lhs + BigInt{val};
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+BigInt operator+(const T val, const BigInt &rhs) {
+  return BigInt{val} + rhs;
+}
+
+inline BigInt operator-(const BigInt &lhs, const char *str) {
+  return lhs - BigInt{std::string{str}};
+}
+
+inline BigInt operator-(const char *str, const BigInt &rhs) {
+  return BigInt{std::string{str}} - rhs;
+}
+
+inline BigInt operator-(const BigInt &lhs, const std::string &str) {
+  return lhs - BigInt{str};
+}
+
+inline BigInt operator-(const std::string &str, const BigInt &rhs) {
+  return BigInt{str} - rhs;
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+BigInt operator-(const BigInt &lhs, const T val) {
+  return lhs - BigInt{val};
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+BigInt operator-(const T val, const BigInt &rhs) {
+  return BigInt{val} - rhs;
 }
 
 } // namespace sch
