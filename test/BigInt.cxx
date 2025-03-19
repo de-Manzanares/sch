@@ -12,7 +12,6 @@
 #include "BigInt.hpp"
 
 namespace BigInt_test {
-
 //------------------------------------------------------------------------------
 
 /// one less than the number of digits in LONG_LONG_MAX
@@ -162,25 +161,25 @@ TEST_CASE("operator - : subtraction") {
   }
 }
 
-/*
-
 TEST_CASE("operator: * multiplication") {
-  for (int i = 0; i < 1000; ++i) {
-    long long n[2];
+  for (int i = 0; i < 50; ++i) {
+    sch::BigInt10 n[2];
     sch::BigInt bint[2];
     std::ostringstream os[2];
 
     for (int k = 0; k < 2; ++k) {
-      std::string str = randomString(1, LL_HALF_LENGTH);
+      std::string str = randomString(1000, 2000);
       randomizeSign(str);
-      n[k] = std::stoll(str);
-      bint[k] = n[k];
+      n[k] = str;
+      bint[k] = str;
     }
     os[0] << n[0] * n[1];
     os[1] << bint[0] * bint[1];
     CHECK(os[0].str() == os[1].str());
   }
 }
+
+/*
 
 TEST_CASE("operator: / division") {
   for (int i = 0; i < 1000; ++i) {
