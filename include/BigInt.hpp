@@ -34,6 +34,7 @@ class BigInt {
  public:
   BigInt() = default;
   explicit BigInt(const std::string &str);
+  explicit BigInt(const std::string_view str) : BigInt(std::string{str}) {}
   template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
   BigInt(const T val) : BigInt(std::to_string(val)) {} // NOLINT
   ~BigInt() = default;
@@ -95,7 +96,8 @@ class BigInt {
   template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
   BigInt &operator%=(T val);
 
-  BigInt operator-() const;
+  BigInt operator-() &&;
+  BigInt operator-() const &;
   BigInt &operator++();
   BigInt &operator--();
 
@@ -107,6 +109,7 @@ class BigInt {
   // constants
   static constexpr std::uint64_t EXP = 18; // 10^EXP
   static constexpr std::uint64_t BASE = 1'000'000'000'000'000'000;
+  static constexpr std::uint64_t K_MAX_DIGIT = 4294967296; // sqrt(2^64)-1
 
   // private variables
   sign _sign = sign::positive;          ///< sign of the number
@@ -123,6 +126,10 @@ class BigInt {
                        const BigInt &rhs, BigInt &difference);
   static void s_carryDown(std::size_t &it, const BigInt &bint_8,
                           BigInt &difference);
+
+  // MULTIPLICATION -------------------------------------------
+  [[nodiscard]] static std::string_view abs(const std::string &str);
+  static BigInt karatsuba(std::string_view lhs, std::string_view rhs);
 };
 
 // CONSTRUCTOR -----------------------------------------------------------------
@@ -233,7 +240,12 @@ inline bool BigInt::operator>=(const BigInt &rhs) const {
 
 // UNARY MINUS -----------------------------------------------------------------
 
-inline BigInt BigInt::operator-() const {
+inline BigInt BigInt::operator-() && {
+  _sign = _sign == sign::positive ? sign::negative : sign::positive;
+  return std::move(*this);
+}
+
+inline BigInt BigInt::operator-() const & {
   BigInt tmp = *this;
   tmp._sign = (tmp._sign == sign::positive ? sign::negative : sign::positive);
   return tmp;
@@ -420,6 +432,63 @@ inline void BigInt::s_carryDown(std::size_t &it, const BigInt &bint_8,
     difference._digits.push_back(bint_8._digits[it]);
     ++it;
   }
+}
+
+// MULTIPLICATION --------------------------------------------------------------
+
+inline std::string_view BigInt::abs(const std::string &str) {
+  if (str.front() == '-') {
+    return std::string_view{str}.substr(1);
+  }
+  return std::string_view{str};
+}
+
+inline BigInt BigInt::karatsuba(const std::string_view lhs, // NOLINT recursion
+                                const std::string_view rhs) {
+  if (std::all_of(lhs.begin(), lhs.end(),
+                  [](const char c) { return c == '0'; }) ||
+      std::all_of(rhs.begin(), rhs.end(),
+                  [](const char c) { return c == '0'; })) {
+    return BigInt{0};
+  }
+
+  if (lhs.size() < 10 && rhs.size() < 10) {
+    return std::stoull(std::string{lhs}) * std::stoull(std::string{rhs});
+  }
+
+  const std::size_t m = std::max(lhs.size(), rhs.size());
+  const std::size_t n = m / 2;
+  std::string_view a;
+  std::string_view b;
+  std::string_view c;
+  std::string_view d;
+  if (lhs.size() > n) {
+    a = lhs.substr(0, lhs.size() - n);
+    b = lhs.substr(lhs.size() - n);
+  } else {
+    a = "0";
+    b = lhs;
+  }
+  if (rhs.size() > n) {
+    c = rhs.substr(0, rhs.size() - n);
+    d = rhs.substr(rhs.size() - n);
+  } else {
+    c = "0";
+    d = rhs;
+  }
+  const BigInt ac = karatsuba(a, c);
+  const BigInt bd = karatsuba(b, d);
+  const BigInt sum_ad_bc = karatsuba((BigInt{a} + BigInt{b}).to_string(),
+                                     (BigInt{c} + BigInt{d}).to_string()) -
+                           ac - bd;
+  return BigInt{ac.to_string() + std::string(2 * n, '0')} +
+         BigInt{sum_ad_bc.to_string() + std::string(n, '0')} + bd;
+}
+
+inline BigInt BigInt::operator*(const BigInt &rhs) const {
+  return _sign == rhs._sign
+             ? karatsuba(abs(this->to_string()), abs(rhs.to_string()))
+             : -karatsuba(abs(this->to_string()), abs(rhs.to_string()));
 }
 
 // MEMBER FUNCTIONS ------------------------------------------------------------
@@ -670,6 +739,32 @@ BigInt operator-(const BigInt &lhs, const T val) {
 template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
 BigInt operator-(const T val, const BigInt &rhs) {
   return BigInt{val} - rhs;
+}
+
+inline BigInt operator*(const BigInt &lhs, const char *str) {
+  return lhs * BigInt{std::string{str}};
+}
+
+inline BigInt operator*(const char *str, const BigInt &rhs) {
+  return BigInt{std::string{str}} * rhs;
+}
+
+inline BigInt operator*(const BigInt &lhs, const std::string &str) {
+  return lhs * BigInt{str};
+}
+
+inline BigInt operator*(const std::string &str, const BigInt &rhs) {
+  return BigInt{str} * rhs;
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+BigInt operator*(const BigInt &lhs, const T val) {
+  return lhs * BigInt{val};
+}
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+BigInt operator*(const T val, const BigInt &rhs) {
+  return BigInt{val} * rhs;
 }
 
 } // namespace sch
