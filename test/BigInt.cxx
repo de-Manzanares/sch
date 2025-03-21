@@ -179,63 +179,6 @@ TEST_CASE("operator: * multiplication") {
   }
 }
 
-std::pair<std::uint32_t, std::uint64_t> DivThreeHalvesByTwo(std::uint32_t a1,
-                                                            std::uint32_t a2,
-                                                            std::uint32_t a3,
-                                                            std::uint64_t B) {
-  std::uint32_t b1 = B >> 32;
-
-  if (a1 == b1) {
-    throw std::invalid_argument("DivThreeHalvesByTwo: a1 == b1");
-  }
-
-  std::uint32_t b2 = static_cast<uint32_t>(B);
-  std::uint64_t A12 = static_cast<uint64_t>(a1) << 32 | a2;
-  std::uint32_t q = A12 / b1;
-  std::uint32_t c = A12 - q * b1;
-  std::uint64_t D = static_cast<uint64_t>(q) * static_cast<uint64_t>(b2);
-  std::uint64_t ca3 = static_cast<uint64_t>(c) << 32 | a3;
-  if (ca3 < D) {
-    --q;
-    ca3 += B;
-    if (ca3 < D) {
-      --q;
-      ca3 += B;
-    }
-  }
-  return {q, ca3 - D};
-}
-
-std::pair<std::uint64_t, std::uint64_t>
-DivTwoDigitsByOne(std::uint32_t a1, std::uint32_t a2, std::uint32_t a3,
-                  std::uint32_t a4, std::uint64_t B) {
-
-  auto [q1, R] = DivThreeHalvesByTwo(a1, a2, a3, B);
-
-  std::uint32_t r1 = R >> 32;
-  std::uint32_t r2 = static_cast<uint32_t>(R);
-
-  auto [q2, S] = DivThreeHalvesByTwo(r1, r2, a4, B);
-
-  std::uint64_t Q = static_cast<uint64_t>(q1) << 32 | static_cast<uint64_t>(q2);
-
-  return {Q, S};
-}
-
-TEST_CASE("division") {
-  SECTION("DivThreeHalvesByTwo") {
-    SKIP("");
-    std::uint64_t B = (1ULL << 63) + 10;
-    auto pair = DivThreeHalvesByTwo(1, 0, 0, B);
-    std::cout << pair.first << " " << pair.second << std::endl;
-  }
-  SECTION("DivTwoDigitsByOne") {
-    std::uint64_t B = (1ULL << 63) + 10;
-    auto pair = DivTwoDigitsByOne(1, 0, 0, 0, B);
-    std::cout << pair.first << " " << pair.second << std::endl;
-  }
-}
-
 /*
 
 TEST_CASE("operator: / division") {
