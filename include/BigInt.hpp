@@ -33,11 +33,12 @@ namespace sch {
 class BigInt {
  public:
   BigInt() = default;
-  explicit BigInt(const std::string &str);
-  explicit BigInt(const char *cstr) : BigInt(std::string{cstr}) {}
-  explicit BigInt(const std::string_view strv) : BigInt(std::string{strv}) {}
+  BigInt(const std::string &str);
+  BigInt(const char *cstr) : BigInt(std::string{cstr}) {}
+  BigInt(const std::string_view strv) : BigInt(std::string{strv}) {}
   template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
   BigInt(const T val) : BigInt(std::to_string(val)) {} // NOLINT
+  BigInt(const std::vector<std::uint64_t> &v) : _digits{v} {}
   ~BigInt() = default;
 
   BigInt(const BigInt &) = default;       // copy constructor
@@ -125,7 +126,119 @@ class BigInt {
   // MULTIPLICATION -------------------------------------------
   [[nodiscard]] static std::string_view abs(const std::string &str);
   static BigInt karatsuba(std::string_view lhs, std::string_view rhs);
+
+  // DIVISION -------------------------------------------------
 };
+
+// TEMPLATED OPERATORS ---------------------------------------------------------
+
+template <typename T,
+          typename = std::enable_if_t<std::is_constructible_v<BigInt, T>>>
+bool operator==(const BigInt &lhs, const T &val) {
+  return lhs == BigInt{val};
+}
+
+template <typename T,
+          typename = std::enable_if_t<std::is_constructible_v<BigInt, T>>>
+bool operator==(const T &val, const BigInt &rhs) {
+  return BigInt{val} == rhs;
+}
+
+template <typename T,
+          typename = std::enable_if_t<std::is_constructible_v<BigInt, T>>>
+bool operator!=(const BigInt &lhs, const T &val) {
+  return lhs != BigInt{val};
+}
+
+template <typename T,
+          typename = std::enable_if_t<std::is_constructible_v<BigInt, T>>>
+bool operator!=(const T &val, const BigInt &rhs) {
+  return BigInt{val} != rhs;
+}
+
+template <typename T,
+          typename = std::enable_if_t<std::is_constructible_v<BigInt, T>>>
+bool operator<(const BigInt &lhs, const T &val) {
+  return lhs < BigInt{val};
+}
+
+template <typename T,
+          typename = std::enable_if_t<std::is_constructible_v<BigInt, T>>>
+bool operator<(const T &val, const BigInt &rhs) {
+  return BigInt{val} < rhs;
+}
+
+template <typename T,
+          typename = std::enable_if_t<std::is_constructible_v<BigInt, T>>>
+bool operator>(const BigInt &lhs, const T &val) {
+  return lhs > BigInt{val};
+}
+
+template <typename T,
+          typename = std::enable_if_t<std::is_constructible_v<BigInt, T>>>
+bool operator>(const T &val, const BigInt &rhs) {
+  return BigInt{val} > rhs;
+}
+
+template <typename T,
+          typename = std::enable_if_t<std::is_constructible_v<BigInt, T>>>
+bool operator<=(const BigInt &lhs, const T &val) {
+  return lhs <= BigInt{val};
+}
+
+template <typename T,
+          typename = std::enable_if_t<std::is_constructible_v<BigInt, T>>>
+bool operator<=(const T &val, const BigInt &rhs) {
+  return BigInt{val} <= rhs;
+}
+
+template <typename T,
+          typename = std::enable_if_t<std::is_constructible_v<BigInt, T>>>
+bool operator>=(const BigInt &lhs, const T &val) {
+  return lhs >= BigInt{val};
+}
+
+template <typename T,
+          typename = std::enable_if_t<std::is_constructible_v<BigInt, T>>>
+bool operator>=(const T &val, const BigInt &rhs) {
+  return BigInt{val} >= rhs;
+}
+
+template <typename T,
+          typename = std::enable_if_t<std::is_constructible_v<BigInt, T>>>
+BigInt operator+(const BigInt &lhs, const T &val) {
+  return lhs + BigInt{val};
+}
+
+template <typename T,
+          typename = std::enable_if_t<std::is_constructible_v<BigInt, T>>>
+BigInt operator+(const T &val, const BigInt &rhs) {
+  return BigInt{val} + rhs;
+}
+
+template <typename T,
+          typename = std::enable_if_t<std::is_constructible_v<BigInt, T>>>
+BigInt operator-(const BigInt &lhs, const T &val) {
+  return lhs - BigInt{val};
+}
+
+template <typename T,
+          typename = std::enable_if_t<std::is_constructible_v<BigInt, T>>>
+BigInt operator-(const T &val, const BigInt &rhs) {
+  return BigInt{val} - rhs;
+}
+
+template <typename T,
+          typename = std::enable_if_t<std::is_constructible_v<BigInt, T>>>
+BigInt operator*(const BigInt &lhs, const T val) {
+  return lhs * BigInt{val};
+}
+
+template <typename T,
+          typename = std::enable_if_t<std::is_constructible_v<BigInt, T>>>
+BigInt operator*(const T &val, const BigInt &rhs) {
+  return BigInt{val} * rhs;
+}
 
 // CONSTRUCTOR -----------------------------------------------------------------
 
@@ -474,6 +587,79 @@ inline BigInt BigInt::operator*(const BigInt &rhs) const {
              : -karatsuba(abs(this->to_string()), abs(rhs.to_string()));
 }
 
+// DIVISION --------------------------------------------------------------------
+
+inline BigInt BigInt::operator/(const BigInt &rhs) const {
+  if (rhs == 0) {
+    throw std::runtime_error(
+        "BigInt::operator/() : Division by zero is undefined");
+  }
+  if (*this == 0) {
+    return 0;
+  }
+
+  if (_digits.size() == 1 && rhs._digits.size() == 1) {
+    return _digits[0] / rhs._digits[0];
+  }
+
+  std::int64_t k = _digits.size();     // number of digits in the dividend
+  std::int64_t l = rhs._digits.size(); // number of digits in the divisor
+
+  if (k < l) { // if divisor > dividend
+    return 0;  // quotient of 0, remainder of lhs
+  }
+
+  BigInt q{0};
+  std::string q_str{};
+  BigInt r_prev{0};
+  BigInt r{0};
+
+  for (std::int64_t i = 0; i <= l - 2; ++i) {
+    r_prev += EXP * (l - 2 - i) > 0 ? std::to_string(_digits[k - (1 + i)]) +
+                                          std::string(EXP * (l - 2 - i), '0')
+                                    : std::to_string(_digits[k - (1 + i)]);
+  }
+
+  for (std::size_t i = 0; i <= k - l; ++i) {
+    // find the i+l-1'th digit of the dividend
+    BigInt a = _digits[k - (i + l)];
+    // calculate the intermediate dividend
+    BigInt d = (r_prev.to_string() + std::string(EXP, '0')) + a;
+
+    // find the i'th digit of the quotient
+    // calculate the intermediate remainder
+
+    BigInt qi{0};
+    if (d < rhs) {
+      qi = 0;
+      r = d;
+    } else {
+      // binary search for rhs * qi <= d
+      std::uint64_t lb = 0;
+      std::uint64_t ub = BASE - 1;
+      std::uint64_t m = (lb + ub) / 2;
+      while (d - (rhs * m) < 0 || d - (rhs * m) > rhs) {
+        if (rhs * m < d) {
+          lb = m + 1;
+          m = (lb + ub) / 2;
+        } else if (rhs * m > d) {
+          ub = m - 1;
+          m = (lb + ub) / 2;
+        }
+      }
+      qi = m;
+      r = d - rhs * m;
+    }
+    // store the i'th digit of the quotient
+    q_str += qi.to_string();
+
+    // update values
+    r_prev = r;
+  }
+
+  return q_str;
+}
+
 // MEMBER FUNCTIONS ------------------------------------------------------------
 
 inline void BigInt::normalize() {
@@ -486,7 +672,7 @@ inline void BigInt::normalize() {
 }
 
 inline std::string BigInt::to_string() const {
-  std::string str;
+  std::string str{};
   if (_sign == sign::negative) {
     str += "-";
   }
@@ -508,116 +694,6 @@ inline std::string BigInt::to_string() const {
 inline std::ostream &operator<<(std::ostream &os, const BigInt &b) {
   os << b.to_string();
   return os;
-}
-
-// TEMPLATED OPERATORS ---------------------------------------------------------
-
-template <typename T,
-          typename = std::enable_if_t<std::is_constructible_v<BigInt, T>>>
-bool operator==(const BigInt &lhs, const T &val) {
-  return lhs == BigInt{val};
-}
-
-template <typename T,
-          typename = std::enable_if_t<std::is_constructible_v<BigInt, T>>>
-bool operator==(const T &val, const BigInt &rhs) {
-  return BigInt{val} == rhs;
-}
-
-template <typename T,
-          typename = std::enable_if_t<std::is_constructible_v<BigInt, T>>>
-bool operator!=(const BigInt &lhs, const T &val) {
-  return lhs != BigInt{val};
-}
-
-template <typename T,
-          typename = std::enable_if_t<std::is_constructible_v<BigInt, T>>>
-bool operator!=(const T &val, const BigInt &rhs) {
-  return BigInt{val} != rhs;
-}
-
-template <typename T,
-          typename = std::enable_if_t<std::is_constructible_v<BigInt, T>>>
-bool operator<(const BigInt &lhs, const T &val) {
-  return lhs < BigInt{val};
-}
-
-template <typename T,
-          typename = std::enable_if_t<std::is_constructible_v<BigInt, T>>>
-bool operator<(const T &val, const BigInt &rhs) {
-  return BigInt{val} < rhs;
-}
-
-template <typename T,
-          typename = std::enable_if_t<std::is_constructible_v<BigInt, T>>>
-bool operator>(const BigInt &lhs, const T &val) {
-  return lhs > BigInt{val};
-}
-
-template <typename T,
-          typename = std::enable_if_t<std::is_constructible_v<BigInt, T>>>
-bool operator>(const T &val, const BigInt &rhs) {
-  return BigInt{val} > rhs;
-}
-
-template <typename T,
-          typename = std::enable_if_t<std::is_constructible_v<BigInt, T>>>
-bool operator<=(const BigInt &lhs, const T &val) {
-  return lhs <= BigInt{val};
-}
-
-template <typename T,
-          typename = std::enable_if_t<std::is_constructible_v<BigInt, T>>>
-bool operator<=(const T &val, const BigInt &rhs) {
-  return BigInt{val} <= rhs;
-}
-
-template <typename T,
-          typename = std::enable_if_t<std::is_constructible_v<BigInt, T>>>
-bool operator>=(const BigInt &lhs, const T &val) {
-  return lhs >= BigInt{val};
-}
-
-template <typename T,
-          typename = std::enable_if_t<std::is_constructible_v<BigInt, T>>>
-bool operator>=(const T &val, const BigInt &rhs) {
-  return BigInt{val} >= rhs;
-}
-
-template <typename T,
-          typename = std::enable_if_t<std::is_constructible_v<BigInt, T>>>
-BigInt operator+(const BigInt &lhs, const T &val) {
-  return lhs + BigInt{val};
-}
-
-template <typename T,
-          typename = std::enable_if_t<std::is_constructible_v<BigInt, T>>>
-BigInt operator+(const T &val, const BigInt &rhs) {
-  return BigInt{val} + rhs;
-}
-
-template <typename T,
-          typename = std::enable_if_t<std::is_constructible_v<BigInt, T>>>
-BigInt operator-(const BigInt &lhs, const T &val) {
-  return lhs - BigInt{val};
-}
-
-template <typename T,
-          typename = std::enable_if_t<std::is_constructible_v<BigInt, T>>>
-BigInt operator-(const T &val, const BigInt &rhs) {
-  return BigInt{val} - rhs;
-}
-
-template <typename T,
-          typename = std::enable_if_t<std::is_constructible_v<BigInt, T>>>
-BigInt operator*(const BigInt &lhs, const T val) {
-  return lhs * BigInt{val};
-}
-
-template <typename T,
-          typename = std::enable_if_t<std::is_constructible_v<BigInt, T>>>
-BigInt operator*(const T &val, const BigInt &rhs) {
-  return BigInt{val} * rhs;
 }
 
 } // namespace sch
