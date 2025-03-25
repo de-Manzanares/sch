@@ -130,6 +130,9 @@ class BigInt {
   // DIVISION -------------------------------------------------
 };
 
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+BigInt pow(const BigInt &base, T exp);
+
 // TEMPLATED OPERATORS ---------------------------------------------------------
 
 template <typename T,
@@ -694,6 +697,41 @@ inline std::string BigInt::to_string() const {
 inline std::ostream &operator<<(std::ostream &os, const BigInt &b) {
   os << b.to_string();
   return os;
+}
+
+// NON-MEMBER FUNCTIONS --------------------------------------------------------
+
+/**
+ * @tparam T A built-in integral type (signed or unsigned).
+ *           Must be non-negative when calling this function.
+ * @param base The base value (x in x^y).
+ * @param exp  The exponent value (y in x^y).
+ * @return The result of x^y as a BigInt.
+ * @throws std::invalid_argument if `exp` is negative.
+ */
+template <typename T, typename> BigInt pow(const BigInt &base, const T exp) {
+  if (exp < 0) {
+    throw(std::invalid_argument("BigInt::pow() : negative exponent"));
+  }
+  if (exp == 0) { // precedes the next check because 0^0 == 1
+    return 1;
+  }
+  if (base == 0) {
+    return 0;
+  }
+
+  BigInt m_base = base;                       // mutable copy
+  auto m_exp = static_cast<std::size_t>(exp); // mutable copy
+  BigInt res{1};                              // result
+
+  while (m_exp > 0) {
+    if (m_exp % 2 == 1) {
+      res *= m_base;
+    }
+    m_base *= m_base;
+    m_exp /= 2;
+  }
+  return res;
 }
 
 } // namespace sch
