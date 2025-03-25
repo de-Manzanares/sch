@@ -13,7 +13,6 @@
 #define SCH_INCLUDE_BigInt_HPP_
 
 #include "BigInt10.hpp"
-#include "schmath.hpp"
 #include "sign.h"
 #include <algorithm>
 #include <cstdint>
@@ -38,7 +37,7 @@ class BigInt {
   BigInt(const std::string_view strv) : BigInt(std::string{strv}) {}
   template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
   BigInt(const T val) : BigInt(std::to_string(val)) {} // NOLINT
-  BigInt(const std::vector<std::uint64_t> &v) : _digits{v} {}
+  BigInt(const std::vector<std::uint64_t> &v) : _digits{v} { normalize(); }
   ~BigInt() = default;
 
   BigInt(const BigInt &) = default;       // copy constructor
@@ -128,6 +127,7 @@ class BigInt {
   static BigInt karatsuba(std::string_view lhs, std::string_view rhs);
 
   // DIVISION -------------------------------------------------
+  static BigInt abs(const BigInt &bint);
 };
 
 template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
@@ -592,6 +592,10 @@ inline BigInt BigInt::operator*(const BigInt &rhs) const {
 
 // DIVISION --------------------------------------------------------------------
 
+inline BigInt BigInt::abs(const BigInt &bint) {
+  return bint._sign == sign::positive ? bint : -bint;
+}
+
 inline BigInt BigInt::operator/(const BigInt &rhs) const {
   if (rhs == 0) {
     throw std::runtime_error(
@@ -601,66 +605,77 @@ inline BigInt BigInt::operator/(const BigInt &rhs) const {
     return 0;
   }
 
-  if (_digits.size() == 1 && rhs._digits.size() == 1) {
-    return _digits[0] / rhs._digits[0];
+  BigInt A = abs(*this);
+  BigInt B = abs(rhs);
+
+  if (B > A) {
+    return 0;
   }
 
-  std::int64_t k = _digits.size();     // number of digits in the dividend
-  std::int64_t l = rhs._digits.size(); // number of digits in the divisor
+  BigInt Q{};
+  __uint128_t q = 0;
+  BigInt tw_q{};
 
-  if (k < l) { // if divisor > dividend
-    return 0;  // quotient of 0, remainder of lhs
-  }
-
-  BigInt q{0};
-  std::string q_str{};
-  BigInt r_prev{0};
-  BigInt r{0};
-
-  for (std::int64_t i = 0; i <= l - 2; ++i) {
-    r_prev += EXP * (l - 2 - i) > 0 ? std::to_string(_digits[k - (1 + i)]) +
-                                          std::string(EXP * (l - 2 - i), '0')
-                                    : std::to_string(_digits[k - (1 + i)]);
-  }
-
-  for (std::size_t i = 0; i <= k - l; ++i) {
-    // find the i+l-1'th digit of the dividend
-    BigInt a = _digits[k - (i + l)];
-    // calculate the intermediate dividend
-    BigInt d = (r_prev.to_string() + std::string(EXP, '0')) + a;
-
-    // find the i'th digit of the quotient
-    // calculate the intermediate remainder
-
-    BigInt qi{0};
-    if (d < rhs) {
-      qi = 0;
-      r = d;
-    } else {
-      // binary search for rhs * qi <= d
-      std::uint64_t lb = 0;
-      std::uint64_t ub = BASE - 1;
-      std::uint64_t m = (lb + ub) / 2;
-      while (d - (rhs * m) < 0 || d - (rhs * m) > rhs) {
-        if (rhs * m < d) {
-          lb = m + 1;
-          m = (lb + ub) / 2;
-        } else if (rhs * m > d) {
-          ub = m - 1;
-          m = (lb + ub) / 2;
-        }
-      }
-      qi = m;
-      r = d - rhs * m;
+  BigInt scale{1};
+  if (B._digits.back() < BASE / 2) {
+    scale = (BASE / 2 / B._digits.back());
+    while (B._digits.back() * scale < BASE / 2) {
+      scale += 1;
     }
-    // store the i'th digit of the quotient
-    q_str += qi.to_string();
-
-    // update values
-    r_prev = r;
+    A *= scale;
+    B *= scale;
   }
 
-  return q_str;
+  std::int64_t n = B._digits.size();
+  std::int64_t m = A._digits.size() - n;
+
+  if (A >= B.to_string() + std::string(EXP * m, '0')) { // A >= BASE^m * B
+    Q._digits.push_back(1);
+    A -= (B.to_string() + std::string(EXP * m, '0')); // A = A - BASE^m * B
+  } else {
+    Q._digits.push_back(0);
+  }
+
+  for (std::int64_t j = m - 1; j >= 0; --j) {
+    // create two word numerator
+
+    // a_{n+j}*BASE + a_{n+j-1}
+    __uint128_t numerator = static_cast<__uint128_t>(A._digits[n + j]) * BASE +
+                            A._digits[n + j - 1];
+
+    q = numerator / B._digits[n - 1];
+    q = q < static_cast<__uint128_t>(BASE - 1)
+            ? q
+            : static_cast<__uint128_t>(BASE - 1);
+
+    // construct BigInt from two words
+    tw_q = std::vector<std::uint64_t>{static_cast<std::uint64_t>(q),
+                                      static_cast<std::uint64_t>(q >> 64)};
+
+    // A -= q * BASE ^ j * BASE;
+    A -= (tw_q.to_string() + std::string(EXP * j, '0')) * B;
+
+    while (A < 0) {
+      q = q - 1;
+      A += (B.to_string() + std::string(EXP * j, '0'));
+    }
+
+    tw_q = std::vector<std::uint64_t>{static_cast<std::uint64_t>(q),
+                                      static_cast<std::uint64_t>(q >> 64)};
+    if (tw_q._digits.back() == 0) {
+      tw_q._digits.pop_back();
+    }
+    std::reverse(tw_q._digits.begin(), tw_q._digits.end());
+
+    for (const auto d : tw_q._digits) {
+      Q._digits.push_back(d);
+    }
+  }
+
+  _sign == rhs._sign ? Q._sign = sign::positive : Q._sign = sign::negative;
+  std::reverse(Q._digits.begin(), Q._digits.end());
+  Q.normalize();
+  return Q;
 }
 
 // MEMBER FUNCTIONS ------------------------------------------------------------
