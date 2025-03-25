@@ -106,7 +106,7 @@ TEST_CASE("multiplication") {
     std::ostringstream os[2];
 
     for (int k = 0; k < 2; ++k) {
-      std::string str = randomString(1000, 2000);
+      std::string str = randomString(1, 2000);
       randomizeSign(str);
       n[k] = str;
       bint[k] = str;
@@ -118,14 +118,14 @@ TEST_CASE("multiplication") {
 }
 
 TEST_CASE("division") {
-  for (int i = 0; i < 100; ++i) {
+  for (int i = 0; i < 50; ++i) {
     sch::BigInt bint[2];
     sch::BigInt10 n[2];
     std::ostringstream os[2];
 
     for (int k = 0; k < 2; ++k) {
-      std::string str = randomString(1, 20);
-      // randomizeSign(str);
+      std::string str = randomString(1, 2000);
+      randomizeSign(str);
       n[k] = str;
       bint[k] = str;
     }
