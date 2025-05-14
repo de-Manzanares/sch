@@ -12,7 +12,6 @@
 #ifndef SCH_INCLUDE_BigInt_HPP_
 #define SCH_INCLUDE_BigInt_HPP_
 
-#include "Sign.h"
 #include <algorithm>
 #include <cstdint>
 #include <execution>
@@ -22,6 +21,8 @@
 #include <vector>
 
 namespace sch {
+
+enum class Sign : bool { negative, positive };
 
 /**
  * @class BigInt
@@ -95,8 +96,8 @@ public:
   }
 
   template <typename T,
-          typename = std::enable_if_t<std::is_constructible_v<BigInt, T>>>
-BigInt &operator%=(const T &rhs) {
+            typename = std::enable_if_t<std::is_constructible_v<BigInt, T>>>
+  BigInt &operator%=(const T &rhs) {
     *this = *this % BigInt{rhs};
     return *this;
   }
@@ -599,6 +600,8 @@ inline BigInt BigInt::operator*(const BigInt &rhs) const {
 }
 
 // DIVISION --------------------------------------------------------------------
+
+// todo https://learn.microsoft.com/en-us/cpp/intrinsics/div128?view=msvc-170
 
 inline BigInt BigInt::abs(const BigInt &bint) {
   return bint._sign == Sign::positive ? bint : -bint;
