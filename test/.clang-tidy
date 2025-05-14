@@ -1,0 +1,7 @@
+---
+InheritParentConfig: true
+
+Checks: '-*-avoid-do-while,-*-avoid-magic-numbers'
+
+CheckOptions:
+  - { key: readability-function-cognitive-complexity.Threshold,     value: '125' }
