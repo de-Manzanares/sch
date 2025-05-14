@@ -100,39 +100,53 @@ $(function(){initNavTree('index.html',''); initResizable(true); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="md_README"></a></p>
-<p><a href="https://github.com/de-Manzanares/sch/tree/master/test"><img src="https://img.shields.io/github/actions/workflow/status/de-Manzanares/sch/.github%2Fworkflows%2Fcmake-multi-platform.yml?logo=githubactions&amp;label=Test" alt="GitHub Actions Workflow Status" class="inline"/></a> <a href="https://codecov.io/gh/de-Manzanares/sch"><img src="https://codecov.io/gh/de-Manzanares/sch/graph/badge.svg?token=Y9345DJGVF" alt="codecov" style="pointer-events: none;" class="inline"/></a> <img src="https://img.shields.io/badge/C%2B%2B-17-blue" alt="C++ Standard" class="inline"/></p>
+<p><a href="https://github.com/de-Manzanares/sch/actions"><img src="https://img.shields.io/github/actions/workflow/status/de-Manzanares/sch/.github%2Fworkflows%2Fcmake-multi-platform.yml?logo=githubactions&amp;label=Test" alt="GitHub Actions Workflow Status" class="inline"/></a> <a href="https://codecov.io/gh/de-Manzanares/sch"><img src="https://codecov.io/gh/de-Manzanares/sch/graph/badge.svg?token=Y9345DJGVF" alt="codecov" style="pointer-events: none;" class="inline"/></a> <img src="https://img.shields.io/badge/C%2B%2B-17-blue" alt="C++ Standard" class="inline"/></p>
 <h1><a class="anchor" id="autotoc_md1"></a>
-BigInt - Arbitrary Precision Integer</h1>
-<p>The BigInt class is an arbitrary precision integer that offers natural arithmetic syntax and semantics.</p>
+BigInt &mdash; Multiple-Precision Integer</h1>
 <ul>
-<li>Arbitrary Precision: The sky (RAM) is the limit.</li>
-<li>Natural expression: Seamlessly interoperate with <a href="https://en.cppreference.com/w/cpp/language/types#Integral_types">built-in integral types</a>, strings, and character arrays.</li>
+<li>fast multiplication (<a href="https://en.wikipedia.org/wiki/Karatsuba_algorithm">Karatsuba</a>)</li>
+<li>naive division (but not terribly slow)</li>
+<li>overloads arithmetic, comparison, unary minus, and stream insertion operators<ul>
+<li><code>+ - * / % += -= *= /= %=</code></li>
+<li><code>== != &lt; &gt; &lt;= &gt;=</code></li>
+<li><code>-</code></li>
+<li><code>&lt;&lt;</code></li>
 </ul>
-<h4><a class="anchor" id="autotoc_md2"></a>
-Example application</h4>
+</li>
+<li>arithmetic operators<ul>
+<li>interoperate with constructable types</li>
+<li>are symmetric (<code>BigInt</code> can be lhs and/or rhs)</li>
+</ul>
+</li>
+<li>constructable types<ul>
+<li>builtin integral types</li>
+<li>string literals</li>
+<li><code>std::string</code></li>
+<li><code>std::string_view</code></li>
+</ul>
+</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md2"></a>
+Example application</h2>
 <p>A solution to <a href="https://projecteuler.net/about">Project Euler</a> <a href="https://projecteuler.net/problem=16">Problem 16</a>:</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="BigInt_8hpp.html">BigInt.hpp</a>&quot;</span></div>
+<div class="fragment"><div class="line"> ++</div>
+<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="BigInt_8hpp.html">BigInt.hpp</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// the sum of the digits of the number 2^1000</span></div>
 <div class="line"><span class="keywordtype">int</span> main() {</div>
 <div class="line">  <a class="code hl_class" href="classsch_1_1BigInt.html">sch::BigInt</a> sum{};</div>
 <div class="line">  <span class="keyword">const</span> <a class="code hl_class" href="classsch_1_1BigInt.html">sch::BigInt</a> n = sch::pow(2, 1000);</div>
-<div class="line">  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keywordtype">char</span> ch : n.<a class="code hl_function" href="classsch_1_1BigInt.html#a91bb1fec4395c7190a369152ae003912">to_string</a>()) {</div>
+<div class="line">  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keywordtype">char</span> ch : n.to_string()) {</div>
 <div class="line">    sum += ch - <span class="charliteral">&#39;0&#39;</span>;</div>
 <div class="line">  }</div>
 <div class="line">  std::cout &lt;&lt; sum &lt;&lt; <span class="charliteral">&#39;\n&#39;</span>;</div>
 <div class="line">}</div>
 <div class="ttc" id="aBigInt_8hpp_html"><div class="ttname"><a href="BigInt_8hpp.html">BigInt.hpp</a></div><div class="ttdoc">Arbitrary precision integer.</div></div>
-<div class="ttc" id="aclasssch_1_1BigInt_html"><div class="ttname"><a href="classsch_1_1BigInt.html">sch::BigInt</a></div><div class="ttdoc">Arbitrary precision integer.</div><div class="ttdef"><b>Definition</b> BigInt.hpp:32</div></div>
-<div class="ttc" id="aclasssch_1_1BigInt_html_a91bb1fec4395c7190a369152ae003912"><div class="ttname"><a href="classsch_1_1BigInt.html#a91bb1fec4395c7190a369152ae003912">sch::BigInt::to_string</a></div><div class="ttdeci">std::string to_string() const</div><div class="ttdef"><b>Definition</b> BigInt.hpp:1037</div></div>
+<div class="ttc" id="aclasssch_1_1BigInt_html"><div class="ttname"><a href="classsch_1_1BigInt.html">sch::BigInt</a></div><div class="ttdoc">Arbitrary precision integer.</div><div class="ttdef"><b>Definition</b> BigInt.hpp:31</div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md3"></a>
 How to Use</h2>
-<ul>
-<li>Getting BigInt</li>
-<li>Example Code</li>
-<li><a href="https://de-manzanares.github.io/sch/classsch_1_1BigInt.html">BigInt Class Reference</a></li>
-</ul>
+<p><a href="https://de-manzanares.github.io/sch/classsch_1_1BigInt.html">BigInt Class Reference</a></p>
 <h3><a class="anchor" id="autotoc_md4"></a>
 Getting BigInt</h3>
 <p>If you are using CMake, you can use <a href="https://cmake.org/cmake/help/latest/module/FetchContent.html">FetchContent</a>:</p>
@@ -140,128 +154,23 @@ Getting BigInt</h3>
 <div class="line">FetchContent_Declare(</div>
 <div class="line">        sch</div>
 <div class="line">        GIT_REPOSITORY https://github.com/de-Manzanares/sch.git</div>
-<div class="line">        GIT_TAG v0.1.0 # or a later release</div>
+<div class="line">        GIT_TAG v0.2.0</div>
 <div class="line">)</div>
 <div class="line">FetchContent_MakeAvailable(sch)</div>
-<div class="line">target_link_libraries(your-target PRIVATE sch)</div>
-</div><!-- fragment --><p>Otherwise, you can download the header file from the <a href="https://github.com/de-Manzanares/sch/releases">Releases</a> section and build as you would.</p>
-<h3><a class="anchor" id="autotoc_md5"></a>
-Example Code</h3>
-<h4><a class="anchor" id="autotoc_md6"></a>
-Constructors</h4>
-<div class="fragment"><div class="line">std::string str0{<span class="stringliteral">&quot;2147483647&quot;</span>};</div>
-<div class="line">std::string str1{<span class="stringliteral">&quot;-2147483647&quot;</span>};</div>
-<div class="line"> </div>
-<div class="line"><a class="code hl_class" href="classsch_1_1BigInt.html">sch::BigInt</a> a{str0};         <span class="comment">// construct with string</span></div>
-<div class="line"><a class="code hl_class" href="classsch_1_1BigInt.html">sch::BigInt</a> b{<span class="stringliteral">&quot;2147483647&quot;</span>}; <span class="comment">// construct with c-string</span></div>
-<div class="line"><a class="code hl_class" href="classsch_1_1BigInt.html">sch::BigInt</a> c{2147483647};   <span class="comment">// construct with built-in integral type</span></div>
-<div class="line"><a class="code hl_class" href="classsch_1_1BigInt.html">sch::BigInt</a> d{a};            <span class="comment">// construct with BigInt</span></div>
-<div class="line"> </div>
-<div class="line"><span class="comment">// negative numbers are welcome too</span></div>
-<div class="line"> </div>
-<div class="line"><a class="code hl_class" href="classsch_1_1BigInt.html">sch::BigInt</a> e{str1};          <span class="comment">// construct with string</span></div>
-<div class="line"><a class="code hl_class" href="classsch_1_1BigInt.html">sch::BigInt</a> f{<span class="stringliteral">&quot;-2147483647&quot;</span>}; <span class="comment">// construct with c-string</span></div>
-<div class="line"><a class="code hl_class" href="classsch_1_1BigInt.html">sch::BigInt</a> g{-2147483647};   <span class="comment">// construct with built-in integral type</span></div>
-<div class="line"><a class="code hl_class" href="classsch_1_1BigInt.html">sch::BigInt</a> h{a * -1};        <span class="comment">// construct with BigInt</span></div>
-</div><!-- fragment --><h4><a class="anchor" id="autotoc_md7"></a>
-Assignment Operator</h4>
-<p>Assign from other BigInts, C‑strings, standard strings, and built-in integral types:</p>
-<div class="fragment"><div class="line"><a class="code hl_class" href="classsch_1_1BigInt.html">sch::BigInt</a> a;</div>
-<div class="line"><a class="code hl_class" href="classsch_1_1BigInt.html">sch::BigInt</a> b{314159};</div>
-<div class="line">std::string str0{<span class="stringliteral">&quot;2147483647&quot;</span>};</div>
-<div class="line">std::string str1{<span class="stringliteral">&quot;-2147483647&quot;</span>};</div>
-<div class="line"> </div>
-<div class="line">a = str0;         <span class="comment">// assign from string</span></div>
-<div class="line">a = <span class="stringliteral">&quot;2147483647&quot;</span>; <span class="comment">// assign from c-string</span></div>
-<div class="line">a = 2147483647;   <span class="comment">// assign from built-in integral type</span></div>
-<div class="line">a = b;            <span class="comment">// assign from BigInt</span></div>
-<div class="line"> </div>
-<div class="line"><span class="comment">// negative numbers are welcome too</span></div>
-<div class="line"> </div>
-<div class="line">a = str1;          <span class="comment">// assign from string</span></div>
-<div class="line">a = <span class="stringliteral">&quot;-2147483647&quot;</span>; <span class="comment">// assign from c-string</span></div>
-<div class="line">a = -2147483647;   <span class="comment">// assign from built-in integral type</span></div>
-<div class="line">a = b * -1;        <span class="comment">// assign from BigInt</span></div>
-</div><!-- fragment --><h4><a class="anchor" id="autotoc_md8"></a>
-To String; Stream Insertion</h4>
-<p><code>BigInt::to_string()</code> returns a base-10 string representation of the value.</p>
-<p><code>sch::operator&lt;&lt;(std::ostream &amp;, const BigInt)</code> inserts a base-10 string representation of the value to a stream.</p>
-<div class="fragment"><div class="line"><a class="code hl_class" href="classsch_1_1BigInt.html">sch::BigInt</a> a{-123456};</div>
-<div class="line">std::string str = a.<a class="code hl_function" href="classsch_1_1BigInt.html#a91bb1fec4395c7190a369152ae003912">to_string</a>();</div>
-<div class="line"> </div>
-<div class="line"> </div>
-<div class="line">std::cout &lt;&lt; a &lt;&lt; <span class="charliteral">&#39;\n&#39;</span>;   <span class="comment">// -123456</span></div>
-<div class="line">std::cout &lt;&lt; str &lt;&lt; <span class="charliteral">&#39;\n&#39;</span>; <span class="comment">// -123456</span></div>
-</div><!-- fragment --><h4><a class="anchor" id="autotoc_md9"></a>
-Arithmetic Operators</h4>
-<p>The class overloads the standard arithmetic operators: <code>+ - * / % += -= *= /= %=</code></p>
-<p>These can be used to interoperate with c-strings, standard strings, built-in integral types, and other BigInts. Excluding the compound assignment operators, the operators are symmetric, i.e., the BigInt can be on either side (or both sides) of the operand.</p>
-<div class="fragment"><div class="line"><a class="code hl_class" href="classsch_1_1BigInt.html">sch::BigInt</a> a{2147483647};</div>
-<div class="line"><a class="code hl_class" href="classsch_1_1BigInt.html">sch::BigInt</a> b{-1 * a};</div>
-<div class="line">std::string str{<span class="stringliteral">&quot;250&quot;</span>};</div>
-<div class="line"><span class="keywordtype">int</span> num = 25;</div>
-<div class="line"> </div>
-<div class="line"><span class="comment">// Symmetric arithmetic operations:</span></div>
-<div class="line"><a class="code hl_class" href="classsch_1_1BigInt.html">sch::BigInt</a> c = (((<span class="stringliteral">&quot;125&quot;</span> * a) + (b % str)) / num) * (a - b);</div>
-<div class="line">std::cout &lt;&lt; c &lt;&lt; <span class="charliteral">&#39;\n&#39;</span>; <span class="comment">// 46116860115554402326</span></div>
-<div class="line"> </div>
-<div class="line"><span class="comment">// Compound assignment</span></div>
-<div class="line">c += c;</div>
-<div class="line">c -= a * b;</div>
-<div class="line">c *= <span class="stringliteral">&quot;-31415926535897932&quot;</span>;</div>
-<div class="line">c /= 123456789;</div>
-<div class="line">c %= -987654321;</div>
-<div class="line">std::cout &lt;&lt; c &lt;&lt; <span class="charliteral">&#39;\n&#39;</span>; <span class="comment">// -211191818</span></div>
-</div><!-- fragment --><h4><a class="anchor" id="autotoc_md10"></a>
-Comparison Operators</h4>
-<p>The class overloads the standard comparison operators: <code>== != &lt; &gt; &lt;= &gt;=</code></p>
-<p>These can be used for comparison with c-strings, standard strings, built-in integral types, and other BigInts. The operators are symmetric, i.e., the BigInt can be on either side (or both sides) of the operand.</p>
-<div class="fragment"><div class="line"><a class="code hl_class" href="classsch_1_1BigInt.html">sch::BigInt</a> a{18446744073709551615UL};</div>
-<div class="line"><a class="code hl_class" href="classsch_1_1BigInt.html">sch::BigInt</a> b{<span class="stringliteral">&quot;113811381138113811381138&quot;</span>};</div>
-<div class="line">std::string str{<span class="stringliteral">&quot;2147483647&quot;</span>};</div>
-<div class="line"><span class="keywordtype">int</span> num = -2147483648;</div>
-<div class="line"> </div>
-<div class="line"><span class="comment">// Symmetric comparison operations:</span></div>
-<div class="line"><span class="keywordtype">bool</span> cmp1 = (a &lt; b);                      <span class="comment">// BigInt &lt; BigInt</span></div>
-<div class="line"><span class="keywordtype">bool</span> cmp2 = (a &lt;= str);                   <span class="comment">// BigInt &lt;= std::string</span></div>
-<div class="line"><span class="keywordtype">bool</span> cmp3 = (<span class="stringliteral">&quot;9223372036854775807&quot;</span> == a); <span class="comment">// c-string == BigInt</span></div>
-<div class="line"><span class="keywordtype">bool</span> cmp4 = (b &gt; 184467440737095516UL);   <span class="comment">// BigInt &gt; built-in integral type</span></div>
-<div class="line"><span class="keywordtype">bool</span> cmp5 = (num &gt;= a);                   <span class="comment">// built-in integral type &gt;= BigInt</span></div>
-<div class="line"><span class="keywordtype">bool</span> cmp6 = (a != b);                     <span class="comment">// BigInt != BigInt</span></div>
-</div><!-- fragment --><h4><a class="anchor" id="autotoc_md11"></a>
-Exponentiation</h4>
-<p>The base can be provided as a c-string, standard string, built-in integral type, or BigInt. The exponent must be a non-negative (signed or unsigned) built-in integral type. The function throws std::invalid_argument if the exponent is negative.</p>
-<div class="fragment"><div class="line"><span class="keyword">const</span> <a class="code hl_class" href="classsch_1_1BigInt.html">sch::BigInt</a> a = sch::pow(1965, 2004);</div>
-<div class="line"><span class="keyword">const</span> <a class="code hl_class" href="classsch_1_1BigInt.html">sch::BigInt</a> b = sch::pow(2004, 1965);</div>
-<div class="line"><span class="keywordflow">if</span> (a &gt; b) {</div>
-<div class="line">  std::cout &lt;&lt; 1965 &lt;&lt; <span class="charliteral">&#39;^&#39;</span> &lt;&lt; 2004 &lt;&lt; <span class="stringliteral">&quot;=\n&quot;</span> &lt;&lt; a &lt;&lt; <span class="charliteral">&#39;\n&#39;</span>; </div>
-<div class="line">} <span class="keywordflow">else</span> {</div>
-<div class="line">  std::cout &lt;&lt; 2004 &lt;&lt; <span class="charliteral">&#39;^&#39;</span> &lt;&lt; 1965 &lt;&lt; <span class="stringliteral">&quot;=\n&quot;</span> &lt;&lt; b &lt;&lt; <span class="charliteral">&#39;\n&#39;</span>;</div>
-<div class="line">}</div>
-</div><!-- fragment --><h4><a class="anchor" id="autotoc_md12"></a>
-Unary Negation:</h4>
-<p>Be careful with this ...</p>
-<p>If used on a const BigInt, it will return an opposite-sign copy of the object; if used on a non-const BigInt, it will modify the object.</p>
-<div class="fragment"><div class="line"><span class="keywordtype">int</span> a{2147483647};</div>
-<div class="line"><a class="code hl_class" href="classsch_1_1BigInt.html">sch::BigInt</a> ma{a};       <span class="comment">// mutable BigInt</span></div>
-<div class="line"><span class="keyword">const</span> <a class="code hl_class" href="classsch_1_1BigInt.html">sch::BigInt</a> ca{a}; <span class="comment">// const BigInt</span></div>
-<div class="line"> </div>
-<div class="line"><span class="comment">// currently</span></div>
-<div class="line"><span class="comment">// a == ma == ca</span></div>
-<div class="line"> </div>
-<div class="line"><a class="code hl_class" href="classsch_1_1BigInt.html">sch::BigInt</a> b0{-ma}; <span class="comment">// ma = -ma, b0 = ma;</span></div>
-<div class="line"><a class="code hl_class" href="classsch_1_1BigInt.html">sch::BigInt</a> b1{-ca}; <span class="comment">// b1 = -ca</span></div>
-<div class="line"> </div>
-<div class="line"><span class="comment">// after the use of unary operator-()</span></div>
-<div class="line"><span class="comment">// a == ca != ma</span></div>
-</div><!-- fragment --><h4><a class="anchor" id="autotoc_md13"></a>
-Increment/Decrement:</h4>
-<p>The class defines the prefix increment/decrement operators, but not the postfix.</p>
-<p>WARNING! These operators do not handle sign change.</p>
-<p>They work just fine so long as we avoid crossing zero. Thus far, attempts to handle sign change within the increment/decrement operators have drastically impacted performance. How often do we loop from -100 to 100 anyway?</p>
-<h1><a class="anchor" id="autotoc_md14"></a>
-License</h1>
-<p>This project is provided under the MIT License. </p>
+<div class="line">target_link_libraries(&lt;your-target&gt; PRIVATE sch)</div>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md5"></a>
+Limitations</h3>
+<p>Division and modulo operators currently rely on compiler implementations of 128-bit integers. It would be nice to remove that dependency.</p>
+<p>A fair bit of data manipulation involves conversions to and from <code>std::string</code>. I believe this means that the greatest width of a <code>BigInt</code> is limited by <code>std::string::max_size</code>, and is therefore not "arbitrary." However, <code>std::string::max_size</code> is typically <em>hugemongous</em>.</p>
+<h2><a class="anchor" id="autotoc_md6"></a>
+Resources</h2>
+<p>The construction of this software was informed by the following:</p>
+<ul>
+<li>R. P. Brent and P. Zimmermann, “Modern Computer Arithmetic”.</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md7"></a>
+License</h2>
+<p>This software is made available under the MIT License. </p>
 </div></div><!-- PageDoc -->
 <a href="doxygen_crawl.html"></a>
 </div><!-- contents -->

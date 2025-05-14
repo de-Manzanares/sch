@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['getting_20bigint_0',['Getting BigInt',['../index.html#autotoc_md4',1,'']]]
+  ['integer_0',['BigInt &amp;mdash; Multiple-Precision Integer',['../index.html#autotoc_md1',1,'']]]
 ];

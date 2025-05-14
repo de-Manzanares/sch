@@ -1,5 +1,5 @@
 var BigInt_8hpp =
 [
-    [ "sch::BigInt", "classsch_1_1BigInt.html", "classsch_1_1BigInt" ],
-    [ "pow", "BigInt_8hpp.html#a03a19dd7a46c5818cd2381ffcc344e16", null ]
+    [ "sch::BigInt", "classsch_1_1BigInt.html", null ],
+    [ "pow", "BigInt_8hpp.html#a49c93f8d8853ef0d410bba84831d91f8", null ]
 ];

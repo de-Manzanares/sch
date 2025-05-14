@@ -109,7 +109,6 @@ $(function(){initNavTree('BigInt_8hpp.html',''); initResizable(true); });
 <div class="textblock"><code>#include &lt;algorithm&gt;</code><br />
 <code>#include &lt;cstdint&gt;</code><br />
 <code>#include &lt;execution&gt;</code><br />
-<code>#include &lt;numeric&gt;</code><br />
 <code>#include &lt;stdexcept&gt;</code><br />
 <code>#include &lt;string&gt;</code><br />
 <code>#include &lt;type_traits&gt;</code><br />
@@ -119,23 +118,21 @@ Include dependency graph for BigInt.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="BigInt_8hpp__incl.png" border="0" usemap="#ainclude_2BigInt_8hpp" alt=""/></div>
 <map name="ainclude_2BigInt_8hpp" id="ainclude_2BigInt_8hpp">
-<area shape="rect" title="Arbitrary precision integer." alt="" coords="308,5,433,31"/>
+<area shape="rect" title="Arbitrary precision integer." alt="" coords="266,5,390,31"/>
 <area shape="rect" title=" " alt="" coords="5,79,80,105"/>
-<area shape="poly" title=" " alt="" coords="313,34,96,81,95,76,312,29"/>
+<area shape="poly" title=" " alt="" coords="280,34,96,80,94,75,279,29"/>
 <area shape="rect" title=" " alt="" coords="104,79,165,105"/>
-<area shape="poly" title=" " alt="" coords="331,34,181,79,179,74,330,29"/>
+<area shape="poly" title=" " alt="" coords="296,34,180,77,178,72,294,29"/>
 <area shape="rect" title=" " alt="" coords="188,79,265,105"/>
-<area shape="poly" title=" " alt="" coords="347,34,266,74,263,69,345,29"/>
-<area shape="rect" title=" " alt="" coords="289,79,356,105"/>
-<area shape="poly" title=" " alt="" coords="365,33,341,67,337,64,360,30"/>
-<area shape="rect" title=" " alt="" coords="380,79,457,105"/>
-<area shape="poly" title=" " alt="" coords="381,30,404,64,400,67,376,33"/>
-<area shape="rect" title=" " alt="" coords="481,79,534,105"/>
-<area shape="poly" title=" " alt="" coords="395,29,472,69,470,74,393,34"/>
-<area shape="rect" title=" " alt="" coords="559,79,640,105"/>
-<area shape="poly" title=" " alt="" coords="410,29,547,71,546,77,409,34"/>
-<area shape="rect" title=" " alt="" coords="664,79,722,105"/>
-<area shape="poly" title=" " alt="" coords="434,29,650,76,649,81,433,34"/>
+<area shape="poly" title=" " alt="" coords="312,34,258,72,255,67,309,29"/>
+<area shape="rect" title=" " alt="" coords="289,79,366,105"/>
+<area shape="poly" title=" " alt="" coords="330,31,330,63,325,63,325,31"/>
+<area shape="rect" title=" " alt="" coords="390,79,444,105"/>
+<area shape="poly" title=" " alt="" coords="345,29,392,67,389,71,341,34"/>
+<area shape="rect" title=" " alt="" coords="468,79,550,105"/>
+<area shape="poly" title=" " alt="" coords="360,29,465,70,463,75,358,34"/>
+<area shape="rect" title=" " alt="" coords="574,79,631,105"/>
+<area shape="poly" title=" " alt="" coords="378,29,559,75,558,81,377,34"/>
 </map>
 </div>
 </div>
@@ -149,251 +146,97 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:a1fe229e848e0772fd2b4364b2f752814" id="r_a1fe229e848e0772fd2b4364b2f752814"><td class="memItemLeft" align="right" valign="top"><a id="a1fe229e848e0772fd2b4364b2f752814" name="a1fe229e848e0772fd2b4364b2f752814"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><b>sign</b> : bool { <b>negative</b>
+<tr class="memitem:a0203eb80a29f69961e4a0c279973de30" id="r_a0203eb80a29f69961e4a0c279973de30"><td class="memItemLeft" align="right" valign="top"><a id="a0203eb80a29f69961e4a0c279973de30" name="a0203eb80a29f69961e4a0c279973de30"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><b>Sign</b> : bool { <b>negative</b>
 , <b>positive</b>
  }</td></tr>
-<tr class="separator:a1fe229e848e0772fd2b4364b2f752814"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a0203eb80a29f69961e4a0c279973de30"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a098d3a703916fccd786e78bd81df112f" id="r_a098d3a703916fccd786e78bd81df112f"><td class="memItemLeft" align="right" valign="top"><a id="a098d3a703916fccd786e78bd81df112f" name="a098d3a703916fccd786e78bd81df112f"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator==</b> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;lhs, const int rhs)</td></tr>
-<tr class="separator:a098d3a703916fccd786e78bd81df112f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad2e89be3bcf09f4c2dfda682378ffdbc" id="r_ad2e89be3bcf09f4c2dfda682378ffdbc"><td class="memItemLeft" align="right" valign="top"><a id="ad2e89be3bcf09f4c2dfda682378ffdbc" name="ad2e89be3bcf09f4c2dfda682378ffdbc"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator==</b> (const int lhs, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
-<tr class="separator:ad2e89be3bcf09f4c2dfda682378ffdbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab0c5801ecac0b4abe06bc7e5583f9982" id="r_ab0c5801ecac0b4abe06bc7e5583f9982"><td class="memItemLeft" align="right" valign="top"><a id="ab0c5801ecac0b4abe06bc7e5583f9982" name="ab0c5801ecac0b4abe06bc7e5583f9982"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator==</b> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;lhs, const char *str)</td></tr>
-<tr class="separator:ab0c5801ecac0b4abe06bc7e5583f9982"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5beb9731d5b2b79b9b454e7a32b4d5d6" id="r_a5beb9731d5b2b79b9b454e7a32b4d5d6"><td class="memItemLeft" align="right" valign="top"><a id="a5beb9731d5b2b79b9b454e7a32b4d5d6" name="a5beb9731d5b2b79b9b454e7a32b4d5d6"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator==</b> (const char *str, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
-<tr class="separator:a5beb9731d5b2b79b9b454e7a32b4d5d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:add503aaf470b354bd811524392a2248d" id="r_add503aaf470b354bd811524392a2248d"><td class="memItemLeft" align="right" valign="top"><a id="add503aaf470b354bd811524392a2248d" name="add503aaf470b354bd811524392a2248d"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator==</b> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;lhs, const std::string &amp;str)</td></tr>
-<tr class="separator:add503aaf470b354bd811524392a2248d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aab49e23c774b0aed406457b08535ed9f" id="r_aab49e23c774b0aed406457b08535ed9f"><td class="memItemLeft" align="right" valign="top"><a id="aab49e23c774b0aed406457b08535ed9f" name="aab49e23c774b0aed406457b08535ed9f"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator==</b> (const std::string &amp;str, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
-<tr class="separator:aab49e23c774b0aed406457b08535ed9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a72fc1fbf91c1fa8cf6dcef6fbd89e0ae" id="r_a72fc1fbf91c1fa8cf6dcef6fbd89e0ae"><td class="memTemplParams" colspan="2"><a id="a72fc1fbf91c1fa8cf6dcef6fbd89e0ae" name="a72fc1fbf91c1fa8cf6dcef6fbd89e0ae"></a>
-template&lt;typename T , typename &gt; </td></tr>
-<tr class="memitem:a72fc1fbf91c1fa8cf6dcef6fbd89e0ae"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sch::operator==</b> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;lhs, const T &amp;rhs)</td></tr>
-<tr class="separator:a72fc1fbf91c1fa8cf6dcef6fbd89e0ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3722d568b6dc218739cd2a317ec47eca" id="r_a3722d568b6dc218739cd2a317ec47eca"><td class="memTemplParams" colspan="2"><a id="a3722d568b6dc218739cd2a317ec47eca" name="a3722d568b6dc218739cd2a317ec47eca"></a>
-template&lt;typename T , typename &gt; </td></tr>
-<tr class="memitem:a3722d568b6dc218739cd2a317ec47eca"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sch::operator==</b> (const T &amp;lhs, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
-<tr class="separator:a3722d568b6dc218739cd2a317ec47eca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5da5b0ce38ca1414f0876f1a43b812e5" id="r_a5da5b0ce38ca1414f0876f1a43b812e5"><td class="memItemLeft" align="right" valign="top"><a id="a5da5b0ce38ca1414f0876f1a43b812e5" name="a5da5b0ce38ca1414f0876f1a43b812e5"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator!=</b> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;lhs, const char *str)</td></tr>
-<tr class="separator:a5da5b0ce38ca1414f0876f1a43b812e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6314f861f106ab39e7923505d15623e1" id="r_a6314f861f106ab39e7923505d15623e1"><td class="memItemLeft" align="right" valign="top"><a id="a6314f861f106ab39e7923505d15623e1" name="a6314f861f106ab39e7923505d15623e1"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator!=</b> (const char *str, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
-<tr class="separator:a6314f861f106ab39e7923505d15623e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a15ffb7a09dace7c73e9f0444648585e6" id="r_a15ffb7a09dace7c73e9f0444648585e6"><td class="memItemLeft" align="right" valign="top"><a id="a15ffb7a09dace7c73e9f0444648585e6" name="a15ffb7a09dace7c73e9f0444648585e6"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator!=</b> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;lhs, const std::string &amp;str)</td></tr>
-<tr class="separator:a15ffb7a09dace7c73e9f0444648585e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a49f7c4a287605625f3abb9881f8bc000" id="r_a49f7c4a287605625f3abb9881f8bc000"><td class="memItemLeft" align="right" valign="top"><a id="a49f7c4a287605625f3abb9881f8bc000" name="a49f7c4a287605625f3abb9881f8bc000"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator!=</b> (const std::string &amp;str, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
-<tr class="separator:a49f7c4a287605625f3abb9881f8bc000"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aee1cfddad4eb4e6ac5103708f9c9ab3b" id="r_aee1cfddad4eb4e6ac5103708f9c9ab3b"><td class="memTemplParams" colspan="2"><a id="aee1cfddad4eb4e6ac5103708f9c9ab3b" name="aee1cfddad4eb4e6ac5103708f9c9ab3b"></a>
-template&lt;typename T , typename  = std::enable_if_t&lt;std::is_integral_v&lt;T&gt;&gt;&gt; </td></tr>
-<tr class="memitem:aee1cfddad4eb4e6ac5103708f9c9ab3b"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sch::operator!=</b> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;lhs, const T val)</td></tr>
-<tr class="separator:aee1cfddad4eb4e6ac5103708f9c9ab3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a519460f1486a1ac278a6db0104e26245" id="r_a519460f1486a1ac278a6db0104e26245"><td class="memTemplParams" colspan="2"><a id="a519460f1486a1ac278a6db0104e26245" name="a519460f1486a1ac278a6db0104e26245"></a>
-template&lt;typename T , typename  = std::enable_if_t&lt;std::is_integral_v&lt;T&gt;&gt;&gt; </td></tr>
-<tr class="memitem:a519460f1486a1ac278a6db0104e26245"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sch::operator!=</b> (const T val, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
-<tr class="separator:a519460f1486a1ac278a6db0104e26245"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a097c825f8886028f693ea0aaf2980f32" id="r_a097c825f8886028f693ea0aaf2980f32"><td class="memItemLeft" align="right" valign="top"><a id="a097c825f8886028f693ea0aaf2980f32" name="a097c825f8886028f693ea0aaf2980f32"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator&lt;</b> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;lhs, const char *str)</td></tr>
-<tr class="separator:a097c825f8886028f693ea0aaf2980f32"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7338f258f483cecf15440684789b1cf4" id="r_a7338f258f483cecf15440684789b1cf4"><td class="memItemLeft" align="right" valign="top"><a id="a7338f258f483cecf15440684789b1cf4" name="a7338f258f483cecf15440684789b1cf4"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator&lt;</b> (const char *str, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
-<tr class="separator:a7338f258f483cecf15440684789b1cf4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ada0092adf804fae622d21541601d22f9" id="r_ada0092adf804fae622d21541601d22f9"><td class="memItemLeft" align="right" valign="top"><a id="ada0092adf804fae622d21541601d22f9" name="ada0092adf804fae622d21541601d22f9"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator&lt;</b> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;lhs, const std::string &amp;str)</td></tr>
-<tr class="separator:ada0092adf804fae622d21541601d22f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a19cc1ddf0fa996b957721d0182fceb24" id="r_a19cc1ddf0fa996b957721d0182fceb24"><td class="memItemLeft" align="right" valign="top"><a id="a19cc1ddf0fa996b957721d0182fceb24" name="a19cc1ddf0fa996b957721d0182fceb24"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator&lt;</b> (const std::string &amp;str, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
-<tr class="separator:a19cc1ddf0fa996b957721d0182fceb24"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae0353826f8c41f5849e4170cd51fa4be" id="r_ae0353826f8c41f5849e4170cd51fa4be"><td class="memTemplParams" colspan="2"><a id="ae0353826f8c41f5849e4170cd51fa4be" name="ae0353826f8c41f5849e4170cd51fa4be"></a>
-template&lt;typename T , typename  = std::enable_if_t&lt;std::is_integral_v&lt;T&gt;&gt;&gt; </td></tr>
-<tr class="memitem:ae0353826f8c41f5849e4170cd51fa4be"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sch::operator&lt;</b> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;lhs, const T val)</td></tr>
-<tr class="separator:ae0353826f8c41f5849e4170cd51fa4be"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ace8342d9987e35d0430584f5c2e53db7" id="r_ace8342d9987e35d0430584f5c2e53db7"><td class="memTemplParams" colspan="2"><a id="ace8342d9987e35d0430584f5c2e53db7" name="ace8342d9987e35d0430584f5c2e53db7"></a>
-template&lt;typename T , typename  = std::enable_if_t&lt;std::is_integral_v&lt;T&gt;&gt;&gt; </td></tr>
-<tr class="memitem:ace8342d9987e35d0430584f5c2e53db7"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sch::operator&lt;</b> (const T val, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
-<tr class="separator:ace8342d9987e35d0430584f5c2e53db7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae3f36e0f9605727206b2d1ad68bd4704" id="r_ae3f36e0f9605727206b2d1ad68bd4704"><td class="memItemLeft" align="right" valign="top"><a id="ae3f36e0f9605727206b2d1ad68bd4704" name="ae3f36e0f9605727206b2d1ad68bd4704"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator&gt;</b> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;lhs, const char *str)</td></tr>
-<tr class="separator:ae3f36e0f9605727206b2d1ad68bd4704"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3a485bd1670d35f6e052ba5aefe5f7b5" id="r_a3a485bd1670d35f6e052ba5aefe5f7b5"><td class="memItemLeft" align="right" valign="top"><a id="a3a485bd1670d35f6e052ba5aefe5f7b5" name="a3a485bd1670d35f6e052ba5aefe5f7b5"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator&gt;</b> (const char *str, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
-<tr class="separator:a3a485bd1670d35f6e052ba5aefe5f7b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9aa4d18177fedceed49992e491c0ea89" id="r_a9aa4d18177fedceed49992e491c0ea89"><td class="memItemLeft" align="right" valign="top"><a id="a9aa4d18177fedceed49992e491c0ea89" name="a9aa4d18177fedceed49992e491c0ea89"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator&gt;</b> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;lhs, const std::string &amp;str)</td></tr>
-<tr class="separator:a9aa4d18177fedceed49992e491c0ea89"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae93f59e428efad7007e4e9f361b263b8" id="r_ae93f59e428efad7007e4e9f361b263b8"><td class="memItemLeft" align="right" valign="top"><a id="ae93f59e428efad7007e4e9f361b263b8" name="ae93f59e428efad7007e4e9f361b263b8"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator&gt;</b> (const std::string &amp;str, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
-<tr class="separator:ae93f59e428efad7007e4e9f361b263b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a17bb2ea0202595ddeed409b522d738d4" id="r_a17bb2ea0202595ddeed409b522d738d4"><td class="memTemplParams" colspan="2"><a id="a17bb2ea0202595ddeed409b522d738d4" name="a17bb2ea0202595ddeed409b522d738d4"></a>
-template&lt;typename T , typename  = std::enable_if_t&lt;std::is_integral_v&lt;T&gt;&gt;&gt; </td></tr>
-<tr class="memitem:a17bb2ea0202595ddeed409b522d738d4"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sch::operator&gt;</b> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;lhs, const T val)</td></tr>
-<tr class="separator:a17bb2ea0202595ddeed409b522d738d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a65af1d86f55693d00a8a2b2b46ff7dfc" id="r_a65af1d86f55693d00a8a2b2b46ff7dfc"><td class="memTemplParams" colspan="2"><a id="a65af1d86f55693d00a8a2b2b46ff7dfc" name="a65af1d86f55693d00a8a2b2b46ff7dfc"></a>
-template&lt;typename T , typename  = std::enable_if_t&lt;std::is_integral_v&lt;T&gt;&gt;&gt; </td></tr>
-<tr class="memitem:a65af1d86f55693d00a8a2b2b46ff7dfc"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sch::operator&gt;</b> (const T val, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
-<tr class="separator:a65af1d86f55693d00a8a2b2b46ff7dfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4cf3f49c31f2c782a6d545b7a4d01cf0" id="r_a4cf3f49c31f2c782a6d545b7a4d01cf0"><td class="memItemLeft" align="right" valign="top"><a id="a4cf3f49c31f2c782a6d545b7a4d01cf0" name="a4cf3f49c31f2c782a6d545b7a4d01cf0"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator&lt;=</b> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;lhs, const char *str)</td></tr>
-<tr class="separator:a4cf3f49c31f2c782a6d545b7a4d01cf0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a389fdb01ec928865d2cd4ae5a20ee19a" id="r_a389fdb01ec928865d2cd4ae5a20ee19a"><td class="memItemLeft" align="right" valign="top"><a id="a389fdb01ec928865d2cd4ae5a20ee19a" name="a389fdb01ec928865d2cd4ae5a20ee19a"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator&lt;=</b> (const char *str, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
-<tr class="separator:a389fdb01ec928865d2cd4ae5a20ee19a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a79e7aa98191bfb1fd96e234c208196ef" id="r_a79e7aa98191bfb1fd96e234c208196ef"><td class="memItemLeft" align="right" valign="top"><a id="a79e7aa98191bfb1fd96e234c208196ef" name="a79e7aa98191bfb1fd96e234c208196ef"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator&lt;=</b> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;lhs, const std::string &amp;str)</td></tr>
-<tr class="separator:a79e7aa98191bfb1fd96e234c208196ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2e8ef69e90e651175b9ade4a220d8fb7" id="r_a2e8ef69e90e651175b9ade4a220d8fb7"><td class="memItemLeft" align="right" valign="top"><a id="a2e8ef69e90e651175b9ade4a220d8fb7" name="a2e8ef69e90e651175b9ade4a220d8fb7"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator&lt;=</b> (const std::string &amp;str, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
-<tr class="separator:a2e8ef69e90e651175b9ade4a220d8fb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acecb7aaa40c2193f8716523cfa93e682" id="r_acecb7aaa40c2193f8716523cfa93e682"><td class="memTemplParams" colspan="2"><a id="acecb7aaa40c2193f8716523cfa93e682" name="acecb7aaa40c2193f8716523cfa93e682"></a>
-template&lt;typename T , typename  = std::enable_if_t&lt;std::is_integral_v&lt;T&gt;&gt;&gt; </td></tr>
-<tr class="memitem:acecb7aaa40c2193f8716523cfa93e682"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sch::operator&lt;=</b> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;lhs, const T val)</td></tr>
-<tr class="separator:acecb7aaa40c2193f8716523cfa93e682"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afc1505965ebfff2b5b839c797111a555" id="r_afc1505965ebfff2b5b839c797111a555"><td class="memTemplParams" colspan="2"><a id="afc1505965ebfff2b5b839c797111a555" name="afc1505965ebfff2b5b839c797111a555"></a>
-template&lt;typename T , typename  = std::enable_if_t&lt;std::is_integral_v&lt;T&gt;&gt;&gt; </td></tr>
-<tr class="memitem:afc1505965ebfff2b5b839c797111a555"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sch::operator&lt;=</b> (const T val, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
-<tr class="separator:afc1505965ebfff2b5b839c797111a555"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a64ad5bb3b25b6e504c8ec646f2a73893" id="r_a64ad5bb3b25b6e504c8ec646f2a73893"><td class="memItemLeft" align="right" valign="top"><a id="a64ad5bb3b25b6e504c8ec646f2a73893" name="a64ad5bb3b25b6e504c8ec646f2a73893"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator&gt;=</b> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;lhs, const char *str)</td></tr>
-<tr class="separator:a64ad5bb3b25b6e504c8ec646f2a73893"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aac79b1105fe0aa1a54191f11adf40f96" id="r_aac79b1105fe0aa1a54191f11adf40f96"><td class="memItemLeft" align="right" valign="top"><a id="aac79b1105fe0aa1a54191f11adf40f96" name="aac79b1105fe0aa1a54191f11adf40f96"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator&gt;=</b> (const char *str, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
-<tr class="separator:aac79b1105fe0aa1a54191f11adf40f96"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aed8c9c49b7a3d247780f25ad38b32273" id="r_aed8c9c49b7a3d247780f25ad38b32273"><td class="memItemLeft" align="right" valign="top"><a id="aed8c9c49b7a3d247780f25ad38b32273" name="aed8c9c49b7a3d247780f25ad38b32273"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator&gt;=</b> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;lhs, const std::string &amp;str)</td></tr>
-<tr class="separator:aed8c9c49b7a3d247780f25ad38b32273"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a26badfefde5aae65ba1b9dc7fbe02c6e" id="r_a26badfefde5aae65ba1b9dc7fbe02c6e"><td class="memItemLeft" align="right" valign="top"><a id="a26badfefde5aae65ba1b9dc7fbe02c6e" name="a26badfefde5aae65ba1b9dc7fbe02c6e"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator&gt;=</b> (const std::string &amp;str, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
-<tr class="separator:a26badfefde5aae65ba1b9dc7fbe02c6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5616218a6b0fe5fb5aaa977ad4dc9b26" id="r_a5616218a6b0fe5fb5aaa977ad4dc9b26"><td class="memTemplParams" colspan="2"><a id="a5616218a6b0fe5fb5aaa977ad4dc9b26" name="a5616218a6b0fe5fb5aaa977ad4dc9b26"></a>
-template&lt;typename T , typename  = std::enable_if_t&lt;std::is_integral_v&lt;T&gt;&gt;&gt; </td></tr>
-<tr class="memitem:a5616218a6b0fe5fb5aaa977ad4dc9b26"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sch::operator&gt;=</b> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;lhs, const T val)</td></tr>
-<tr class="separator:a5616218a6b0fe5fb5aaa977ad4dc9b26"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae6a428328d0e2bdd8f257409bbbb0a2c" id="r_ae6a428328d0e2bdd8f257409bbbb0a2c"><td class="memTemplParams" colspan="2"><a id="ae6a428328d0e2bdd8f257409bbbb0a2c" name="ae6a428328d0e2bdd8f257409bbbb0a2c"></a>
-template&lt;typename T , typename  = std::enable_if_t&lt;std::is_integral_v&lt;T&gt;&gt;&gt; </td></tr>
-<tr class="memitem:ae6a428328d0e2bdd8f257409bbbb0a2c"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sch::operator&gt;=</b> (const T val, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
-<tr class="separator:ae6a428328d0e2bdd8f257409bbbb0a2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2a5ac346cf20593a037338a61bbe3cc1" id="r_a2a5ac346cf20593a037338a61bbe3cc1"><td class="memItemLeft" align="right" valign="top"><a id="a2a5ac346cf20593a037338a61bbe3cc1" name="a2a5ac346cf20593a037338a61bbe3cc1"></a>
-<a class="el" href="classsch_1_1BigInt.html">BigInt</a>&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator+</b> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;lhs, const char *str)</td></tr>
-<tr class="separator:a2a5ac346cf20593a037338a61bbe3cc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a62c28b24411de6b3a4b94b50d5b95f97" id="r_a62c28b24411de6b3a4b94b50d5b95f97"><td class="memItemLeft" align="right" valign="top"><a id="a62c28b24411de6b3a4b94b50d5b95f97" name="a62c28b24411de6b3a4b94b50d5b95f97"></a>
-<a class="el" href="classsch_1_1BigInt.html">BigInt</a>&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator+</b> (const char *str, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
-<tr class="separator:a62c28b24411de6b3a4b94b50d5b95f97"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a03fc07892349998e4ccdd6d2e16dd643" id="r_a03fc07892349998e4ccdd6d2e16dd643"><td class="memItemLeft" align="right" valign="top"><a id="a03fc07892349998e4ccdd6d2e16dd643" name="a03fc07892349998e4ccdd6d2e16dd643"></a>
-<a class="el" href="classsch_1_1BigInt.html">BigInt</a>&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator+</b> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;lhs, const std::string &amp;str)</td></tr>
-<tr class="separator:a03fc07892349998e4ccdd6d2e16dd643"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a867e75d04eb74e2d596e651e7af0abb2" id="r_a867e75d04eb74e2d596e651e7af0abb2"><td class="memItemLeft" align="right" valign="top"><a id="a867e75d04eb74e2d596e651e7af0abb2" name="a867e75d04eb74e2d596e651e7af0abb2"></a>
-<a class="el" href="classsch_1_1BigInt.html">BigInt</a>&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator+</b> (const std::string &amp;str, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
-<tr class="separator:a867e75d04eb74e2d596e651e7af0abb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abdaf1ab0214c7dfcdf7bffce808e56be" id="r_abdaf1ab0214c7dfcdf7bffce808e56be"><td class="memTemplParams" colspan="2"><a id="abdaf1ab0214c7dfcdf7bffce808e56be" name="abdaf1ab0214c7dfcdf7bffce808e56be"></a>
-template&lt;typename T , typename  = std::enable_if_t&lt;std::is_integral_v&lt;T&gt;&gt;&gt; </td></tr>
-<tr class="memitem:abdaf1ab0214c7dfcdf7bffce808e56be"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classsch_1_1BigInt.html">BigInt</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sch::operator+</b> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;lhs, const T val)</td></tr>
-<tr class="separator:abdaf1ab0214c7dfcdf7bffce808e56be"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2e37f2e18e0545e485db3c23b503b19b" id="r_a2e37f2e18e0545e485db3c23b503b19b"><td class="memTemplParams" colspan="2"><a id="a2e37f2e18e0545e485db3c23b503b19b" name="a2e37f2e18e0545e485db3c23b503b19b"></a>
-template&lt;typename T , typename  = std::enable_if_t&lt;std::is_integral_v&lt;T&gt;&gt;&gt; </td></tr>
-<tr class="memitem:a2e37f2e18e0545e485db3c23b503b19b"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classsch_1_1BigInt.html">BigInt</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sch::operator+</b> (const T val, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
-<tr class="separator:a2e37f2e18e0545e485db3c23b503b19b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae1b15be24874332e27c5dd78a9bab38f" id="r_ae1b15be24874332e27c5dd78a9bab38f"><td class="memItemLeft" align="right" valign="top"><a id="ae1b15be24874332e27c5dd78a9bab38f" name="ae1b15be24874332e27c5dd78a9bab38f"></a>
-<a class="el" href="classsch_1_1BigInt.html">BigInt</a>&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator-</b> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;lhs, const char *str)</td></tr>
-<tr class="separator:ae1b15be24874332e27c5dd78a9bab38f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a53b307ec2ba18a0889e5a540ef6169" id="r_a6a53b307ec2ba18a0889e5a540ef6169"><td class="memItemLeft" align="right" valign="top"><a id="a6a53b307ec2ba18a0889e5a540ef6169" name="a6a53b307ec2ba18a0889e5a540ef6169"></a>
-<a class="el" href="classsch_1_1BigInt.html">BigInt</a>&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator-</b> (const char *str, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
-<tr class="separator:a6a53b307ec2ba18a0889e5a540ef6169"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6d5d51fb2e24fed476e5472a183a0644" id="r_a6d5d51fb2e24fed476e5472a183a0644"><td class="memItemLeft" align="right" valign="top"><a id="a6d5d51fb2e24fed476e5472a183a0644" name="a6d5d51fb2e24fed476e5472a183a0644"></a>
-<a class="el" href="classsch_1_1BigInt.html">BigInt</a>&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator-</b> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;lhs, const std::string &amp;str)</td></tr>
-<tr class="separator:a6d5d51fb2e24fed476e5472a183a0644"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a728623c791e36609b12e142e17c7b307" id="r_a728623c791e36609b12e142e17c7b307"><td class="memItemLeft" align="right" valign="top"><a id="a728623c791e36609b12e142e17c7b307" name="a728623c791e36609b12e142e17c7b307"></a>
-<a class="el" href="classsch_1_1BigInt.html">BigInt</a>&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator-</b> (const std::string &amp;str, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
-<tr class="separator:a728623c791e36609b12e142e17c7b307"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab58d1ac053155aafc7d3d8ce4219e0df" id="r_ab58d1ac053155aafc7d3d8ce4219e0df"><td class="memTemplParams" colspan="2"><a id="ab58d1ac053155aafc7d3d8ce4219e0df" name="ab58d1ac053155aafc7d3d8ce4219e0df"></a>
-template&lt;typename T , typename  = std::enable_if_t&lt;std::is_integral_v&lt;T&gt;&gt;&gt; </td></tr>
-<tr class="memitem:ab58d1ac053155aafc7d3d8ce4219e0df"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classsch_1_1BigInt.html">BigInt</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sch::operator-</b> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;lhs, const T val)</td></tr>
-<tr class="separator:ab58d1ac053155aafc7d3d8ce4219e0df"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a81c1048a0da6bb738bcdf044552f48e3" id="r_a81c1048a0da6bb738bcdf044552f48e3"><td class="memTemplParams" colspan="2"><a id="a81c1048a0da6bb738bcdf044552f48e3" name="a81c1048a0da6bb738bcdf044552f48e3"></a>
-template&lt;typename T , typename  = std::enable_if_t&lt;std::is_integral_v&lt;T&gt;&gt;&gt; </td></tr>
-<tr class="memitem:a81c1048a0da6bb738bcdf044552f48e3"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classsch_1_1BigInt.html">BigInt</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sch::operator-</b> (const T val, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
-<tr class="separator:a81c1048a0da6bb738bcdf044552f48e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a910ec86c03f638a07d9daf49412e4082" id="r_a910ec86c03f638a07d9daf49412e4082"><td class="memItemLeft" align="right" valign="top"><a id="a910ec86c03f638a07d9daf49412e4082" name="a910ec86c03f638a07d9daf49412e4082"></a>
-<a class="el" href="classsch_1_1BigInt.html">BigInt</a>&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator*</b> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;lhs, const char *str)</td></tr>
-<tr class="separator:a910ec86c03f638a07d9daf49412e4082"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adf2a0bd09242e6ea5d454b68a88a57fd" id="r_adf2a0bd09242e6ea5d454b68a88a57fd"><td class="memItemLeft" align="right" valign="top"><a id="adf2a0bd09242e6ea5d454b68a88a57fd" name="adf2a0bd09242e6ea5d454b68a88a57fd"></a>
-<a class="el" href="classsch_1_1BigInt.html">BigInt</a>&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator*</b> (const char *str, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
-<tr class="separator:adf2a0bd09242e6ea5d454b68a88a57fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a268c20fe8b11f67b1a8710deaa3b266e" id="r_a268c20fe8b11f67b1a8710deaa3b266e"><td class="memItemLeft" align="right" valign="top"><a id="a268c20fe8b11f67b1a8710deaa3b266e" name="a268c20fe8b11f67b1a8710deaa3b266e"></a>
-<a class="el" href="classsch_1_1BigInt.html">BigInt</a>&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator*</b> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;lhs, const std::string &amp;str)</td></tr>
-<tr class="separator:a268c20fe8b11f67b1a8710deaa3b266e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2a4d60974fd59c24c4922df9988be4ac" id="r_a2a4d60974fd59c24c4922df9988be4ac"><td class="memItemLeft" align="right" valign="top"><a id="a2a4d60974fd59c24c4922df9988be4ac" name="a2a4d60974fd59c24c4922df9988be4ac"></a>
-<a class="el" href="classsch_1_1BigInt.html">BigInt</a>&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator*</b> (const std::string &amp;str, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
-<tr class="separator:a2a4d60974fd59c24c4922df9988be4ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49c93f8d8853ef0d410bba84831d91f8" id="r_a49c93f8d8853ef0d410bba84831d91f8"><td class="memTemplParams" colspan="2">template&lt;typename T , typename  = std::enable_if_t&lt;std::is_integral_v&lt;T&gt;&gt;&gt; </td></tr>
+<tr class="memitem:a49c93f8d8853ef0d410bba84831d91f8"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classsch_1_1BigInt.html">BigInt</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a49c93f8d8853ef0d410bba84831d91f8">sch::pow</a> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;base, T exp)</td></tr>
+<tr class="separator:a49c93f8d8853ef0d410bba84831d91f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab4f4642a9b82a5057efba1f5acfab71b" id="r_ab4f4642a9b82a5057efba1f5acfab71b"><td class="memTemplParams" colspan="2"><a id="ab4f4642a9b82a5057efba1f5acfab71b" name="ab4f4642a9b82a5057efba1f5acfab71b"></a>
+template&lt;typename T , typename  = std::enable_if_t&lt;std::is_constructible_v&lt;BigInt, T&gt;&gt;&gt; </td></tr>
+<tr class="memitem:ab4f4642a9b82a5057efba1f5acfab71b"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sch::operator==</b> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;lhs, const T &amp;val)</td></tr>
+<tr class="separator:ab4f4642a9b82a5057efba1f5acfab71b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a90ea73c1fe75b173ac7eb948c35fe494" id="r_a90ea73c1fe75b173ac7eb948c35fe494"><td class="memTemplParams" colspan="2"><a id="a90ea73c1fe75b173ac7eb948c35fe494" name="a90ea73c1fe75b173ac7eb948c35fe494"></a>
+template&lt;typename T , typename  = std::enable_if_t&lt;std::is_constructible_v&lt;BigInt, T&gt;&gt;&gt; </td></tr>
+<tr class="memitem:a90ea73c1fe75b173ac7eb948c35fe494"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sch::operator==</b> (const T &amp;val, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
+<tr class="separator:a90ea73c1fe75b173ac7eb948c35fe494"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a26c990bdd62410bd01113dec031e8f" id="r_a4a26c990bdd62410bd01113dec031e8f"><td class="memTemplParams" colspan="2"><a id="a4a26c990bdd62410bd01113dec031e8f" name="a4a26c990bdd62410bd01113dec031e8f"></a>
+template&lt;typename T , typename  = std::enable_if_t&lt;std::is_constructible_v&lt;BigInt, T&gt;&gt;&gt; </td></tr>
+<tr class="memitem:a4a26c990bdd62410bd01113dec031e8f"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sch::operator!=</b> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;lhs, const T &amp;val)</td></tr>
+<tr class="separator:a4a26c990bdd62410bd01113dec031e8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5fd83aaf8ae2a853d1797d00359c051f" id="r_a5fd83aaf8ae2a853d1797d00359c051f"><td class="memTemplParams" colspan="2"><a id="a5fd83aaf8ae2a853d1797d00359c051f" name="a5fd83aaf8ae2a853d1797d00359c051f"></a>
+template&lt;typename T , typename  = std::enable_if_t&lt;std::is_constructible_v&lt;BigInt, T&gt;&gt;&gt; </td></tr>
+<tr class="memitem:a5fd83aaf8ae2a853d1797d00359c051f"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sch::operator!=</b> (const T &amp;val, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
+<tr class="separator:a5fd83aaf8ae2a853d1797d00359c051f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7da78068cd4bce6e1e3675ef7affcf2d" id="r_a7da78068cd4bce6e1e3675ef7affcf2d"><td class="memTemplParams" colspan="2"><a id="a7da78068cd4bce6e1e3675ef7affcf2d" name="a7da78068cd4bce6e1e3675ef7affcf2d"></a>
+template&lt;typename T , typename  = std::enable_if_t&lt;std::is_constructible_v&lt;BigInt, T&gt;&gt;&gt; </td></tr>
+<tr class="memitem:a7da78068cd4bce6e1e3675ef7affcf2d"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sch::operator&lt;</b> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;lhs, const T &amp;val)</td></tr>
+<tr class="separator:a7da78068cd4bce6e1e3675ef7affcf2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f3c2c98b829530a5dc9d70933a9ba76" id="r_a6f3c2c98b829530a5dc9d70933a9ba76"><td class="memTemplParams" colspan="2"><a id="a6f3c2c98b829530a5dc9d70933a9ba76" name="a6f3c2c98b829530a5dc9d70933a9ba76"></a>
+template&lt;typename T , typename  = std::enable_if_t&lt;std::is_constructible_v&lt;BigInt, T&gt;&gt;&gt; </td></tr>
+<tr class="memitem:a6f3c2c98b829530a5dc9d70933a9ba76"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sch::operator&lt;</b> (const T &amp;val, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
+<tr class="separator:a6f3c2c98b829530a5dc9d70933a9ba76"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae22cfa1e34470aeb12eb59679d81c4cf" id="r_ae22cfa1e34470aeb12eb59679d81c4cf"><td class="memTemplParams" colspan="2"><a id="ae22cfa1e34470aeb12eb59679d81c4cf" name="ae22cfa1e34470aeb12eb59679d81c4cf"></a>
+template&lt;typename T , typename  = std::enable_if_t&lt;std::is_constructible_v&lt;BigInt, T&gt;&gt;&gt; </td></tr>
+<tr class="memitem:ae22cfa1e34470aeb12eb59679d81c4cf"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sch::operator&gt;</b> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;lhs, const T &amp;val)</td></tr>
+<tr class="separator:ae22cfa1e34470aeb12eb59679d81c4cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a519135fbbe5e3f6b4debfbae5ea0a9e4" id="r_a519135fbbe5e3f6b4debfbae5ea0a9e4"><td class="memTemplParams" colspan="2"><a id="a519135fbbe5e3f6b4debfbae5ea0a9e4" name="a519135fbbe5e3f6b4debfbae5ea0a9e4"></a>
+template&lt;typename T , typename  = std::enable_if_t&lt;std::is_constructible_v&lt;BigInt, T&gt;&gt;&gt; </td></tr>
+<tr class="memitem:a519135fbbe5e3f6b4debfbae5ea0a9e4"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sch::operator&gt;</b> (const T &amp;val, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
+<tr class="separator:a519135fbbe5e3f6b4debfbae5ea0a9e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2279fc5210bd1bdf65a4d0912fae33df" id="r_a2279fc5210bd1bdf65a4d0912fae33df"><td class="memTemplParams" colspan="2"><a id="a2279fc5210bd1bdf65a4d0912fae33df" name="a2279fc5210bd1bdf65a4d0912fae33df"></a>
+template&lt;typename T , typename  = std::enable_if_t&lt;std::is_constructible_v&lt;BigInt, T&gt;&gt;&gt; </td></tr>
+<tr class="memitem:a2279fc5210bd1bdf65a4d0912fae33df"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sch::operator&lt;=</b> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;lhs, const T &amp;val)</td></tr>
+<tr class="separator:a2279fc5210bd1bdf65a4d0912fae33df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d919d2dc505edfd7d4272b79bfd4672" id="r_a0d919d2dc505edfd7d4272b79bfd4672"><td class="memTemplParams" colspan="2"><a id="a0d919d2dc505edfd7d4272b79bfd4672" name="a0d919d2dc505edfd7d4272b79bfd4672"></a>
+template&lt;typename T , typename  = std::enable_if_t&lt;std::is_constructible_v&lt;BigInt, T&gt;&gt;&gt; </td></tr>
+<tr class="memitem:a0d919d2dc505edfd7d4272b79bfd4672"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sch::operator&lt;=</b> (const T &amp;val, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
+<tr class="separator:a0d919d2dc505edfd7d4272b79bfd4672"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d63fe80f2bc4891f5a7d9f8c2e3604e" id="r_a7d63fe80f2bc4891f5a7d9f8c2e3604e"><td class="memTemplParams" colspan="2"><a id="a7d63fe80f2bc4891f5a7d9f8c2e3604e" name="a7d63fe80f2bc4891f5a7d9f8c2e3604e"></a>
+template&lt;typename T , typename  = std::enable_if_t&lt;std::is_constructible_v&lt;BigInt, T&gt;&gt;&gt; </td></tr>
+<tr class="memitem:a7d63fe80f2bc4891f5a7d9f8c2e3604e"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sch::operator&gt;=</b> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;lhs, const T &amp;val)</td></tr>
+<tr class="separator:a7d63fe80f2bc4891f5a7d9f8c2e3604e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abf05dd712ba9b79a591240f2b501384f" id="r_abf05dd712ba9b79a591240f2b501384f"><td class="memTemplParams" colspan="2"><a id="abf05dd712ba9b79a591240f2b501384f" name="abf05dd712ba9b79a591240f2b501384f"></a>
+template&lt;typename T , typename  = std::enable_if_t&lt;std::is_constructible_v&lt;BigInt, T&gt;&gt;&gt; </td></tr>
+<tr class="memitem:abf05dd712ba9b79a591240f2b501384f"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sch::operator&gt;=</b> (const T &amp;val, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
+<tr class="separator:abf05dd712ba9b79a591240f2b501384f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac6665d17c1326afda8164829f191b636" id="r_ac6665d17c1326afda8164829f191b636"><td class="memTemplParams" colspan="2"><a id="ac6665d17c1326afda8164829f191b636" name="ac6665d17c1326afda8164829f191b636"></a>
+template&lt;typename T , typename  = std::enable_if_t&lt;std::is_constructible_v&lt;BigInt, T&gt;&gt;&gt; </td></tr>
+<tr class="memitem:ac6665d17c1326afda8164829f191b636"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classsch_1_1BigInt.html">BigInt</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sch::operator+</b> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;lhs, const T &amp;val)</td></tr>
+<tr class="separator:ac6665d17c1326afda8164829f191b636"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d6927e66b45fda8aa4827374126356f" id="r_a1d6927e66b45fda8aa4827374126356f"><td class="memTemplParams" colspan="2"><a id="a1d6927e66b45fda8aa4827374126356f" name="a1d6927e66b45fda8aa4827374126356f"></a>
+template&lt;typename T , typename  = std::enable_if_t&lt;std::is_constructible_v&lt;BigInt, T&gt;&gt;&gt; </td></tr>
+<tr class="memitem:a1d6927e66b45fda8aa4827374126356f"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classsch_1_1BigInt.html">BigInt</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sch::operator+</b> (const T &amp;val, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
+<tr class="separator:a1d6927e66b45fda8aa4827374126356f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a31019f2d8e29226952551b2d4363db1e" id="r_a31019f2d8e29226952551b2d4363db1e"><td class="memTemplParams" colspan="2"><a id="a31019f2d8e29226952551b2d4363db1e" name="a31019f2d8e29226952551b2d4363db1e"></a>
+template&lt;typename T , typename  = std::enable_if_t&lt;std::is_constructible_v&lt;BigInt, T&gt;&gt;&gt; </td></tr>
+<tr class="memitem:a31019f2d8e29226952551b2d4363db1e"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classsch_1_1BigInt.html">BigInt</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sch::operator-</b> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;lhs, const T &amp;val)</td></tr>
+<tr class="separator:a31019f2d8e29226952551b2d4363db1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb4e26021584969b7a9733af05f818cd" id="r_adb4e26021584969b7a9733af05f818cd"><td class="memTemplParams" colspan="2"><a id="adb4e26021584969b7a9733af05f818cd" name="adb4e26021584969b7a9733af05f818cd"></a>
+template&lt;typename T , typename  = std::enable_if_t&lt;std::is_constructible_v&lt;BigInt, T&gt;&gt;&gt; </td></tr>
+<tr class="memitem:adb4e26021584969b7a9733af05f818cd"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classsch_1_1BigInt.html">BigInt</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sch::operator-</b> (const T &amp;val, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
+<tr class="separator:adb4e26021584969b7a9733af05f818cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a249e3a58468baa48d193e2ae52949e6c" id="r_a249e3a58468baa48d193e2ae52949e6c"><td class="memTemplParams" colspan="2"><a id="a249e3a58468baa48d193e2ae52949e6c" name="a249e3a58468baa48d193e2ae52949e6c"></a>
-template&lt;typename T , typename  = std::enable_if_t&lt;std::is_integral_v&lt;T&gt;&gt;&gt; </td></tr>
+template&lt;typename T , typename  = std::enable_if_t&lt;std::is_constructible_v&lt;BigInt, T&gt;&gt;&gt; </td></tr>
 <tr class="memitem:a249e3a58468baa48d193e2ae52949e6c"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classsch_1_1BigInt.html">BigInt</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sch::operator*</b> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;lhs, const T val)</td></tr>
 <tr class="separator:a249e3a58468baa48d193e2ae52949e6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a024c3c0d3145d4ecd9d759f30831c2b5" id="r_a024c3c0d3145d4ecd9d759f30831c2b5"><td class="memTemplParams" colspan="2"><a id="a024c3c0d3145d4ecd9d759f30831c2b5" name="a024c3c0d3145d4ecd9d759f30831c2b5"></a>
-template&lt;typename T , typename  = std::enable_if_t&lt;std::is_integral_v&lt;T&gt;&gt;&gt; </td></tr>
-<tr class="memitem:a024c3c0d3145d4ecd9d759f30831c2b5"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classsch_1_1BigInt.html">BigInt</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sch::operator*</b> (const T val, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
-<tr class="separator:a024c3c0d3145d4ecd9d759f30831c2b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afe9e860a5f58b679d3562310e912aabf" id="r_afe9e860a5f58b679d3562310e912aabf"><td class="memItemLeft" align="right" valign="top"><a id="afe9e860a5f58b679d3562310e912aabf" name="afe9e860a5f58b679d3562310e912aabf"></a>
-<a class="el" href="classsch_1_1BigInt.html">BigInt</a>&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator/</b> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;lhs, const char *str)</td></tr>
-<tr class="separator:afe9e860a5f58b679d3562310e912aabf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aebf844492e4a9a331feb5b5ffd2c0d02" id="r_aebf844492e4a9a331feb5b5ffd2c0d02"><td class="memItemLeft" align="right" valign="top"><a id="aebf844492e4a9a331feb5b5ffd2c0d02" name="aebf844492e4a9a331feb5b5ffd2c0d02"></a>
-<a class="el" href="classsch_1_1BigInt.html">BigInt</a>&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator/</b> (const char *str, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
-<tr class="separator:aebf844492e4a9a331feb5b5ffd2c0d02"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa295fe86c4a32812979cce15e6f8e7d4" id="r_aa295fe86c4a32812979cce15e6f8e7d4"><td class="memItemLeft" align="right" valign="top"><a id="aa295fe86c4a32812979cce15e6f8e7d4" name="aa295fe86c4a32812979cce15e6f8e7d4"></a>
-<a class="el" href="classsch_1_1BigInt.html">BigInt</a>&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator/</b> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;lhs, const std::string &amp;str)</td></tr>
-<tr class="separator:aa295fe86c4a32812979cce15e6f8e7d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a230a9fba55184e44a68383efd080fd43" id="r_a230a9fba55184e44a68383efd080fd43"><td class="memItemLeft" align="right" valign="top"><a id="a230a9fba55184e44a68383efd080fd43" name="a230a9fba55184e44a68383efd080fd43"></a>
-<a class="el" href="classsch_1_1BigInt.html">BigInt</a>&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator/</b> (const std::string &amp;str, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
-<tr class="separator:a230a9fba55184e44a68383efd080fd43"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab1b0ccf32807af507947afd4ec945e18" id="r_ab1b0ccf32807af507947afd4ec945e18"><td class="memTemplParams" colspan="2"><a id="ab1b0ccf32807af507947afd4ec945e18" name="ab1b0ccf32807af507947afd4ec945e18"></a>
-template&lt;typename T , typename  = std::enable_if_t&lt;std::is_integral_v&lt;T&gt;&gt;&gt; </td></tr>
-<tr class="memitem:ab1b0ccf32807af507947afd4ec945e18"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classsch_1_1BigInt.html">BigInt</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sch::operator/</b> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;lhs, const T val)</td></tr>
-<tr class="separator:ab1b0ccf32807af507947afd4ec945e18"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a749c1ddb4f6f7c41bddff7f55885a507" id="r_a749c1ddb4f6f7c41bddff7f55885a507"><td class="memTemplParams" colspan="2"><a id="a749c1ddb4f6f7c41bddff7f55885a507" name="a749c1ddb4f6f7c41bddff7f55885a507"></a>
-template&lt;typename T , typename  = std::enable_if_t&lt;std::is_integral_v&lt;T&gt;&gt;&gt; </td></tr>
-<tr class="memitem:a749c1ddb4f6f7c41bddff7f55885a507"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classsch_1_1BigInt.html">BigInt</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sch::operator/</b> (const T val, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
-<tr class="separator:a749c1ddb4f6f7c41bddff7f55885a507"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8d707dc3185ad503dc3845e76f1fb2bf" id="r_a8d707dc3185ad503dc3845e76f1fb2bf"><td class="memItemLeft" align="right" valign="top"><a id="a8d707dc3185ad503dc3845e76f1fb2bf" name="a8d707dc3185ad503dc3845e76f1fb2bf"></a>
-<a class="el" href="classsch_1_1BigInt.html">BigInt</a>&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator%</b> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;lhs, const char *str)</td></tr>
-<tr class="separator:a8d707dc3185ad503dc3845e76f1fb2bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a269a3b75eab35e01334767e30021dd0f" id="r_a269a3b75eab35e01334767e30021dd0f"><td class="memItemLeft" align="right" valign="top"><a id="a269a3b75eab35e01334767e30021dd0f" name="a269a3b75eab35e01334767e30021dd0f"></a>
-<a class="el" href="classsch_1_1BigInt.html">BigInt</a>&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator%</b> (const char *str, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
-<tr class="separator:a269a3b75eab35e01334767e30021dd0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a89b981102611aea6a1e64f809bd2ec7d" id="r_a89b981102611aea6a1e64f809bd2ec7d"><td class="memItemLeft" align="right" valign="top"><a id="a89b981102611aea6a1e64f809bd2ec7d" name="a89b981102611aea6a1e64f809bd2ec7d"></a>
-<a class="el" href="classsch_1_1BigInt.html">BigInt</a>&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator%</b> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;lhs, const std::string &amp;str)</td></tr>
-<tr class="separator:a89b981102611aea6a1e64f809bd2ec7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3b315ddac68c160fc7a7daeb91c593f5" id="r_a3b315ddac68c160fc7a7daeb91c593f5"><td class="memItemLeft" align="right" valign="top"><a id="a3b315ddac68c160fc7a7daeb91c593f5" name="a3b315ddac68c160fc7a7daeb91c593f5"></a>
-<a class="el" href="classsch_1_1BigInt.html">BigInt</a>&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator%</b> (const std::string &amp;str, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
-<tr class="separator:a3b315ddac68c160fc7a7daeb91c593f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2758622ec6f7ceada9598325a98e31f8" id="r_a2758622ec6f7ceada9598325a98e31f8"><td class="memTemplParams" colspan="2"><a id="a2758622ec6f7ceada9598325a98e31f8" name="a2758622ec6f7ceada9598325a98e31f8"></a>
-template&lt;typename T , typename  = std::enable_if_t&lt;std::is_integral_v&lt;T&gt;&gt;&gt; </td></tr>
-<tr class="memitem:a2758622ec6f7ceada9598325a98e31f8"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classsch_1_1BigInt.html">BigInt</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sch::operator%</b> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;lhs, const T val)</td></tr>
-<tr class="separator:a2758622ec6f7ceada9598325a98e31f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a28d8a5168d0219896fa4db510e68040f" id="r_a28d8a5168d0219896fa4db510e68040f"><td class="memTemplParams" colspan="2"><a id="a28d8a5168d0219896fa4db510e68040f" name="a28d8a5168d0219896fa4db510e68040f"></a>
-template&lt;typename T , typename  = std::enable_if_t&lt;std::is_integral_v&lt;T&gt;&gt;&gt; </td></tr>
-<tr class="memitem:a28d8a5168d0219896fa4db510e68040f"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classsch_1_1BigInt.html">BigInt</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sch::operator%</b> (const T val, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
-<tr class="separator:a28d8a5168d0219896fa4db510e68040f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a577a71a5c120f8b9bafa1cd2d9d32735" id="r_a577a71a5c120f8b9bafa1cd2d9d32735"><td class="memTemplParams" colspan="2"><a id="a577a71a5c120f8b9bafa1cd2d9d32735" name="a577a71a5c120f8b9bafa1cd2d9d32735"></a>
+template&lt;typename T , typename  = std::enable_if_t&lt;std::is_constructible_v&lt;BigInt, T&gt;&gt;&gt; </td></tr>
+<tr class="memitem:a577a71a5c120f8b9bafa1cd2d9d32735"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classsch_1_1BigInt.html">BigInt</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sch::operator*</b> (const T &amp;val, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;rhs)</td></tr>
+<tr class="separator:a577a71a5c120f8b9bafa1cd2d9d32735"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3213e6b317decd8b2fc6affe5fbe1cb9" id="r_a3213e6b317decd8b2fc6affe5fbe1cb9"><td class="memItemLeft" align="right" valign="top"><a id="a3213e6b317decd8b2fc6affe5fbe1cb9" name="a3213e6b317decd8b2fc6affe5fbe1cb9"></a>
 std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>sch::operator&lt;&lt;</b> (std::ostream &amp;os, const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;b)</td></tr>
 <tr class="separator:a3213e6b317decd8b2fc6affe5fbe1cb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a03a19dd7a46c5818cd2381ffcc344e16" id="r_a03a19dd7a46c5818cd2381ffcc344e16"><td class="memTemplParams" colspan="2">template&lt;typename T , typename  = std::enable_if_t&lt;std::is_integral_v&lt;T&gt;&gt;&gt; </td></tr>
-<tr class="memitem:a03a19dd7a46c5818cd2381ffcc344e16"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classsch_1_1BigInt.html">BigInt</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a03a19dd7a46c5818cd2381ffcc344e16">sch::pow</a> (const <a class="el" href="classsch_1_1BigInt.html">BigInt</a> &amp;base, const T exp)</td></tr>
-<tr class="separator:a03a19dd7a46c5818cd2381ffcc344e16"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Arbitrary precision integer. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="a03a19dd7a46c5818cd2381ffcc344e16" name="a03a19dd7a46c5818cd2381ffcc344e16"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a03a19dd7a46c5818cd2381ffcc344e16">&#9670;&#160;</a></span>pow()</h2>
+<a id="a49c93f8d8853ef0d410bba84831d91f8" name="a49c93f8d8853ef0d410bba84831d91f8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a49c93f8d8853ef0d410bba84831d91f8">&#9670;&#160;</a></span>pow()</h2>
 
 <div class="memitem">
 <div class="memproto">

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['negation_3a_0',['Unary Negation:',['../index.html#autotoc_md12',1,'']]]
+  ['resources_0',['Resources',['../index.html#autotoc_md6',1,'']]]
 ];

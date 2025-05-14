@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['how_20to_20use_0',['How to Use',['../index.html#autotoc_md3',1,'']]]
+  ['license_0',['License',['../index.html#autotoc_md7',1,'']]],
+  ['limitations_1',['Limitations',['../index.html#autotoc_md5',1,'']]]
 ];

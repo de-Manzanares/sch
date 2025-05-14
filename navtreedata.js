@@ -25,29 +25,18 @@
 var NAVTREE =
 [
   [ "sch", "index.html", [
-    [ "BigInt - Arbitrary Precision Integer", "index.html#autotoc_md1", [
+    [ "BigInt — Multiple-Precision Integer", "index.html#autotoc_md1", [
+      [ "Example application", "index.html#autotoc_md2", null ],
       [ "How to Use", "index.html#autotoc_md3", [
         [ "Getting BigInt", "index.html#autotoc_md4", null ],
-        [ "Example Code", "index.html#autotoc_md5", [
-          [ "Constructors", "index.html#autotoc_md6", null ],
-          [ "Assignment Operator", "index.html#autotoc_md7", null ],
-          [ "To String; Stream Insertion", "index.html#autotoc_md8", null ],
-          [ "Arithmetic Operators", "index.html#autotoc_md9", null ],
-          [ "Comparison Operators", "index.html#autotoc_md10", null ],
-          [ "Exponentiation", "index.html#autotoc_md11", null ],
-          [ "Unary Negation:", "index.html#autotoc_md12", null ],
-          [ "Increment/Decrement:", "index.html#autotoc_md13", null ]
-        ] ]
-      ] ]
+        [ "Limitations", "index.html#autotoc_md5", null ]
+      ] ],
+      [ "Resources", "index.html#autotoc_md6", null ],
+      [ "License", "index.html#autotoc_md7", null ]
     ] ],
-    [ "License", "index.html#autotoc_md14", null ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
-      [ "Class Index", "classes.html", null ],
-      [ "Class Members", "functions.html", [
-        [ "All", "functions.html", null ],
-        [ "Functions", "functions_func.html", null ]
-      ] ]
+      [ "Class Index", "classes.html", null ]
     ] ],
     [ "Files", "files.html", [
       [ "File List", "files.html", "files_dup" ]
