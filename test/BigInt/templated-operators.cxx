@@ -45,7 +45,7 @@ TEST_CASE("templated operators std::string") {
   }
 }
 
-TEST_CASE("templated operators c-string") {
+TEST_CASE("templated operators string literal") {
   for (int i = 0; i < 1; ++i) {
     sch::BigInt bint[2];
     bint[0] = "123456789";
