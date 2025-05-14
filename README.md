@@ -6,14 +6,29 @@
 
 # BigInt &mdash; Multiple-Precision Integer
 
-- Fast multiplication ([Karatsuba](https://en.wikipedia.org/wiki/Karatsuba_algorithm))
-- Naive division (but not terribly slow)
-- Overloads arithmetic, comparison, and stream insertion operators
+- fast multiplication ([Karatsuba](https://en.wikipedia.org/wiki/Karatsuba_algorithm))
+- naive division (but not terribly slow)
+
+
+- overloads arithmetic, comparison, unary minus, and stream insertion operators
     - `+ - * / % += -= *= /= %=`
     - `== != < > <= >=`
-    - `>>`
+    - `-`
+    - `<<`
 
-### Example application
+
+- arithmetic operators
+    - interoperate with constructable types
+    - are symmetric (`BigInt` can be lhs and/or rhs)
+
+
+- constructable types
+    - builtin integral types
+    - string literals
+    - `std::string`
+    - `std::string_view`
+
+## Example application
 
 A solution to [Project Euler](https://projecteuler.net/about) [Problem 16](https://projecteuler.net/problem=16):
 
@@ -51,6 +66,16 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(sch)
 target_link_libraries(<your-target> PRIVATE sch)
 ```
+
+### Limitations
+
+Division and modulo operators currently rely on compiler implementations of
+128-bit integers. It would be nice to remove that dependency.
+
+A fair bit of data manipulation involves conversions to and from
+`std::string`. I believe this means that the greatest width of a `BigInt` is
+limited by `std::string::max_size`, and is therefore not "arbitrary." However,
+`std::string::max_size` is typically *hugemongous*.
 
 ## Resources
 
