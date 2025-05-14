@@ -89,6 +89,13 @@ class BigInt {
     return *this;
   }
 
+  template <typename T,
+            typename = std::enable_if_t<std::is_constructible_v<BigInt, T>>>
+  BigInt &operator/=(const T &rhs) {
+    *this = *this / BigInt{rhs};
+    return *this;
+  }
+
   BigInt operator-() &&;
   BigInt operator-() const &;
   BigInt &operator++();
