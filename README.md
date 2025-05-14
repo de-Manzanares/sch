@@ -1,6 +1,6 @@
 # sch
 
-[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/de-Manzanares/sch/.github%2Fworkflows%2Fcmake-multi-platform.yml?logo=githubactions&label=Test)](https://github.com/de-Manzanares/sch/tree/master/test)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/de-Manzanares/sch/.github%2Fworkflows%2Fcmake-multi-platform.yml?logo=githubactions&label=Test)](https://github.com/de-Manzanares/sch/actions)
 [![codecov](https://codecov.io/gh/de-Manzanares/sch/graph/badge.svg?token=Y9345DJGVF)](https://codecov.io/gh/de-Manzanares/sch)
 ![C++ Standard](https://img.shields.io/badge/C%2B%2B-17-blue)
 
@@ -61,7 +61,7 @@ include(FetchContent)
 FetchContent_Declare(
         sch
         GIT_REPOSITORY https://github.com/de-Manzanares/sch.git
-        GIT_TAG v0.1.0 # or a later version
+        GIT_TAG v0.2.0
 )
 FetchContent_MakeAvailable(sch)
 target_link_libraries(<your-target> PRIVATE sch)
