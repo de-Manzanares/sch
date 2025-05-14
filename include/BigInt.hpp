@@ -12,12 +12,10 @@
 #ifndef SCH_INCLUDE_BigInt_HPP_
 #define SCH_INCLUDE_BigInt_HPP_
 
-#include "BigInt10.hpp"
-#include "sign.h"
+#include "Sign.h"
 #include <algorithm>
 #include <cstdint>
 #include <execution>
-#include <numeric>
 #include <stdexcept>
 #include <string>
 #include <type_traits>
@@ -107,7 +105,7 @@ class BigInt {
   static constexpr std::uint64_t K_MAX_DIGIT = 4294967296; // sqrt(2^64)-1
 
   // private variables
-  sign _sign = sign::positive;          ///< sign of the number
+  Sign _sign = Sign::positive;          ///< Sign of the number
   std::vector<std::uint64_t> _digits{}; ///< @note little endian order
 
   // ADDITION HELPERS ----------------------------------------
@@ -246,10 +244,10 @@ BigInt operator*(const T &val, const BigInt &rhs) {
 // CONSTRUCTOR -----------------------------------------------------------------
 
 inline BigInt::BigInt(const std::string &str) {
-  int minusSignOffset = 0;  // to ignore negative sign, if it exists
-  if (str.front() == '-') { // check for sign
+  int minusSignOffset = 0;  // to ignore negative Sign, if it exists
+  if (str.front() == '-') { // check for Sign
     minusSignOffset = 1;
-    _sign = sign::negative;
+    _sign = Sign::negative;
   }
   // ensure there are no other non-numeric characters
   if (!std::all_of(str.begin() + minusSignOffset, str.end(), isdigit)) {
@@ -294,31 +292,31 @@ inline bool BigInt::operator!=(const BigInt &rhs) const {
 }
 
 inline bool BigInt::operator<(const BigInt &rhs) const {
-  // opposite sign considerations ---------------------
-  if (_sign == sign::negative && rhs._sign == sign::positive) {
+  // opposite Sign considerations ---------------------
+  if (_sign == Sign::negative && rhs._sign == Sign::positive) {
     return true;
   }
-  if (_sign == sign::positive && rhs._sign == sign::negative) {
+  if (_sign == Sign::positive && rhs._sign == Sign::negative) {
     return false;
   }
-  // same sign considerations -------------------------
+  // same Sign considerations -------------------------
   // different lengths ------------------
   // if positive, shorter is smaller
   // if negative, longer is smaller
   if (_digits.size() != rhs._digits.size()) {
-    return (_sign == sign::positive ? _digits.size() < rhs._digits.size()
-                                    : rhs._digits.size() < _digits.size());
+    return _sign == Sign::positive ? _digits.size() < rhs._digits.size()
+                                   : rhs._digits.size() < _digits.size();
   }
   // same length ------------------------
   // if positive, lexicographically "smaller" is smaller
   // if negative, lexicographically "larger" is smaller
-  return (_sign == sign::positive
-              ? std::lexicographical_compare(_digits.rbegin(), _digits.rend(),
-                                             rhs._digits.rbegin(),
-                                             rhs._digits.rend())
-              : std::lexicographical_compare(rhs._digits.rbegin(),
-                                             rhs._digits.rend(),
-                                             _digits.rbegin(), _digits.rend()));
+  return _sign == Sign::positive
+             ? std::lexicographical_compare(_digits.rbegin(), _digits.rend(),
+                                            rhs._digits.rbegin(),
+                                            rhs._digits.rend())
+             : std::lexicographical_compare(rhs._digits.rbegin(),
+                                            rhs._digits.rend(),
+                                            _digits.rbegin(), _digits.rend());
   // --------------------------------------------------
 }
 
@@ -337,13 +335,13 @@ inline bool BigInt::operator>=(const BigInt &rhs) const {
 // UNARY MINUS -----------------------------------------------------------------
 
 inline BigInt BigInt::operator-() && {
-  _sign = _sign == sign::positive ? sign::negative : sign::positive;
+  _sign = _sign == Sign::positive ? Sign::negative : Sign::positive;
   return std::move(*this);
 }
 
 inline BigInt BigInt::operator-() const & {
   BigInt tmp = *this;
-  tmp._sign = (tmp._sign == sign::positive ? sign::negative : sign::positive);
+  tmp._sign = tmp._sign == Sign::positive ? Sign::negative : Sign::positive;
   return tmp;
 }
 
@@ -357,14 +355,14 @@ inline BigInt BigInt::operator+(const BigInt &rhs) const { // NOLINT
   // conditional statements below. This allows us to reuse the subtraction
   // (addition) logic.
   if (_sign != rhs._sign) {
-    if (_sign == sign::negative) {
+    if (_sign == Sign::negative) {
       return rhs - -*this;
     }
-    if (rhs._sign == sign::negative) {
+    if (rhs._sign == Sign::negative) {
       return *this - -rhs;
     }
   }
-  if (_sign == sign::negative && rhs._sign == sign::negative) {
+  if (_sign == Sign::negative && rhs._sign == Sign::negative) {
     return -(-*this + -rhs);
   }
 
@@ -448,15 +446,15 @@ inline BigInt BigInt::operator-(const BigInt &rhs) const { // NOLINT
     return BigInt{0};
   }
   if (_sign != rhs._sign) {
-    if (_sign == sign::negative) {
+    if (_sign == Sign::negative) {
       return -(-(*this) + rhs);
     }
-    if (rhs._sign == sign::negative) {
-      return *this + (-(rhs));
+    if (rhs._sign == Sign::negative) {
+      return *this + -rhs;
     }
   }
-  if (_sign == sign::negative && rhs._sign == sign::negative) {
-    return -(rhs) - (-(*this));
+  if (_sign == Sign::negative && rhs._sign == Sign::negative) {
+    return -rhs - -*this;
   }
 
   BigInt difference{};
@@ -470,9 +468,9 @@ inline BigInt BigInt::operator-(const BigInt &rhs) const { // NOLINT
                                  : rhs._digits.size());
 
   if (m_rhs > m_lhs) {
-    difference._sign = sign::negative; // otherwise dif sign is pos. by default
+    difference._sign = Sign::negative; // otherwise dif Sign is pos. by default
   }
-  if (difference._sign == sign::positive) { // subtract rhs from lhs
+  if (difference._sign == Sign::positive) { // subtract rhs from lhs
     subtract(it_lhs, m_lhs, it_rhs, m_rhs, difference);
   } else { // subtract lhs from rhs
     subtract(it_rhs, m_rhs, it_lhs, m_lhs, difference);
@@ -502,7 +500,7 @@ inline void BigInt::subtract(std::size_t &it_lhs, BigInt &lhs,
         lhs._digits[it_lhs + 1] -= 1;
       } else {
         std::size_t tmp_it{1};
-        while ((it_lhs + tmp_it) < lhs._digits.size() - 1 &&
+        while (it_lhs + tmp_it < lhs._digits.size() - 1 &&
                lhs._digits[it_lhs + tmp_it] == 0) {
           lhs._digits[it_lhs + tmp_it] = BASE - 1;
           ++tmp_it;
@@ -593,7 +591,7 @@ inline BigInt BigInt::operator*(const BigInt &rhs) const {
 // DIVISION --------------------------------------------------------------------
 
 inline BigInt BigInt::abs(const BigInt &bint) {
-  return bint._sign == sign::positive ? bint : -bint;
+  return bint._sign == Sign::positive ? bint : -bint;
 }
 
 inline BigInt BigInt::operator/(const BigInt &rhs) const {
@@ -618,7 +616,7 @@ inline BigInt BigInt::operator/(const BigInt &rhs) const {
 
   BigInt scale{1};
   if (B._digits.back() < BASE / 2) {
-    scale = (BASE / 2 / B._digits.back());
+    scale = BASE / 2 / B._digits.back();
     while (B._digits.back() * scale < BASE / 2) {
       scale += 1;
     }
@@ -626,22 +624,23 @@ inline BigInt BigInt::operator/(const BigInt &rhs) const {
     B *= scale;
   }
 
-  std::int64_t n = B._digits.size();
-  std::int64_t m = A._digits.size() - n;
+  const std::int64_t n = B._digits.size();
+  const std::int64_t m = A._digits.size() - n;
 
   if (A >= B.to_string() + std::string(EXP * m, '0')) { // A >= BASE^m * B
     Q._digits.push_back(1);
-    A -= (B.to_string() + std::string(EXP * m, '0')); // A = A - BASE^m * B
+    A -= B.to_string() + std::string(EXP * m, '0'); // A = A - BASE^m * B
   } else {
     Q._digits.push_back(0);
   }
 
   for (std::int64_t j = m - 1; j >= 0; --j) {
-    // create two word numerator
+    // create two-word numerator
 
     // a_{n+j}*BASE + a_{n+j-1}
-    __uint128_t numerator = static_cast<__uint128_t>(A._digits[n + j]) * BASE +
-                            A._digits[n + j - 1];
+    const __uint128_t numerator =
+        static_cast<__uint128_t>(A._digits[n + j]) * BASE +
+        A._digits[n + j - 1];
 
     q = numerator / B._digits[n - 1];
     q = q < static_cast<__uint128_t>(BASE - 1)
@@ -649,8 +648,8 @@ inline BigInt BigInt::operator/(const BigInt &rhs) const {
             : static_cast<__uint128_t>(BASE - 1);
 
     // construct BigInt from two words
-    tw_q = std::vector<std::uint64_t>{static_cast<std::uint64_t>(q),
-                                      static_cast<std::uint64_t>(q >> 64)};
+    tw_q = std::vector{static_cast<std::uint64_t>(q),
+                       static_cast<std::uint64_t>(q >> 64)};
 
     // A -= q * BASE ^ j * BASE;
     A -= (tw_q.to_string() + std::string(EXP * j, '0')) * B;
@@ -660,8 +659,8 @@ inline BigInt BigInt::operator/(const BigInt &rhs) const {
       A += (B.to_string() + std::string(EXP * j, '0'));
     }
 
-    tw_q = std::vector<std::uint64_t>{static_cast<std::uint64_t>(q),
-                                      static_cast<std::uint64_t>(q >> 64)};
+    tw_q = std::vector{static_cast<std::uint64_t>(q),
+                       static_cast<std::uint64_t>(q >> 64)};
     if (tw_q._digits.back() == 0) {
       tw_q._digits.pop_back();
     }
@@ -672,7 +671,7 @@ inline BigInt BigInt::operator/(const BigInt &rhs) const {
     }
   }
 
-  _sign == rhs._sign ? Q._sign = sign::positive : Q._sign = sign::negative;
+  _sign == rhs._sign ? Q._sign = Sign::positive : Q._sign = Sign::negative;
   std::reverse(Q._digits.begin(), Q._digits.end());
   Q.normalize();
   return Q;
@@ -685,13 +684,13 @@ inline void BigInt::normalize() {
     _digits.pop_back();
   }
   if (_digits.empty() || (_digits.size() == 1 && _digits.front() == 0)) {
-    _sign = sign::positive;
+    _sign = Sign::positive;
   }
 }
 
 inline std::string BigInt::to_string() const {
   std::string str{};
-  if (_sign == sign::negative) {
+  if (_sign == Sign::negative) {
     str += "-";
   }
   // the first "digit" doesn't need leading zeros
@@ -726,7 +725,7 @@ inline std::ostream &operator<<(std::ostream &os, const BigInt &b) {
  */
 template <typename T, typename> BigInt pow(const BigInt &base, const T exp) {
   if (exp < 0) {
-    throw(std::invalid_argument("BigInt::pow() : negative exponent"));
+    throw std::invalid_argument("BigInt::pow() : negative exponent");
   }
   if (exp == 0) { // precedes the next check because 0^0 == 1
     return 1;

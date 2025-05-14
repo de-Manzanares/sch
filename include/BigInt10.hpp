@@ -12,7 +12,7 @@
 #ifndef SCH_INCLUDE_BigInt10_HPP_
 #define SCH_INCLUDE_BigInt10_HPP_
 
-#include "sign.h"
+#include "Sign.h"
 #include <algorithm>
 #include <cstdint>
 #include <execution>
@@ -107,7 +107,7 @@ class BigInt10 {
   static constexpr uint64_t BASE = 10; ///< data is stored in base 10
 
   // private variables
-  sign _sign = sign::positive;  ///< sign of the number
+  Sign _sign = Sign::positive;  ///< Sign of the number
   std::vector<uint8_t> _data{}; ///< @note little endian order
 
   // Addition operator helpers ---------------------------------
@@ -136,10 +136,10 @@ class BigInt10 {
 
 // String constructor
 inline BigInt10::BigInt10(const std::string &str) {
-  int offset = 0;           // to ignore negative sign, if it exists
-  if (str.front() == '-') { // check for sign
+  int offset = 0;           // to ignore negative Sign, if it exists
+  if (str.front() == '-') { // check for Sign
     offset = 1;
-    _sign = sign::negative;
+    _sign = Sign::negative;
   }
   // ensure there are no other non-numeric characters
   if (!std::all_of(str.begin() + offset, str.end(), isdigit)) {
@@ -252,30 +252,31 @@ bool operator!=(const T val, const BigInt10 &rhs) {
 // LESS THAN -------------------------------------------------------------------
 
 inline bool BigInt10::operator<(const BigInt10 &rhs) const {
-  // opposite sign considerations ---------------------
-  if (_sign == sign::negative && rhs._sign == sign::positive) {
+  // opposite Sign considerations ---------------------
+  if (_sign == Sign::negative && rhs._sign == Sign::positive) {
     return true;
   }
-  if (_sign == sign::positive && rhs._sign == sign::negative) {
+  if (_sign == Sign::positive && rhs._sign == Sign::negative) {
     return false;
   }
-  // same sign considerations -------------------------
+  // same Sign considerations -------------------------
   // different lengths ------------------
   // if positive, shorter is smaller
   // if negative, longer is smaller
   if (_data.size() != rhs._data.size()) {
-    return (_sign == sign::positive ? _data.size() < rhs._data.size()
-                                    : rhs._data.size() < _data.size());
+    return _sign == Sign::positive ? _data.size() < rhs._data.size()
+                                   : rhs._data.size() < _data.size();
   }
   // same length ------------------------
   // if positive, lexicographically "smaller" is smaller
   // if negative, lexicographically "larger" is smaller
-  return (
-      _sign == sign::positive
-          ? std::lexicographical_compare(_data.rbegin(), _data.rend(),
-                                         rhs._data.rbegin(), rhs._data.rend())
-          : std::lexicographical_compare(rhs._data.rbegin(), rhs._data.rend(),
-                                         _data.rbegin(), _data.rend()));
+  return _sign == Sign::positive
+             ? std::lexicographical_compare(_data.rbegin(), _data.rend(),
+                                            rhs._data.rbegin(),
+                                            rhs._data.rend())
+             : std::lexicographical_compare(rhs._data.rbegin(),
+                                            rhs._data.rend(), _data.rbegin(),
+                                            _data.rend());
   // --------------------------------------------------
 }
 
@@ -411,14 +412,14 @@ inline BigInt10 BigInt10::operator+(const BigInt10 &rhs) const { // NOLINT
   // conditional statements below. This allows us to reuse the subtraction
   // (addition) logic.
   if (_sign != rhs._sign) {
-    if (_sign == sign::negative) {
+    if (_sign == Sign::negative) {
       return rhs - -*this;
     }
-    if (rhs._sign == sign::negative) {
+    if (rhs._sign == Sign::negative) {
       return *this - -rhs;
     }
   }
-  if (_sign == sign::negative && rhs._sign == sign::negative) {
+  if (_sign == Sign::negative && rhs._sign == Sign::negative) {
     return -(-*this + -rhs);
   }
 
@@ -528,15 +529,15 @@ inline BigInt10 BigInt10::operator-(const BigInt10 &rhs) const { // NOLINT
     return BigInt10{"0"};
   }
   if (_sign != rhs._sign) {
-    if (_sign == sign::negative) {
-      return -(-(*this) + rhs);
+    if (_sign == Sign::negative) {
+      return -(-*this + rhs);
     }
-    if (rhs._sign == sign::negative) {
-      return *this + (-(rhs));
+    if (rhs._sign == Sign::negative) {
+      return *this + -rhs;
     }
   }
-  if (_sign == sign::negative && rhs._sign == sign::negative) {
-    return -(rhs) - (-(*this));
+  if (_sign == Sign::negative && rhs._sign == Sign::negative) {
+    return -rhs - -*this;
   }
 
   BigInt10 difference{};
@@ -549,9 +550,9 @@ inline BigInt10 BigInt10::operator-(const BigInt10 &rhs) const { // NOLINT
                                                            : rhs._data.size());
 
   if (_rhs > _lhs) {
-    difference._sign = sign::negative; // otherwise dif sign is pos. by default
+    difference._sign = Sign::negative; // otherwise dif Sign is pos. by default
   }
-  if (difference._sign == sign::positive) { // subtract rhs from lhs
+  if (difference._sign == Sign::positive) { // subtract rhs from lhs
     subtract(it_lhs, _lhs, it_rhs, _rhs, difference);
   } else { // subtract lhs from rhs
     subtract(it_rhs, _rhs, it_lhs, _lhs, difference);
@@ -685,7 +686,7 @@ inline BigInt10 BigInt10::longMultiplication(const BigInt10 &bottom,
   final_product = std::reduce(std::execution::par, products.begin(),
                               products.end(), BigInt10{});
   final_product._sign =
-      bottom._sign == top._sign ? sign::positive : sign::negative;
+      bottom._sign == top._sign ? Sign::positive : Sign::negative;
   final_product.normalize();
   return final_product;
 }
@@ -744,17 +745,17 @@ BigInt10::longDivision(const BigInt10 &dividend, const BigInt10 &divisor) {
   BigInt10 quotient{};
   BigInt10 remainder{};
 
-  m_dividend._sign = sign::positive;
-  m_divisor._sign = sign::positive;
+  m_dividend._sign = Sign::positive;
+  m_divisor._sign = Sign::positive;
 
-  auto chooseQuotientSign = [&dividend, &divisor]() {
-    return dividend._sign == divisor._sign ? sign::positive : sign::negative;
+  auto chooseQuotientSign = [&dividend, &divisor] {
+    return dividend._sign == divisor._sign ? Sign::positive : Sign::negative;
   };
-  auto chooseRemainderSign = [&dividend, &remainder]() {
+  auto chooseRemainderSign = [&dividend, &remainder] {
     if (remainder == "0") {
-      return sign::positive;
+      return Sign::positive;
     }
-    return dividend._sign == sign::positive ? sign::positive : sign::negative;
+    return dividend._sign == Sign::positive ? Sign::positive : Sign::negative;
   };
 
   if (m_divisor == m_dividend) {
@@ -961,13 +962,13 @@ template <typename T, typename> BigInt10 &BigInt10::operator%=(const T val) {
 // Unary operators
 
 inline BigInt10 &BigInt10::operator-() {
-  _sign = (_sign == sign::positive ? sign::negative : sign::positive);
+  _sign = (_sign == Sign::positive ? Sign::negative : Sign::positive);
   return *this;
 }
 
 inline BigInt10 BigInt10::operator-() const {
   BigInt10 tmp = *this;
-  tmp._sign = (tmp._sign == sign::positive ? sign::negative : sign::positive);
+  tmp._sign = (tmp._sign == Sign::positive ? Sign::negative : Sign::positive);
   return tmp;
 }
 
@@ -975,9 +976,9 @@ inline BigInt10 BigInt10::operator-() const {
 // Increment decrement operators
 
 inline BigInt10 &BigInt10::operator++() { // NOLINT(*-no-recursion)
-  if (_sign == sign::negative) {
+  if (_sign == Sign::negative) {
     // -X + 1 = -(X - 1) Use `operator--()` on the absolute value
-    *this = -(--(-*this));
+    *this = - -- -*this;
     return *this;
   }
   std::size_t i{0};
@@ -994,9 +995,9 @@ inline BigInt10 &BigInt10::operator++() { // NOLINT(*-no-recursion)
 }
 
 inline BigInt10 &BigInt10::operator--() { // NOLINT(*-no-recursion)
-  if (_sign == sign::negative) {
+  if (_sign == Sign::negative) {
     // -X - 1 = -(X + 1) Use `operator++()` on the absolute value
-    *this = -(++(-*this));
+    *this = -++-*this;
     return *this;
   }
 
@@ -1031,7 +1032,7 @@ inline void BigInt10::normalize() {
     _data.pop_back();
   }
   if (_data.empty() || _data == std::vector{uint8_t{0}}) {
-    _sign = sign::positive;
+    _sign = Sign::positive;
   }
 }
 
@@ -1044,7 +1045,7 @@ inline std::string BigInt10::to_string() const {
   }
   std::string str;
   str.reserve(_data.size());
-  if (_sign == sign::negative) {
+  if (_sign == Sign::negative) {
     str.push_back('-');
   }
   for (auto it = _data.rbegin(); it != _data.rend(); ++it) {
