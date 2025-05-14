@@ -28,7 +28,7 @@ namespace sch {
  * @brief Arbitrary precision integer
  */
 class BigInt {
- public:
+public:
   BigInt() = default;
   BigInt(const std::string &str);
   BigInt(const char *cstr) : BigInt(std::string{cstr}) {}
@@ -52,8 +52,6 @@ class BigInt {
     *this = BigInt{val};
     return *this;
   }
-
-  // Comparison operators
 
   bool operator==(const BigInt &rhs) const;
   bool operator!=(const BigInt &rhs) const;
@@ -96,16 +94,21 @@ class BigInt {
     return *this;
   }
 
+  template <typename T,
+          typename = std::enable_if_t<std::is_constructible_v<BigInt, T>>>
+BigInt &operator%=(const T &rhs) {
+    *this = *this % BigInt{rhs};
+    return *this;
+  }
+
   BigInt operator-() &&;
   BigInt operator-() const &;
-  BigInt &operator++();
-  BigInt &operator--();
 
   friend std::ostream &operator<<(std::ostream &os, const BigInt &b);
   void normalize();
   [[nodiscard]] std::string to_string() const;
 
- private:
+private:
   // constants
   static constexpr std::uint64_t EXP = 18; // 10^EXP
   static constexpr std::uint64_t BASE = 1'000'000'000'000'000'000;
@@ -682,6 +685,91 @@ inline BigInt BigInt::operator/(const BigInt &rhs) const {
   std::reverse(Q._digits.begin(), Q._digits.end());
   Q.normalize();
   return Q;
+}
+
+// MODULO ----------------------------------------------------------------------
+
+inline BigInt BigInt::operator%(const BigInt &rhs) const {
+  if (rhs == 0) {
+    return *this;
+  }
+  if (*this == 0 || rhs == 1) {
+    return 0;
+  }
+
+  BigInt A = abs(*this);
+  BigInt B = abs(rhs);
+
+  if (B > A) {
+    return *this;
+  }
+
+  BigInt Q{};
+  __uint128_t q = 0;
+  BigInt tw_q{};
+
+  BigInt scale{1};
+  if (B._digits.back() < BASE / 2) {
+    scale = BASE / 2 / B._digits.back();
+    while (B._digits.back() * scale < BASE / 2) {
+      scale += 1;
+    }
+    A *= scale;
+    B *= scale;
+  }
+
+  const std::int64_t n = B._digits.size();
+  const std::int64_t m = A._digits.size() - n;
+
+  if (A >= B.to_string() + std::string(EXP * m, '0')) { // A >= BASE^m * B
+    Q._digits.push_back(1);
+    A -= B.to_string() + std::string(EXP * m, '0'); // A = A - BASE^m * B
+  } else {
+    Q._digits.push_back(0);
+  }
+
+  for (std::int64_t j = m - 1; j >= 0; --j) {
+    // create two-word numerator
+
+    // a_{n+j}*BASE + a_{n+j-1}
+    const __uint128_t numerator =
+        static_cast<__uint128_t>(A._digits[n + j]) * BASE +
+        A._digits[n + j - 1];
+
+    q = numerator / B._digits[n - 1];
+    q = q < static_cast<__uint128_t>(BASE - 1)
+            ? q
+            : static_cast<__uint128_t>(BASE - 1);
+
+    // construct BigInt from two words
+    tw_q = std::vector{static_cast<std::uint64_t>(q),
+                       static_cast<std::uint64_t>(q >> 64)};
+
+    // A -= q * BASE ^ j * BASE;
+    A -= (tw_q.to_string() + std::string(EXP * j, '0')) * B;
+
+    while (A < 0) {
+      q = q - 1;
+      A += (B.to_string() + std::string(EXP * j, '0'));
+    }
+
+    tw_q = std::vector{static_cast<std::uint64_t>(q),
+                       static_cast<std::uint64_t>(q >> 64)};
+    if (tw_q._digits.back() == 0) {
+      tw_q._digits.pop_back();
+    }
+    std::reverse(tw_q._digits.begin(), tw_q._digits.end());
+
+    for (const auto d : tw_q._digits) {
+      Q._digits.push_back(d);
+    }
+  }
+
+  A /= scale;
+  if (A != 0) {
+    A._sign = this->_sign;
+  }
+  return A;
 }
 
 // MEMBER FUNCTIONS ------------------------------------------------------------
