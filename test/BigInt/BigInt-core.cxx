@@ -4,16 +4,17 @@
 #include <random>
 
 #include "BigInt.hpp"
-#include "helpers.cxx"
+#include "BigInt10.hpp"
+#include "helpers.hpp"
 
-namespace BigInt_test {
+namespace big_int_test {
 
 TEST_CASE("constructor and stream insertion") {
   SECTION("positive") {
     for (int i = 0; i < 1000; ++i) {
       std::ostringstream oss[2];
-      std::string str = randomString(10000, 20000);
-      removeLeadingZeros(str);
+      std::string str = random_string(10000, 20000);
+      remove_leading_zeros(str);
       sch::BigInt bint{str};
       oss[0] << str;
       oss[1] << bint;
@@ -23,8 +24,8 @@ TEST_CASE("constructor and stream insertion") {
   SECTION("negative") {
     for (int i = 0; i < 1000; ++i) {
       std::ostringstream oss[2];
-      std::string str = randomString(10000, 20000);
-      removeLeadingZeros(str);
+      std::string str = random_string(10000, 20000);
+      remove_leading_zeros(str);
       str.insert(0, 1, '-');
       sch::BigInt bint{str};
       oss[0] << str;
@@ -47,8 +48,8 @@ TEST_CASE("comparison operators") {
     long long n[2];
     sch::BigInt bint[2];
     for (int k = 0; k < 2; ++k) {
-      std::string str = randomString(1, LL_FULL_LENGTH);
-      randomizeSign(str);
+      std::string str = random_string(1, LL_FULL_LENGTH);
+      randomize_sign(str);
       n[k] = std::stoll(str);
       bint[k] = n[k];
     }
@@ -70,8 +71,8 @@ TEST_CASE("addition") {
     std::ostringstream os[2];
 
     for (int k = 0; k < 2; ++k) {
-      std::string str = randomString(10000, 20000);
-      randomizeSign(str);
+      std::string str = random_string(10000, 20000);
+      randomize_sign(str);
       bint10[k] = str;
       bint[k] = str;
     }
@@ -88,8 +89,8 @@ TEST_CASE("subtraction") {
     std::ostringstream os[2];
 
     for (int k = 0; k < 2; ++k) {
-      std::string str = randomString(10000, 20000);
-      randomizeSign(str);
+      std::string str = random_string(10000, 20000);
+      randomize_sign(str);
       bint10[k] = str;
       bint[k] = str;
     }
@@ -106,8 +107,8 @@ TEST_CASE("multiplication") {
     std::ostringstream os[2];
 
     for (int k = 0; k < 2; ++k) {
-      std::string str = randomString(1, 2000);
-      randomizeSign(str);
+      std::string str = random_string(1, 2000);
+      randomize_sign(str);
       n[k] = str;
       bint[k] = str;
     }
@@ -124,13 +125,13 @@ TEST_CASE("division") {
     std::ostringstream os[2];
 
     for (int k = 0; k < 2; ++k) {
-      std::string str = randomString(1, 2000);
-      randomizeSign(str);
+      std::string str = random_string(1, 2000);
+      randomize_sign(str);
       n[k] = str;
       bint[k] = str;
     }
     if (n[1] == 0) {
-      n[1] = randomInRange(1, 9);
+      n[1] = random_in_range(1, 9);
       bint[1] = n[1].to_string();
     }
 
@@ -144,8 +145,6 @@ TEST_CASE("division") {
   }
 }
 
-/*
-
 TEST_CASE("modulo") {
   for (int i = 0; i < 1000; ++i) {
     long long n[2];
@@ -153,11 +152,11 @@ TEST_CASE("modulo") {
     std::ostringstream os[2];
 
     for (int k = 0; k < 2; ++k) {
-      std::string str = randomString(1, LL_FULL_LENGTH);
-      randomizeSign(str);
+      std::string str = random_string(1, LL_FULL_LENGTH);
+      randomize_sign(str);
       n[k] = std::stoll(str);
       if (n[k] == 0) {
-        n[k] = randomInRange(1, 9); // NOLINT
+        n[k] = random_in_range(1, 9); // NOLINT
       }
       bint[k] = n[k];
     }
@@ -167,7 +166,9 @@ TEST_CASE("modulo") {
   }
 }
 
-// TODO consider sign
+/*
+
+// TODO consider Sign
 TEST_CASE("exponentiation") {
   SKIP();
   for (int i = 0; i < 11; ++i) {
@@ -183,7 +184,7 @@ TEST_CASE("exponentiation") {
 }
 
 TEST_CASE("counting to 1 million") {
-  // todo fix sign change on increment
+  // todo fix Sign change on increment
   sch::BigInt n{0};
   for (size_t i = 0; i < 1E6; ++i) { // NOLINT
     ++n;
@@ -197,7 +198,7 @@ TEST_CASE("counting to 1 million") {
 }
 
 TEST_CASE("counting from 1 million") {
-  // todo fix sign change on decrement
+  // todo fix Sign change on decrement
   sch::BigInt n{1000000};
   for (size_t i = 1E6; i > 0; --i) {
     --n;
@@ -212,4 +213,4 @@ TEST_CASE("counting from 1 million") {
 
 */
 
-} // namespace BigInt_test
+} // namespace big_int_test

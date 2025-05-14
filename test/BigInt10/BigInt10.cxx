@@ -211,7 +211,7 @@ TEST_CASE("operator: % modulo") {
   }
 }
 
-// TODO consider sign
+// TODO consider Sign
 TEST_CASE("sch::pow()") {
   for (int i = 0; i < 11; ++i) {
     for (int j = 0; j < 11; ++j) {
@@ -226,7 +226,7 @@ TEST_CASE("sch::pow()") {
 }
 
 TEST_CASE("counting to 1 million") {
-  // todo fix sign change on increment
+  // todo fix Sign change on increment
   sch::BigInt10 n{0};
   for (size_t i = 0; i < 1E6; ++i) { // NOLINT
     ++n;
@@ -240,7 +240,7 @@ TEST_CASE("counting to 1 million") {
 }
 
 TEST_CASE("counting from 1 million") {
-  // todo fix sign change on decrement
+  // todo fix Sign change on decrement
   sch::BigInt10 n{1000000};
   for (size_t i = 1E6; i > 0; --i) {
     --n;

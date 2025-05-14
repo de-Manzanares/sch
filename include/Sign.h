@@ -8,7 +8,7 @@
 
 namespace sch {
 
-enum class sign : bool { negative, positive };
+enum class Sign : bool { negative, positive };
 
 } // namespace sch
 

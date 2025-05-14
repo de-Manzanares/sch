@@ -8,7 +8,6 @@
 #define SCH_INCLUDE_SCH_ALL_HPP_
 
 #include "BigInt10.hpp"
-#include "sign.h"
 
 namespace sch {
 
